@@ -246,8 +246,9 @@
   </div>
 
   <!-- Кнопка хода -->
-  <button onclick="runTurn()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">
-    Провести ход
+  <button onclick="runTurn()" 
+  class="fixed top-4 left-4 z-20 bg-blue-600 text-white font-bold px-5 py-2 rounded hover:bg-blue-700">
+  Сделать ход
   </button>
 
   <!-- Краткая статистика -->
@@ -612,11 +613,21 @@ if (currentGoal){
     }
   };
 
-  function finish(reason){
+function finish(reason){
   alert(reason + '\nБаллы: ' + scores[scores.length-1]);
-  /* показываем стартовый экран заново */
+
+  /* 1) возвращаемся на старт-экран */
   document.getElementById('game-screen').classList.add('hidden');
   document.getElementById('start-screen').classList.remove('hidden');
+
+  /* 2) ───── обнуляем график Баллов ───── */
+  chart.data.labels.length = 0;                 // очищаем подписи оси X
+  chart.data.datasets[0].data.length = 0;       // очищаем сами значения
+  chart.update();                               // перерисовываем пустой график
+  document.getElementById('scoreBig').textContent = 0;   // крупная цифра → 0
+  scores.length = 0;                            // если нужно, обнуляем массив scores
+
+  /* (необязательно) обнулить статус цели */
   document.getElementById('goalStatus').textContent = '–';
 }
   
