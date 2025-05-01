@@ -287,6 +287,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   /* кувшин-ползунок */
   function buildJar(sliderId, fillId, valId, hiddenId, max){
+    /* --- пресеты ролей (проценты от БАЗОВОГО дохода 1000 $) --- */
+const rolePresets = {
+  Saver    : {survival:40, comfort:20, save:20, invest:10, healthSpend:5, edu:5},
+  Investor : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5},
+  Spec     : {survival:40, comfort:20, save:5,  invest:15, healthSpend:3, edu:2}
+};
+/* удобная функция: двигаем слайдер по id на новое значение */
+function setSlider(id, value){
+  document.getElementById(id + 'Slider').noUiSlider.set(value);
+}
     const slider=document.getElementById(sliderId);
     const fill  =document.getElementById(fillId);
     const valEl =document.getElementById(valId);
@@ -358,6 +368,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     let income=1000; if(extra==='да') income+=200;
     const spend=survival+comfort+savePlan+investPlan+healthSp+edu;
+/* ----- автодолив свободного остатка в Сбережения ----- */
+if (document.getElementById('autoAdjust').checked) {
+  const rest = income - spend;
+  if (rest > 0) {
+    setSlider('save', savePlan + rest);      // двигаем только слайдер «Сбережения»
+    return;                                  // выходим: updateIncomeExpenses вызовется снова
+  }
+}
 
     document.getElementById('incomeDisplay').innerText   = `$${income}`;
     document.getElementById('expensesDisplay').innerText = `$${spend}`;
@@ -387,13 +405,30 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 
   /* старт */
-  window.startGame = n=>{
-    maxTurns=n;
-    document.getElementById('maxTurns').innerText=n;
-    document.getElementById('start-screen').classList.add('hidden');
-    document.getElementById('game-screen').classList.remove('hidden');
-    updateIncomeExpenses(); updateBars();
-  };
+window.startGame = n => {
+  maxTurns = n;
+  document.getElementById('maxTurns').innerText = n;
+  /* скрываем старт, показываем игру */
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  /* ---------------- пресеты ---------------- */
+  const mode = document.querySelector('input[name="mode"]:checked').value;
+  if (mode === 'role') {
+    const role = document.querySelector('input[name="role"]:checked').value;   // Saver / Investor / Spec
+    const p    = rolePresets[role];
+    const base = 1000;                     // базовый доход, как и в расчётах
+    /* пробегаемся по полям и ставим % от base, округляя до 10 $ */
+    Object.entries(p).forEach(([field, pc]) => {
+      const amount = Math.round(base * pc / 100 / 10) * 10;  // шаг 10 $
+      setSlider(field, amount);
+    });
+  }
+  /* для режимов goal / free ничего менять не надо */
+  /* обнуляем состояние игры */
+  turn = 0; savings = 0; investments = 0; health = 100; happiness = 90;
+  updateIncomeExpenses(); updateBars();
+};
+
 
   /* ХОД */
   window.runTurn = ()=>{
