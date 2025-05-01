@@ -4,77 +4,73 @@
 <meta charset="UTF-8">
 <title>5 Кувшинов</title>
 
-<!-- Tailwind и Chart.js -->
+<!-- Tailwind + Chart.js + noUiSlider -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- noUiSlider -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" rel="stylesheet">
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js"></script>
 
 <style>
 /* кувшины-ползунки */
 .jar-wrap{width:120px;display:flex;flex-direction:column;align-items:center}
 .jar{width:80px;height:160px;border:4px solid #555;border-radius:8px 8px 32px 32px;
-     position:relative;background:#fff;overflow:hidden}
+     background:#fff;overflow:hidden;position:relative}
 .liquid{position:absolute;bottom:0;left:0;width:100%;height:0;
         background:linear-gradient(#4ade80,#16a34a);transition:.25s}
 .slider-v{height:160px;margin-top:12px}
-input.hidden-field{display:none}
-.jar-caption{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-             height:60px;font:600 15px/1.1 sans-serif;text-align:center}
+.jar-caption{height:60px;font:600 15px/1.1 sans-serif;text-align:center}
 
 /* верхние стаканы */
 .glass-wrap{width:100px;display:flex;flex-direction:column;align-items:center}
 .glass{width:70px;height:140px;border:4px solid #555;border-radius:8px 8px 28px 28px;
-       position:relative;background:#fff;overflow:hidden}
+       background:#fff;overflow:hidden;position:relative}
 .liquid-glass{position:absolute;bottom:0;left:0;width:100%;height:0;transition:.25s}
 .neg-liquid{background:#e11d48!important}.neg-text{color:#e11d48!important}
 
 /* вертикальные полосы */
-.vbar{width:26px;height:140px;background:#d1d5db;border-radius:13px;position:relative;overflow:hidden}
-.vbar-fill{position:absolute;bottom:0;left:0;width:100%;height:0;transition:.25s}
-.vbar-text{position:absolute;top:4px;left:0;width:100%;font:700 14px/1 sans-serif;text-align:center;
-           pointer-events:none}
+.vbar{width:26px;height:140px;border-radius:13px;background:#d1d5db;overflow:hidden;position:relative}
+.vbar-fill{position:absolute;bottom:0;width:100%;height:0;transition:.25s}
+.vbar-text{position:absolute;top:4px;width:100%;font:700 14px/1 sans-serif;text-align:center}
 
 /* мини-график */
-.mini-chart-box{width:100px;height:140px;position:relative;display:flex;
-                align-items:center;justify-content:center}
+.mini-chart-box{width:100px;height:140px;display:flex;align-items:center;justify-content:center;position:relative}
 #scoreChart{width:100px!important;height:100px!important}
-#scoreBig{position:absolute;top:0;left:0;width:100%;font:700 18px/1 sans-serif;text-align:center;
-          pointer-events:none}
+#scoreBig{position:absolute;top:0;width:100%;font:700 18px/1 sans-serif;text-align:center}
+
+/* затемняющий фон туториала */
 </style>
 </head>
 <body class="bg-gray-100">
 
 <!-- 🛈 мини-туториал -->
-<div id="tutorial" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center">
+<div id="tutorial" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden">
   <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
-    <h3 id="tutTitle" class="text-xl font-bold">Шаг 1/3</h3>
-    <p id="tutText">…</p>
+    <h3 id="tutTitle" class="text-xl font-bold"></h3>
+    <p id="tutText"></p>
     <button id="tutNext" class="bg-blue-600 text-white px-4 py-2 rounded">Дальше</button>
   </div>
 </div>
 
-<!-- ═══════════ ЭКРАН НАСТРОЙКИ ═══════════ -->
+<!-- ═══════════ СТАРТ ─══════════ -->
 <div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
-  <h1 class="text-4xl font-bold mb-6 text-center">🏺 5 Кувшинов</h1>
-  <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4">
+  <h1 class="text-5xl font-bold mb-6"><span class="mr-2">💰</span>5 Кувшинов</h1>
 
-    <!-- Длительность -->
+  <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-left">
+
+    <!-- длительность -->
     <p class="font-semibold">Длительность игры:</p>
     <div class="flex gap-4">
       <button onclick="startGame(24)" class="flex-1 bg-green-600 text-white py-2 rounded">24 мес</button>
-      <button onclick="startGame(36)" class="flex-1 bg-blue-600 text-white py-2 rounded">36 мес</button>
+      <button onclick="startGame(36)" class="flex-1 bg-blue-600  text-white py-2 rounded">36 мес</button>
     </div>
 
-    <!-- Режим -->
+    <!-- режим -->
     <p class="font-semibold mt-4 mb-1">Как начать?</p>
     <label class="block"><input type="radio" name="mode" value="role" checked> <span class="ml-1">Выбрать роль</span></label>
     <label class="block"><input type="radio" name="mode" value="goal"> <span class="ml-1">Выбрать цель</span></label>
     <label class="block"><input type="radio" name="mode" value="free"> <span class="ml-1">Свободный план</span></label>
 
-    <!-- Блок Роль -->
+    <!-- роли -->
     <div id="roleBlock" class="mt-4">
       <p class="font-semibold mb-1">Роль:</p>
       <label class="mr-4"><input type="radio" name="role" value="Saver" checked> Saver</label>
@@ -82,17 +78,17 @@ input.hidden-field{display:none}
       <label class="mr-4"><input type="radio" name="role" value="Spec"> Speculator</label>
     </div>
 
-    <!-- Блок Цель -->
+    <!-- цели -->
     <div id="goalBlock" class="mt-4 hidden">
       <label class="font-semibold mb-1">Цель:</label>
       <select id="goalSelect" class="w-full border p-2 rounded">
-        <option value="buffer">Подушка 6 мес</option>
-        <option value="passive1k">Пассив $1000/мес</option>
-        <option value="double">Удвоить капитал</option>
+        <option value="buffer">Подушка 12 мес</option>
+        <option value="passive">Пассивный доход $1000/мес</option>
+        <option value="tenk">Накопить $10000</option>
       </select>
     </div>
 
-    <!-- Автодолив -->
+    <!-- автодолив -->
     <label class="flex items-center space-x-2 mt-4">
       <input id="autoAdjust" type="checkbox" class="h-4 w-4 text-blue-600 rounded">
       <span class="text-sm">Автоматически добавлять свободный остаток в Сбережения</span>
@@ -100,52 +96,41 @@ input.hidden-field{display:none}
   </div>
 </div>
 
-<!-- ═══════════ ИГРОВОЙ ЭКРАН ═══════════ -->
+<!-- ═══════════ ИГРА ─══════════ -->
 <div id="game-screen" class="hidden p-6 space-y-6 max-w-7xl mx-auto">
 
-  <!-- Верхний dashboard -->
+  <!-- верхняя панель -->
   <div class="flex flex-wrap gap-6 mb-8 justify-center">
-    <div class="glass-wrap"><div class="glass"><div id="glassIncome"  class="liquid-glass" style="background:#82A8AB"></div></div><p class="mt-1 text-sm font-semibold text-center">Доходы</p></div>
-    <div class="glass-wrap"><div class="glass"><div id="glassExpenses" class="liquid-glass" style="background:#A77F4B"></div></div><p class="mt-1 text-sm font-semibold text-center">Расходы</p></div>
-    <div class="glass-wrap"><div class="glass"><div id="glassSavings" class="liquid-glass" style="background:#728565"></div></div><p class="mt-1 text-sm font-semibold text-center">Сбережения</p></div>
-    <div class="glass-wrap"><div class="glass"><div id="glassInvest"  class="liquid-glass" style="background:#3B4550"></div></div><p class="mt-1 text-sm font-semibold text-center">Инвестиции</p></div>
-    <div class="glass-wrap"><div class="glass"><div id="glassSpec"   class="liquid-glass" style="background:#BF8200"></div></div><p class="mt-1 text-sm font-semibold text-center">Спекуляции</p></div>
-    <div class="glass-wrap"><div class="vbar"><div id="vHealthFill" class="vbar-fill" style="background:#22c55e"></div><span id="vHealthTxt" class="vbar-text">100%</span></div><p class="mt-1 text-sm font-semibold text-center">Здоровье</p></div>
-    <div class="glass-wrap"><div class="vbar"><div id="vHappyFill"  class="vbar-fill" style="background:#facc15"></div><span id="vHappyTxt" class="vbar-text">90%</span></div><p class="mt-1 text-sm font-semibold text-center">Счастье</p></div>
-    <div class="glass-wrap"><div class="mini-chart-box"><canvas id="scoreChart"></canvas><span id="scoreBig">0</span></div><p class="mt-1 text-sm font-semibold text-center">Баллы</p></div>
+    <!-- стаканы -->
+    <template id="glassTpl">
+      <div class="glass-wrap">
+        <div class="glass"><div class="liquid-glass"></div></div>
+        <p class="mt-1 font-semibold text-center text-sm"></p>
+      </div>
+    </template>
   </div>
 
-  <!-- Доход / Расход -->
+  <!-- динамические доход/расход -->
   <div class="grid grid-cols-2 gap-6">
-    <div><label class="block font-semibold mb-1">Доходы ($)</label><p id="incomeDisplay" class="border p-2 rounded bg-gray-50">$0</p></div>
-    <div><label class="block font-semibold mb-1">Расходы ($)</label><p id="expensesDisplay" class="border p-2 rounded bg-gray-50">$0</p></div>
+    <div><label class="font-semibold">Доходы ($)</label><p id="incomeDisplay" class="border p-2 rounded bg-gray-50">$0</p></div>
+    <div><label class="font-semibold">Расходы ($)</label><p id="expensesDisplay" class="border p-2 rounded bg-gray-50">$0</p></div>
   </div>
 
-  <!-- шесть кувшинов-ползунков -->
-  <div class="flex flex-wrap gap-6 mb-8">
-    <div class="jar-wrap"><div class="jar"><div id="survivalFill" class="liquid"></div></div><div id="survivalSlider" class="slider-v"></div><div class="jar-caption mt-1">Выживание<br><span id="survivalVal">500</span> $</div><input id="survival" type="hidden" class="hidden-field" value="500"></div>
-    <div class="jar-wrap"><div class="jar"><div id="comfortFill"  class="liquid"></div></div><div id="comfortSlider"  class="slider-v"></div><div class="jar-caption mt-1">Комфорт<br><span id="comfortVal">500</span> $</div><input id="comfort"  type="hidden" class="hidden-field" value="500"></div>
-    <div class="jar-wrap"><div class="jar"><div id="saveFill"     class="liquid"></div></div><div id="saveSlider"     class="slider-v"></div><div class="jar-caption mt-1">Сбережения<br><span id="saveLabel">0</span> $</div><input id="save"     type="hidden" class="hidden-field" value="0"></div>
-    <div class="jar-wrap"><div class="jar"><div id="investFill"   class="liquid"></div></div><div id="investSlider"   class="slider-v"></div><div class="jar-caption mt-1">Инвестиции<br><span id="investVal">0</span> $</div><input id="invest"   type="hidden" class="hidden-field" value="0"></div>
-    <div class="jar-wrap"><div class="jar"><div id="healthFill"   class="liquid"></div></div><div id="healthSlider"   class="slider-v"></div><div class="jar-caption mt-1">Здоровье<br><span id="healthVal">0</span> $</div><input id="healthSpend" type="hidden" class="hidden-field" value="0"></div>
-    <div class="jar-wrap"><div class="jar"><div id="eduFill"      class="liquid"></div></div><div id="eduSlider"      class="slider-v"></div><div class="jar-caption mt-1">Образование<br><span id="eduVal">0</span> $</div><input id="edu"       type="hidden" class="hidden-field" value="0"></div>
-  </div>
+  <!-- 6 кувшинов -->
+  <div class="flex flex-wrap gap-6 mb-8" id="jarsRow"></div>
 
-  <!-- доп работа -->
-  <label class="block font-semibold mb-1">Дополнительная работа
-    <select id="extra" class="w-full border p-2 rounded max-w-xs mt-1">
-      <option value="нет">Нет</option><option value="да">Да</option>
-    </select>
-  </label>
+  <!-- доп. работа -->
+  <label class="font-semibold" for="extra">Дополнительная работа</label>
+  <select id="extra" class="border p-2 rounded max-w-xs mb-4"><option>нет</option><option>да</option></select>
 
   <!-- ход -->
-  <button onclick="runTurn()" class="w-full bg-blue-600 text-white font-bold py-2 rounded">Провести ход</button>
+  <button onclick="runTurn()" class="w-full py-2 bg-blue-600 text-white font-bold rounded">Провести ход</button>
 
-  <!-- мини-статистика -->
+  <!-- краткая статистика -->
   <div class="text-center space-y-2">
-    <p>Ход: <span id="turn">0</span>/<span id="maxTurns">0</span></p>
-    <p>Событие: <span id="event">–</span></p>
-    <p>Свободные деньги: <span id="free">$0</span></p>
+    <p>Ход: <span id="turn">0</span> / <span id="maxTurns">0</span></p>
+    <p>Событие: <span id="event">-</span></p>
+    <p>Свободные $: <span id="free">$0</span></p>
     <p>Сбережения: <span id="savings">$0</span></p>
     <p>Инвестиции: <span id="investments">$0</span></p>
   </div>
@@ -153,212 +138,260 @@ input.hidden-field{display:none}
   <!-- история -->
   <div class="mt-8">
     <h2 class="text-xl font-bold text-center mb-2">📘 История ходов</h2>
-    <table class="w-full text-sm bg-white rounded shadow overflow-hidden"><thead class="bg-gray-200 font-bold"><tr>
-      <th class="p-2">Ход</th><th class="p-2">Событие</th><th class="p-2">Свободные $</th>
-      <th class="p-2">Сбережения</th><th class="p-2">Инвестиции</th>
-      <th class="p-2">Здоровье</th><th class="p-2">Счастье</th></tr></thead>
-      <tbody id="historyTable" class="text-center"></tbody></table>
+    <table class="w-full text-sm bg-white rounded shadow overflow-hidden">
+      <thead class="bg-gray-200 font-bold"><tr>
+        <th class="p-2">Ход</th><th class="p-2">Событие</th><th class="p-2">Свободные $</th>
+        <th class="p-2">Сбережения</th><th class="p-2">Инвестиции</th>
+        <th class="p-2">Здоровье</th><th class="p-2">Счастье</th></tr></thead>
+      <tbody id="historyTable" class="text-center"></tbody>
+    </table>
   </div>
 </div>
 
-<!-- ═══════════ SCRIPT ═══════════ -->
 <script>
-/* ----- пресеты ролей ----- */
+/* ───────────── role presets ───────────── */
 const rolePresets={
-  Saver:{preset:{survival:40,comfort:20,save:20,invest:10,health:5,edu:5,spec:0},
-    rules:[{type:'min',jar:'save',val:10},{type:'max',jar:'spec',val:5},
-           {type:'buffer',m:3},{type:'ratio',max:50}],
-    bonus:{ok:'happy',fail:'happy-'}},
-  Investor:{preset:{survival:40,comfort:20,save:10,invest:20,health:5,edu:5,spec:0},
-    rules:[{type:'min',jar:'invest',val:15},{type:'max',jar:'spec',val:10},
-           {type:'buffer',m:2},{type:'ratio',max:50}],
-    bonus:{ok:'happy',fail:'happy-'}},
-  Spec:{preset:{survival:40,comfort:20,save:5,invest:15,health:3,edu:2,spec:15},
-    rules:[{type:'min',jar:'save',val:5},{type:'max',jar:'spec',val:30},{type:'ratio',max:50}],
-    bonus:{ok:'spec+',fail:'spec-'}}
+  Saver:{p:{survival:40,comfort:20,save:20,invest:10,health:5,edu:5},
+         rules:[{t:'min',jar:'save',v:10},{t:'buf',m:12},{t:'ratio',max:50}],
+         bonus:'happy'},
+  Investor:{p:{survival:40,comfort:20,save:10,invest:20,health:5,edu:5},
+            rules:[{t:'min',jar:'invest',v:15},{t:'buf',m:6},{t:'ratio',max:50}],
+            bonus:'happy'},
+  Spec:{p:{survival:40,comfort:20,save:5,invest:15,health:3,edu:2},
+        rules:[{t:'min',jar:'save',v:5},{t:'ratio',max:50}],
+        bonus:'spec'}
 };
 
-/* ----- слайды мини-туториала ----- */
-const tutSlides=[
-  {t:'Шаг 1/3',p:'Откладывайте ≥ 10 % дохода — формируется «подушка».'},
-  {t:'Шаг 2/3',p:'Цель – подушка 3–6 месячных расходов, затем инвестиции ≥ 15 %.'},
-  {t:'Шаг 3/3',p:'Базовые нужды ≤ 50 % дохода — иначе живёте «в минус».'}
-];
+/* ───────────── tutorial slides ───────────── */
+const tut=[['Шаг 1/3','Откладывайте ≥ 10 % дохода: формируйте «подушку».'],
+           ['Шаг 2/3','Подушка 12 мес → инвестируйте ≥ 15 %.'],
+           ['Шаг 3/3','Базовые траты ≤ 50 % дохода.']];
 
-/* ===== переменные ===== */
-let turn=0,maxTurns=0,savings=0,investments=0,health=100,happiness=90;
-let activeRules=[],bonusPlan=null,scores=[];
-const rnd=()=>Math.random();
-
-/* ===== мини-график ===== */
-const chart=new Chart(document.getElementById('scoreChart').getContext('2d'),
- {type:'line',data:{labels:[],datasets:[{data:[],borderColor:'#3b82f6',borderWidth:1,tension:.3,fill:false,pointRadius:0}]},
-  options:{responsive:false,animation:false,scales:{x:{display:false},y:{display:false}},
-  plugins:{legend:{display:false},tooltip:{enabled:false}}}});
-
-/* ===== noUiSlider кувшины ===== */
-function buildJar(idFill,idSlider,idVal,idInput,max){
-  const slider=document.getElementById(idSlider),fill=document.getElementById(idFill),
-        val=document.getElementById(idVal),inp=document.getElementById(idInput);
-  noUiSlider.create(slider,{start:+inp.value,orientation:'vertical',direction:'rtl',
-    step:10,connect:[true,false],range:{min:0,max}});
-  slider.noUiSlider.on('update',v=>{
-    const n=Math.round(v[0]);fill.style.height=n/max*100+'%';val.textContent=n;inp.value=n;updateIncome();
-  });
+function showTut(){
+  let i=0;
+  const box=document.getElementById('tutorial'),
+        ttl=document.getElementById('tutTitle'),
+        txt=document.getElementById('tutText'),
+        btn=document.getElementById('tutNext');
+  const render=()=>{ttl.textContent=tut[i][0];txt.textContent=tut[i][1];
+                    btn.textContent=i===tut.length-1?'Понял!':'Дальше';};
+  render();box.classList.remove('hidden');
+  btn.onclick=()=>{i<tut.length-1? (i++,render()) :(box.classList.add('hidden'),localStorage.tut=1)};
 }
-document.addEventListener('DOMContentLoaded',()=>{
-  buildJar('survivalFill','survivalSlider','survivalVal','survival',2000);
-  buildJar('comfortFill' ,'comfortSlider' ,'comfortVal' ,'comfort' ,2000);
-  buildJar('saveFill'    ,'saveSlider'    ,'saveLabel'  ,'save'    ,2000);
-  buildJar('investFill'  ,'investSlider'  ,'investVal'  ,'invest'  ,2000);
-  buildJar('healthFill'  ,'healthSlider'  ,'healthVal'  ,'healthSpend',2000);
-  buildJar('eduFill'     ,'eduSlider'     ,'eduVal'     ,'edu',2000);
-  updateIncome();updateBars();
+
+/* ───────────── helpers ───────────── */
+const $=id=>document.getElementById(id);
+
+/* ───────────── runtime vars ───────────── */
+let turn=0,maxTurns=0,health=100,happy=90,savings=0,invest=0,activeRules=[],bonusType='';
+
+/* ───────────── build static DOM (glasses & jars) ───────────── */
+(function makeDOM(){
+  /* верхние стаканы */
+  const top=[
+    ['glassIncome','#82A8AB','Доходы'],
+    ['glassExpenses','#A77F4B','Расходы'],
+    ['glassSavings','#728565','Сбережения'],
+    ['glassInvest','#3B4550','Инвестиции'],
+    ['glassSpec','#BF8200','Спекуляции'],
+    ['vHealth','#22c55e','Здоровье','vbar'],
+    ['vHappy' ,'#facc15','Счастье' ,'vbar'],
+    ['mini'   ,'','Баллы','mini']
+  ];
+  const wrap=document.querySelector('#game-screen .flex.flex-wrap');
+  top.forEach(([id,color,label,type])=>{
+    if(type==='vbar'){
+      wrap.insertAdjacentHTML('beforeend',`
+      <div class="glass-wrap">
+        <div class="vbar"><div id="${id}Fill" class="vbar-fill" style="background:${color}"></div>
+        <span id="${id}Txt" class="vbar-text">${id==='vHealth'?100:90}%</span></div>
+        <p class="mt-1 font-semibold text-center text-sm">${label}</p>
+      </div>`);
+    }else if(type==='mini'){
+      wrap.insertAdjacentHTML('beforeend',`
+      <div class="glass-wrap"><div class="mini-chart-box">
+        <canvas id="scoreChart"></canvas><span id="scoreBig">0</span></div>
+        <p class="mt-1 font-semibold text-center text-sm">Баллы</p></div>`);
+    }else{
+      wrap.insertAdjacentHTML('beforeend',`
+      <div class="glass-wrap">
+        <div class="glass"><div id="${id}" class="liquid-glass" style="background:${color}"></div></div>
+        <p class="mt-1 font-semibold text-center text-sm">${label}</p>
+      </div>`);
+    }
+  });
+
+  /* 6 кувшинов и скрытые inputs */
+  const jars=[
+    ['survival','Выживание',500],['comfort','Комфорт',500],
+    ['save','Сбережения',0],['invest','Инвестиции',0],
+    ['healthSpend','Здоровье',0],['edu','Образование',0]
+  ];
+  const row=$('#jarsRow');
+  jars.forEach(([id,label,val])=>{
+    row.insertAdjacentHTML('beforeend',`
+     <div class="jar-wrap">
+       <div class="jar"><div id="${id}Fill" class="liquid"></div></div>
+       <div id="${id}Slider" class="slider-v"></div>
+       <div class="jar-caption mt-1">${label}<br><span id="${id==='save'?'saveLabel':id+'Val'}">${val}</span> $</div>
+       <input id="${id}" type="hidden" value="${val}">
+     </div>`);
+  });
+})();
+
+/* ───────────── Chart.js mini chart ───────────── */
+const chart=new Chart($('#scoreChart').getContext('2d'),{
+  type:'line',
+  data:{labels:[],datasets:[{data:[],borderColor:'#3b82f6',borderWidth:1,
+                             tension:.3,fill:false,pointRadius:0}]},
+  options:{responsive:false,animation:false,scales:{x:{display:false},y:{display:false}},
+           plugins:{legend:{display:false},tooltip:{enabled:false}}}
 });
 
-/* ===== верхние стаканы ===== */
-function glasses(income,sv,cf,svPlan,invPlan){
-  const full=Math.max(1,income*2),
-        h=id=>v=>document.getElementById(id).style.height=Math.min(Math.abs(v),full)/full*100+'%';
-  h('glassIncome')(income);h('glassExpenses')(sv+cf);
-  const gS=document.getElementById('glassSavings'),lbl=document.getElementById('saveLabel');
-  gS.classList.toggle('neg-liquid',svPlan<0);lbl.classList.toggle('neg-text',svPlan<0);h('glassSavings')(svPlan);
-  h('glassInvest')(Math.max(0,invPlan));
-}
-
-/* ===== полосы здоровья/счастья ===== */
-function updateBars(){
-  document.getElementById('vHealthFill').style.height=health+'%';
-  document.getElementById('vHappyFill' ).style.height=happiness+'%';
-  document.getElementById('vHealthTxt').textContent=health+'%';
-  document.getElementById('vHappyTxt' ).textContent=happiness+'%';
-}
-
-/* ===== пересчёт доход/расход ===== */
-function updateIncome(){
-  const s=+survival.value,c=+comfort.value,svP=+save.value,invP=+invest.value,
-        hSp=+healthSpend.value,ed=+edu.value,extra=extra.value;
-  let income=1000; if(extra==='да') income+=200;
-  const spend=s+c+svP+invP+hSp+ed;
-  /* автодолив */
-  if(autoAdjust.checked&&income-spend>0){
-    saveSlider.noUiSlider.set(svP+income-spend);return;
-  }
-  incomeDisplay.textContent='$'+income;expensesDisplay.textContent='$'+spend;
-  glasses(income,s,c,svP,invP);
-}
-
-/* ===== правила ===== */
-function violations(income){
-  const pct=x=>100*x/income,
-        v={survival:+survival.value,comfort:+comfort.value,save:+save.value,invest:+invest.value,spec:0};
-  return activeRules.filter(r=>{
-    if(r.type==='min')return pct(v[r.jar])<r.val;
-    if(r.type==='max')return pct(v[r.jar])>r.val;
-    if(r.type==='ratio')return pct(v.survival+v.comfort)>r.max;
-    if(r.type==='buffer')return (v.survival+v.comfort)>0&&savings/(v.survival+v.comfort)<r.m;
+/* ───────────── noUiSlider build ───────────── */
+function buildJar(sliderId,fillId,valId,hiddenId,max){
+  const s=$(sliderId),fill=$(fillId),val=$(valId),hid=$(hiddenId);
+  noUiSlider.create(s,{start:+hid.value,orientation:'vertical',direction:'rtl',
+                       step:10,connect:[true,false],range:{min:0,max}});
+  s.noUiSlider.on('update',v=>{
+    const num=Math.round(v[0]);fill.style.height=(num/max*100)+'%';
+    val.textContent=num;hid.value=num;updateIncomeExpenses();
   });
 }
+['survival','comfort','save','invest','healthSpend','edu'].forEach(id=>{
+  buildJar(id+'Slider',id+'Fill',id==='save'?'saveLabel':id+'Val',id,2000);
+});
 
-/* ===== бонусы/штрафы ===== */
-function applyBon(vio){
-  if(!bonusPlan)return;
-  if(vio.length===0&&bonusPlan.ok==='happy')happiness=Math.min(100,happiness+5);
-  if(vio.length>0&&bonusPlan.fail==='happy-')happiness=Math.max(0,happiness-5);
+/* ───────────── верхние стаканы & полосы ───────────── */
+function updateGlasses(inc,surv,comf,saveP,invP){
+  const full=inc*2||1,setH=(el,v)=>el.style.height=(Math.min(Math.abs(v),full)/full*100)+'%';
+  setH($('#glassIncome'),inc); setH($('#glassExpenses'),surv+comf);
+  const gs=$('#glassSavings'),lab=$('#saveLabel');
+  saveP>=0?(gs.classList.remove('neg-liquid'),lab.classList.remove('neg-text')):
+           (gs.classList.add('neg-liquid')   ,lab.classList.add('neg-text'));
+  setH(gs,saveP); setH($('#glassInvest'),Math.max(0,invP));
+}
+function updateBars(){ $('#vHealthFill').style.height=health+'%';
+  $('#vHappyFill').style.height=happy+'%';
+  $('#vHealthTxt').textContent=health+'%';$('#vHappyTxt').textContent=happy+'%'; }
+
+/* ───────────── доход / расход ───────────── */
+function updateIncomeExpenses(){
+  const surv=+$('#survival').value,comf=+$('#comfort').value,
+        saveP=+$('#save').value,invP=+$('#invest').value,
+        hSp=+$('#healthSpend').value,edu=+$('#edu').value,
+        extra=$('#extra').value;
+  let inc=1000;if(extra==='да')inc+=200;
+  const spend=surv+comf+saveP+invP+hSp+edu;
+  $('#incomeDisplay').textContent='$'+inc;$('#expensesDisplay').textContent='$'+spend;
+
+  /* автодолив */
+  if($('#autoAdjust').checked){
+    const rest=inc-spend;if(rest>0){document.getElementById('saveSlider').noUiSlider.set(saveP+rest);return;}
+  }
+  updateGlasses(inc,surv,comf,saveP,invP);
 }
 
-/* ===== туториал ===== */
-function showTutorial(){const dlg=tutorial;let i=0;
-  const set=()=>{tutTitle.textContent=tutSlides[i].t;tutText.textContent=tutSlides[i].p;
-                 tutNext.textContent=i===2?'Понял!':'Дальше'};
-  dlg.classList.remove('hidden');set();
-  tutNext.onclick=()=>{i<2?(i++,set()):(dlg.classList.add('hidden'),localStorage.setItem('tutSavSeen','1'))};
+/* ───────────── правила проверки ───────────── */
+function badRules(inc){
+  const pct=x=>x/inc*100, surv=+$('#survival').value,comf=+$('#comfort').value,
+        sv=+$('#save').value,iv=+$('#invest').value,viol=[];
+  activeRules.forEach(r=>{
+    if(r.t==='min' && pct(r.jar==='save'?sv:iv)<r.v)viol.push(1);
+    if(r.t==='buf' && (surv+comf)>0 && savings/(surv+comf)<r.m)viol.push(1);
+    if(r.t==='ratio' && pct(surv+comf)>r.max)viol.push(1);
+  });
+  return viol.length;
 }
 
-/* ===== START GAME ===== */
+/* ───────────── история таблицы & график ───────────── */
+function pushHistory(evt,free){
+  $('#historyTable').insertAdjacentHTML('beforeend',`<tr>
+  <td class=p-2>${turn}</td><td class=p-2>${evt}</td>
+  <td class=p-2>$${Math.round(free)}</td><td class=p-2>$${Math.round(savings)}</td>
+  <td class=p-2>$${Math.round(invest)}</td><td class=p-2>${health}%</td><td class=p-2>${happy}%</td></tr>`);
+}
+function updChart(sc){chart.data.labels.push(turn);chart.data.datasets[0].data.push(sc);
+  chart.update();$('#scoreBig').textContent=sc;}
+
+/* ───────────── старт игры ───────────── */
 function startGame(months){
-  maxTurns=months;turn=0;savings=0;investments=0;health=100;happiness=90;scores=[];
+  maxTurns=months;turn=0;savings=0;invest=0;health=100;happy=90;
+  $('#maxTurns').textContent=months;
+
   const mode=document.querySelector('input[name="mode"]:checked').value;
   if(mode==='role'){
-    const role=document.querySelector('input[name="role"]:checked').value,data=rolePresets[role];
-    activeRules=data.rules;bonusPlan=data.bonus;
-    const conv=p=>Math.round(1000*p/10)/10;
-    saveSlider.noUiSlider.set(conv(data.preset.save));
-    investSlider.noUiSlider.set(conv(data.preset.invest));
-    survivalSlider.noUiSlider.set(conv(data.preset.survival));
-    comfortSlider.noUiSlider.set(conv(data.preset.comfort));
-    healthSlider.noUiSlider.set(conv(data.preset.health));
-    eduSlider.noUiSlider.set(conv(data.preset.edu));
-    if(role==='Saver'&&!localStorage.getItem('tutSavSeen'))setTimeout(showTutorial,300);
-  }else{activeRules=[];bonusPlan=null}
-  start-screen.classList.add('hidden');game-screen.classList.remove('hidden');
-  maxTurns.textContent=months;updateIncome();updateBars();
+    const role=document.querySelector('input[name="role"]:checked').value,
+          p=rolePresets[role];
+    activeRules=p.rules;bonusType=p.bonus;
+    const inc=1000;
+    Object.entries(p.p).forEach(([k,pc])=>{
+      document.getElementById(k+(k==='survival'||k==='comfort'?'':'Slider'))
+              .noUiSlider.set(Math.round(inc*pc/10)/10);
+    });
+    if(role==='Saver'&&!localStorage.tut)setTimeout(showTut,250);
+  }else{activeRules=[];bonusType='';}
+
+  $('#start-screen').classList.add('hidden');
+  $('#game-screen').classList.remove('hidden');
+  updateIncomeExpenses();updateBars();
 }
 
-/* ===== RUN TURN ===== */
+/* ───────────── ход ───────────── */
 function runTurn(){
   turn++;
-  const s=+survival.value,c=+comfort.value,svP=+save.value,invP=+invest.value,
-        hSp=+healthSpend.value,ed=+edu.value;
-  let income=1000;if(extra.value==='да')income+=200;
-  const spend=s+c+svP+invP+hSp+ed;
+  const surv=+$('#survival').value,comf=+$('#comfort').value,
+        saveP=+$('#save').value,invP=+$('#invest').value,
+        hSp=+$('#healthSpend').value,edu=+$('#edu').value,extra=$('#extra').value;
+  let inc=1000;if(extra==='да')inc+=200;
+  const spend=surv+comf+saveP+invP+hSp+edu;
 
   /* событие */
-  let evt='ничего',pen=-0,cr=0;
-  const r=rnd();
-  if(r<.15){evt='мелкая трата – $50';pen=-50;}
-  else if(r<.25){evt='кризис – 6 % инвестиций';cr=investments*.06;}
-  else if(r<.40){evt='болезнь – 5 здоровья';health=Math.max(0,health-5);}
+  let evt='ничего',pen=0,cr=0,r=Math.random();
+  if(r<.15){evt='мелкая трата –$50';pen=-50;}
+  else if(r<.25){evt='кризис -6 % инвест';cr=invest*0.06;}
+  else if(r<.4){evt='болезнь -5 здоровья';health=Math.max(0,health-5);}
 
-  const free=income-spend+pen;
-  savings+=svP+free;
-  investments=(investments+invP-cr)*(1+(rnd()<=.7?rnd()*.03:rnd()*-.01));
+  const free=inc-spend+pen;savings+=saveP+free;
+  invest=(invest+invP-cr)*(1+(Math.random()<=.7?Math.random()*0.03:Math.random()*-0.01));
 
-  /* здоровье/счастье */
-  if(evt!=='болезнь – 5 здоровья'){
-    if(s<500)health-=100*(500-s)/500;else health+=5;
-    if(happiness>=90)health+=5;
-    health+=(hSp/500)*50;
-  }
-  health=Math.round(Math.max(0,Math.min(100,health)));
-  if(extra.value==='да')health=Math.max(0,health-5);
-  if(c<500)happiness-=10*(500-c)/500;
-  if(extra.value==='да')happiness-=5;
-  happiness=Math.round(Math.max(0,happiness));
-
-  /* UI */
-  turn.textContent=turn;event.textContent=evt;
-  free.textContent='$'+Math.round(free);
-  savings.textContent='$'+Math.round(savings);
-  investments.textContent='$'+Math.round(investments);
-
-  updateIncome();updateBars();
-  historyTable.insertAdjacentHTML('beforeend',`<tr>
-   <td class="p-2">${turn}</td><td class="p-2">${evt}</td>
-   <td class="p-2">$${Math.round(free)}</td><td class="p-2">$${Math.round(savings)}</td>
-   <td class="p-2">$${Math.round(investments)}</td><td class="p-2">${health}%</td><td class="p-2">${happiness}%</td></tr>`);
-
-  /* баллы */
-  let score=Math.floor(savings/1000)+Math.floor(investments/1000)*2;
-  if(health>70)score+=20;if(happiness>70)score+=20;
-  if((investments*.05+savings*.03)/12>1000)score+=30;
-  chart.data.labels.push(turn);chart.data.datasets[0].data.push(score);chart.update();
-  scoreBig.textContent=score;scores.push(score);
+  /* здоровье-счастье */
+  if(evt!=='болезнь -5 здоровья'&&surv<500)health-=((500-surv)/500)*100;
+  health=Math.max(0,Math.min(100,Math.round(health)));
+  if(comf<500)happy-=((500-comf)/500)*10;happy=Math.max(0,Math.round(happy));
 
   /* правила */
-  applyBon(violations(income));
+  const bad=badRules(inc);
+  if(bonusType==='happy'){happy+=bad? -5:+5;happy=Math.max(0,Math.min(100,happy));}
 
-  if(health<=0||happiness<=0||turn>=maxTurns){
-    alert((health<=0?'Здоровье 0':'Счастье 0')+'\nБаллы: '+score);location.reload();
+  /* UI */
+  $('#turn').textContent=turn;$('#event').textContent=evt;
+  $('#free').textContent='$'+Math.round(free);
+  $('#savings').textContent='$'+Math.round(savings);
+  $('#investments').textContent='$'+Math.round(invest);
+
+  updateIncomeExpenses();updateBars();pushHistory(evt,free);
+
+  /* баллы */
+  let score=Math.floor(savings/1e3)+Math.floor(invest/1e3)*2;
+  if(health>70)score+=20;if(happy>70)score+=20;
+  if((invest*0.05+savings*0.03)/12>1000)score+=30;
+  updChart(score);
+
+  if(health<=0||happy<=0||turn>=maxTurns){
+    alert((health<=0?'Здоровье 0':'Игра окончена')+'\nБаллы: '+score);
+    location.reload();
   }
 }
 
-/* ===== переключатель режима ===== */
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.onchange=()=>{roleBlock.classList.toggle('hidden',r.value!=='role');
-                  goalBlock.classList.toggle('hidden',r.value!=='goal');};
+/* ───────────── переключатель блоков режима ───────────── */
+document.querySelectorAll('input[name="mode"]').forEach(el=>el.onchange=()=>{
+  const m=el.value;$('#roleBlock').classList.toggle('hidden',m!=='role');
+  $('#goalBlock').classList.toggle('hidden',m!=='goal');
 });
+
+/* ───────────── первый расчёт ───────────── */
+updateIncomeExpenses();updateBars();
 </script>
 </body>
 </html>
-
