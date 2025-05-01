@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>5 Кувшинов</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- ========== СТАРТОВЫЙ ЭКРАН ========== -->
+  <div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
+    <h1 class="text-4xl font-bold mb-6 text-center">🏺 5 Кувшинов</h1>
+    <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-center">
+      <h2 class="text-xl font-semibold mb-2">Выбери длительность игры:</h2>
+      <button onclick="startGame(24)" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">24 месяца</button>
+      <button onclick="startGame(36)" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">36 месяцев</button>
+    </div>
+  </div>
+
+  <!-- ========== ИГРОВОЙ ЭКРАН ========== -->
+  <div id="game-screen" class="hidden p-6 space-y-6 max-w-5xl mx-auto">
+
+    <!-- Ввод трат -->
+  <div class="grid grid-cols-2 gap-6">
+    <div>
+    <label class="block font-semibold mb-1">Доход ($)</label>
+    <p id="incomeDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
+  </div>
+  <div>
+    <label class="block font-semibold mb-1">Расходы ($)</label>
+    <p id="expensesDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
+  </div>
+  </div>
+    <div>
+    <label for="survival" class="block font-semibold mb-1">Выживание ($)</label>
+    <input id="survival" type="number" class="w-full border p-2 rounded" value="500">
+  </div>
+
+  <div>
+    <label for="comfort" class="block font-semibold mb-1">Комфорт ($)</label>
+    <input id="comfort" type="number" class="w-full border p-2 rounded" value="500">
+  </div>
+
+  <div>
+    <label for="save" class="block font-semibold mb-1">Сбережения ($)</label>
+    <input id="save" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div>
+    <label for="invest" class="block font-semibold mb-1">Инвестиции ($)</label>
+    <input id="invest" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div>
+    <label for="healthSpend" class="block font-semibold mb-1">На здоровье ($)</label>
+    <input id="healthSpend" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div>
+    <label for="edu" class="block font-semibold mb-1">Образование ($)</label>
+    <input id="edu" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div class="col-span-2">
+    <label for="extra" class="block font-semibold mb-1">Дополнительная работа</label>
+    <select id="extra" class="w-full border p-2 rounded">
+      <option value="нет">Нет</option>
+      <option value="да">Да</option>
+    </select>
+  </div>
+
+</div>
+
+    <!-- Кнопка хода -->
+    <button onclick="runTurn()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">
+      Провести ход
+    </button>
+
+    <!-- Статистика -->
+    <div class="text-center space-y-2">
+      <p>Ход: <span id="turn">0</span> / <span id="maxTurns">0</span></p>
+      <p>Событие: <span id="event">-</span></p>
+      <p>Свободные деньги: <span id="free">$0</span></p>
+      <p>Сбережения: <span id="savings">$0</span></p>
+      <p>Инвестиции: <span id="investments">$0</span></p>
+
+      <p>Здоровье: <span id="healthResult">100%</span></p>
+      <div class="w-full h-3 bg-gray-300 rounded-full">
+        <div id="healthBar" class="h-3 bg-green-500 rounded-full" style="width:100%"></div>
+      </div>
+
+      <p class="mt-2">Счастье: <span id="happinessResult">90%</span></p>
+      <div class="w-full h-3 bg-gray-300 rounded-full">
+        <div id="happinessBar" class="h-3 bg-yellow-400 rounded-full" style="width:90%"></div>
+      </div>
+    </div>
+
+    <!-- История ходов -->
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-center mb-2">📘 История ходов</h2>
+      <table class="w-full text-sm bg-white rounded shadow overflow-hidden">
+        <thead class="bg-gray-200 font-bold">
+          <tr>
+            <th class="p-2">Ход</th>
+            <th class="p-2">Событие</th>
+            <th class="p-2">Свободные $</th>
+            <th class="p-2">Сбережения</th>
+            <th class="p-2">Инвестиции</th>
+            <th class="p-2">Здоровье</th>
+            <th class="p-2">Счастье</th>
+          </tr>
+        </thead>
+        <tbody id="historyTable" class="text-center"></tbody>
+      </table>
+    </div>
+
+    <!-- График баллов -->
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-center mb-2">📈 Накопительный результат</h2>
+      <canvas id="scoreChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ========== ЭКРАН ЗАВЕРШЕНИЯ ========== -->
+  <div id="end-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center">
+    <h1 class="text-4xl font-bold mb-6">🏁 Игра завершена</h1>
+    <div class="bg-white p-6 rounded shadow w-full max-w-md space-y-4">
+      <p id="endReason"></p>
+      <p><strong>Сбережения:</strong> <span id="finalSavings">$0</span></p>
+      <p><strong>Инвестиции:</strong> <span id="finalInvestments">$0</span></p>
+      <p><strong>Здоровье:</strong> <span id="finalHealth">0%</span></p>
+      <p><strong>Счастье:</strong> <span id="finalHappiness">0%</span></p>
+      <p><strong>Пассивный доход:</strong> <span id="finalPassiveIncome">$0</span></p>
+      <p><strong>Баллы:</strong> <span id="finalScore">0</span></p>
+      <p><strong>Титул:</strong> <span id="finalTitle">-</span></p>
+      <button onclick="location.reload()" class="mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700">
+        Играть снова
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== СКРИПТ ========== -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let turn = 0, maxTurns = 0;
+    let savings = 0, investments = 0;
+    let health = 100, happiness = 90;
+    let scores = [];
+
+    // инициализируем график
+    const ctx = document.getElementById('scoreChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: [], datasets: [{ label: 'Баллы', data: [], borderColor: 'rgb(75,192,192)', tension:0.3, fill:false }] },
+      options: { scales: { y: { beginAtZero: true } } }
+    });
+
+    
+// ─────────── Функция обновления Доходы/Расходы ───────────
+  function updateIncomeExpenses() {
+    const survival    = +document.getElementById('survival').value;
+    const comfort     = +document.getElementById('comfort').value;
+    const save        = +document.getElementById('save').value;
+    const invest      = +document.getElementById('invest').value;
+    const healthSpend = +document.getElementById('healthSpend').value;
+    const edu         = +document.getElementById('edu').value;
+    const extra       = document.getElementById('extra').value;
+
+    let income = 1000;
+    if (extra === 'да') income += 200;
+
+    const totalSpend = survival + comfort + save + invest + healthSpend + edu;
+
+    document.getElementById('incomeDisplay').innerText   = `$${income}`;
+    document.getElementById('expensesDisplay').innerText = `$${totalSpend}`;
+  }
+
+    
+    window.startGame = (turns) => {
+      maxTurns = turns;
+      document.getElementById('maxTurns').innerText = turns;
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      updateIncomeExpenses();
+      updateBars();
+    };
+    
+      window.runTurn = () => {
+    turn++;
+      updateIncomeExpenses();
+        
+      // читаем все поля
+      const survival = +document.getElementById('survival').value;
+      const comfort  = +document.getElementById('comfort').value;
+      const save     = +document.getElementById('save').value;
+      const invest   = +document.getElementById('invest').value;
+      const healthSpend = +document.getElementById('healthSpend').value;
+      const edu      = +document.getElementById('edu').value;
+      const extra    = document.getElementById('extra').value;
+    
+      let income = 1000; if (extra==='да') income += 200;
+      const totalSpend = survival + comfort + save + invest + healthSpend + edu;
+
+      // обновляем дисплеи
+      document.getElementById('incomeDisplay').innerText   = `$${income}`;
+      document.getElementById('expensesDisplay').innerText = `$${totalSpend}`;
+       
+      // событие
+      let event='ничего', penalty=0, crisis=0;
+      const r = Math.random();
+      if(r<0.15){event='мелкая трата –$50'; penalty=-50;}
+      else if(r<0.25){event='кризис –6% инвестиций'; crisis=investments*0.06;}
+      else if(r<0.40){event='болезнь –5 здоровья'; health=Math.max(0,health-5);}
+      
+      // расчёты
+  
+      const free = income - totalSpend + penalty;
+      savings += save + free;
+      const growth = Math.random()<=0.7 ? Math.random()*0.03 : Math.random()*-0.01;
+      investments = (investments + invest - crisis)*(1+growth);
+
+      if (event !== 'болезнь –5 здоровья') {
+      if (survival < 500)    health -= ((500 - survival)/500) * 100;
+      else                   health += 5;
+      if (happiness >= 90)   health += 5;
+      health += (healthSpend/500) * 50;}
+
+      health = Math.round(Math.max(0, Math.min(100, health)));
+
+      if(extra==='да') {health = Math.max(0, health - 5);}
+      if(comfort<500) happiness -= ((500-comfort)/500)*10;
+      if(extra==='да') happiness -= 5;
+      happiness = Math.round(Math.max(0, happiness));
+
+      // обновляем интерфейс
+      document.getElementById('turn').innerText = turn;
+      document.getElementById('event').innerText = event;
+      document.getElementById('free').innerText = `$${Math.round(free)}`;
+      document.getElementById('savings').innerText = `$${Math.round(savings)}`;
+      document.getElementById('investments').innerText = `$${Math.round(investments)}`;
+      document.getElementById('healthResult').innerText = `${health}%`;
+      document.getElementById('happinessResult').innerText = `${happiness}%`;
+
+      updateBars();
+      updateHistory(event, free);
+      updateChart();
+
+      if(health<=0 || happiness<=0 || turn>=maxTurns){
+        let reason = health<=0 ? 'Ты потерял здоровье.' 
+                    : happiness<=0 ? 'Ты потерял счастье.' 
+                    : 'Ходы закончились.';
+        finishGame(reason);}
+    };
+
+    function updateBars(){
+    document.getElementById('healthBar').style.width    = `${health}%`;
+    document.getElementById('happinessBar').style.width = `${happiness}%`;
+    }
+
+    function updateHistory(event, free){
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="p-2">${turn}</td>
+        <td class="p-2">${event}</td>
+        <td class="p-2">$${Math.round(free)}</td>
+        <td class="p-2">$${Math.round(savings)}</td>
+        <td class="p-2">$${Math.round(investments)}</td>
+        <td class="p-2">${health}%</td>
+        <td class="p-2">${happiness}%</td>`;
+      document.getElementById('historyTable').appendChild(row);
+    }
+
+    function updateChart(){
+      let score = Math.floor(savings/1000) + Math.floor(investments/1000)*2;
+      if(health>70) score+=20;
+      if(happiness>70) score+=20;
+      const passive=(investments*0.05 + savings*0.03)/12;
+      if(passive>1000) score+=30;
+      scores.push(score);
+      chart.data.labels.push(turn);
+      chart.data.datasets[0].data.push(score);
+      chart.update();
+    }
+
+    function finishGame(reason){
+      document.getElementById('game-screen').classList.add('hidden');
+      const end = document.getElementById('end-screen');
+      end.classList.remove('hidden');
+      document.getElementById('endReason').innerText = reason;
+      document.getElementById('finalSavings').innerText = `$${Math.round(savings)}`;
+      document.getElementById('finalInvestments').innerText = `$${Math.round(investments)}`;
+      document.getElementById('finalHealth').innerText = `${health}%`;
+      document.getElementById('finalHappiness').innerText = `${happiness}%`;
+      document.getElementById('finalPassiveIncome').innerText = `$${Math.round((investments*0.05+savings*0.03)/12)}`;
+      const finalScore = scores[scores.length-1];
+      document.getElementById('finalScore').innerText = `${finalScore} баллов`;
+      let title = 'Новичок';
+      if(finalScore>=80) title='Финансовый магнат';
+      else if(health>90) title='Здоровяк';
+      else if(happiness>90) title='Счастливчик';
+      else if(health<30) title='Выживший';
+      document.getElementById('finalTitle').innerText = title;
+    }
+  });
+  </script>
+</body>
+</html>
