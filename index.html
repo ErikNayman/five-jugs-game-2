@@ -290,22 +290,22 @@ function updateChart(score){
 /* ───── старт игры ───── */
 function startGame(months){
   maxTurns=months;turn=0;savings=0;investments=0;health=100;happiness=90;
-  maxTurns.textContent=months;
+  document.getElementById('maxTurns').textContent=months;
 
   const mode=document.querySelector('input[name="mode"]:checked').value;
   if(mode==='role'){
     const role=document.querySelector('input[name="role"]:checked').value,
-          p=rolePresets[role];
-    activeRules=p.rules;giveBonus=p.bonus;
-    const inc=1000;Object.entries(p.p).forEach(([k,pc])=>{
-      document.getElementById(k+'Slider').noUiSlider.set(Math.round(inc*pc/10)/10);
+          preset=rolePresets[role];
+    activeRules=preset.rules; giveBonus=preset.bonus;
+    const baseInc=1000;
+    Object.entries(preset.p).forEach(([k,pc])=>{
+      document.getElementById(k+'Slider').noUiSlider.set(Math.round(baseInc*pc/10)/10);
     });
-    if(role==='Saver' && !localStorage.tut)setTimeout(showTut,250);
-  }else{activeRules=[];giveBonus=false;}
-
-  start-screen.classList.add('hidden');
-  game-screen.classList.remove('hidden');
-  updateIncomeExpenses();updateBars();
+    if(role==='Saver' && !localStorage.tut) setTimeout(showTut,250);
+  }else{ activeRules=[]; giveBonus=false; }
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  updateIncomeExpenses(); updateBars();
 }
 
 /* ───── ход ───── */
