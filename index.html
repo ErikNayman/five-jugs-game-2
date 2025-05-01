@@ -83,12 +83,14 @@
     <label class="block"><input type="radio" name="mode" value="free"> <span class="ml-1">Свободный план</span></label>
 
     <!-- блок «Роль» -->
-    <div id="roleBlock" class="mt-4">
-      <p class="font-semibold mb-1">Роль:</p>
-      <label class="mr-4"><input type="radio" name="role" value="Saver" checked> Saver</label>
-      <label class="mr-4"><input type="radio" name="role" value="Investor"> Investor</label>
-      <label class="mr-4"><input type="radio" name="role" value="Spec"> Speculator</label>
-    </div>
+  <div id="roleBlock" class="mt-3 bg-gray-50 p-3 rounded border hidden">
+  <p class="font-semibold mb-1">Роль:</p>
+  <div class="flex flex-col gap-1 sm:flex-row sm:gap-4">
+    <label><input type="radio" name="role" value="Saver" checked> 🐿️ Saver</label>
+    <label><input type="radio" name="role" value="Investor"> 📈 Investor</label>
+    <label><input type="radio" name="role" value="Spec"> 🎲 Speculator</label>
+  </div>
+</div>
 
     <!-- блок «Цель» (пока скрыт) -->
     <div id="goalBlock" class="mt-4 hidden">
@@ -351,7 +353,7 @@ const tutSlides = [          // мини-туториал для Saver
 const rolePresets = {
   /* min / max — проценты от дохода; buf — минимальная «подушка» в месяцах */
   Saver : {
-    plan  : {survival:40, comfort:20, save:20, invest:10, healthSpend:5, edu:5},
+    plan  : {survival:50, comfort:25, save:10, invest:5, healthSpend:5, edu:5},
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
