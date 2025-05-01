@@ -287,16 +287,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   /* кувшин-ползунок */
   function buildJar(sliderId, fillId, valId, hiddenId, max){
-    /* --- пресеты ролей (проценты от БАЗОВОГО дохода 1000 $) --- */
-const rolePresets = {
-  Saver    : {survival:40, comfort:20, save:20, invest:10, healthSpend:5, edu:5},
-  Investor : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5},
-  Spec     : {survival:40, comfort:20, save:5,  invest:15, healthSpend:3, edu:2}
-};
-/* удобная функция: двигаем слайдер по id на новое значение */
-function setSlider(id, value){
-  document.getElementById(id + 'Slider').noUiSlider.set(value);
-}
+
     const slider=document.getElementById(sliderId);
     const fill  =document.getElementById(fillId);
     const valEl =document.getElementById(valId);
@@ -315,6 +306,17 @@ function setSlider(id, value){
       updateIncomeExpenses();
     });
   }
+
+      /* --- пресеты ролей (проценты от БАЗОВОГО дохода 1000 $) --- */
+const rolePresets = {
+  Saver    : {survival:40, comfort:20, save:20, invest:10, healthSpend:5, edu:5},
+  Investor : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5},
+  Spec     : {survival:40, comfort:20, save:5,  invest:15, healthSpend:3, edu:2}
+};
+/* удобная функция: двигаем слайдер по id на новое значение */
+function setSlider(id, value){
+  document.getElementById(id + 'Slider').noUiSlider.set(value);
+}
 
   /* шесть кувшинов */
   buildJar('survivalSlider','survivalFill','survivalVal','survival',2000);
