@@ -246,10 +246,16 @@
   </div>
 
   <!-- Кнопка хода -->
-  <button onclick="runTurn()" 
-  class="fixed top-4 left-4 z-20 bg-blue-600 text-white font-bold px-5 py-2 rounded hover:bg-blue-700">
-  Сделать ход
-  </button>
+ <button id="turnBtn" onclick="runTurn()"
+        class="fixed top-4 left-4 z-20 bg-blue-600/90 hover:bg-blue-600 text-white
+               w-12 h-12 flex items-center justify-center rounded-full shadow-md
+               focus:outline-none"             <!-- убрать синий обвод -->
+        title="Сделать ход">
+  <!-- простая SVG-стрелка-вперёд -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+</button>
 
   <!-- Краткая статистика -->
   <div class="text-center space-y-2">
