@@ -629,9 +629,7 @@ function finish(reason){
   health = 100;
   happiness = 90;
   updateBars();
-  /* (сброс графика, статуса цели и т.д. уже есть) */
-}
-
+  
   /* 2) ───── обнуляем график Баллов ───── */
   chart.data.labels.length = 0;                 // очищаем подписи оси X
   chart.data.datasets[0].data.length = 0;       // очищаем сами значения
