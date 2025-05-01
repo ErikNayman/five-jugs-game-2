@@ -622,10 +622,15 @@ if (currentGoal){
 
 function finish(reason){
   alert(reason + '\nБаллы: ' + scores[scores.length-1]);
-
-  /* 1) возвращаемся на старт-экран */
-  document.getElementById('game-screen').classList.add('hidden');
-  document.getElementById('start-screen').classList.remove('hidden');
+  /* показываем старт-экран */
+  gameScreen.classList.add('hidden');
+  startScreen.classList.remove('hidden');
+  /* сбрасываем здоровье/счастье и их бары */
+  health = 100;
+  happiness = 90;
+  updateBars();
+  /* (сброс графика, статуса цели и т.д. уже есть) */
+}
 
   /* 2) ───── обнуляем график Баллов ───── */
   chart.data.labels.length = 0;                 // очищаем подписи оси X
