@@ -320,9 +320,12 @@ let activeRules = [];        // правила текущей роли
 let bonusFlag   = false;     // true → ±5 к happiness
 let currentGoal = null;      // объект цели или null
 const goals = {
-  buffer : { key:'buffer',  text:'подушка на 12 месяцев',   check:g=>g.savings>=g.monthExpenses*12 },
-  passive: { key:'passive', text:'пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
-  tenk   : { key:'tenk',    text:'накопить $10 000',        check:g=>g.savings>=10000 }
+  buffer : { key:'buffer',  text:'Подушка на 12 месяцев',   check:g=>g.savings>=g.monthExpenses*12 },
+  passive: { key:'passive', text:'Пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
+  tenk   : { key:'tenk',    text:'Накопить $10 000',        check:g=>g.savings>=10000 }
+  double : { key:'double', text :'Удвоить капитал',    // сравниваем текущие накопления с тем, что было на старте игры
+    check: g => (g.savings + g.investments) >= (startSavings + startInvestments) * 2
+  }
 };
 
 const tutSlides = [          // мини-туториал для Saver
@@ -378,9 +381,10 @@ const rolePresets = {
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
-      {type:'buf',  months:12}                // подушка на 12 мес
+      {type:'buf',  months:12}                // Подушка на 12 мес
     ],
-    bonus:+5          // успех → +5 happiness, провал → –5
+    bonus:+5 // успех → +5 happiness, провал → –5
+    goalKey : 'buffer'
   },
   Investor : {
     plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5},
@@ -390,6 +394,7 @@ const rolePresets = {
       {type:'buf',  months:6}
     ],
     bonus:+5
+    goalKey : 'passive'
   },
   Spec : {
     plan  : {survival:40, comfort:20, save:5,  invest:15, healthSpend:3, edu:2},
@@ -398,6 +403,7 @@ const rolePresets = {
       {type:'ratio', max:50}
     ],
     bonus:false       // без бонуса/штрафа
+    goalKey : 'double'
   }
 };
 
@@ -559,6 +565,13 @@ window.startGame = n => {
     setSlider(field, Math.round(base*pc/100/10)*10);
   });
   if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
+   // назначаем цель, соответствующую роли
+    currentGoal = goals[cfg.goalKey];
+    document.getElementById('goalText').textContent   = currentGoal.text;
+    document.getElementById('goalStatus').textContent = 'в процессе';
+    updateGoalProgress(currentGoal,
+         { savings:0, passiveIncome:0, monthExpenses:1 });
+    goalHeader.textContent = 'Твоя цель: ' + currentGoal.text;
 } else {
   activeRules = []; bonusFlag = false;
 }
