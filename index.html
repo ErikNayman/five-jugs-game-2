@@ -449,7 +449,7 @@ const gameScreen  = document.getElementById('game-screen');
 const rolePresets = {
   /* min / max — проценты от дохода; buf — минимальная «подушка» в месяцах */
   Saver : {
-    plan  : {survival:50, comfort:25, save:10, invest:5, healthSpend:5, edu:5},
+    plan  : {survival:50, comfort:25, save:10, invest:5, healthSpend:5, edu:5, spec:0},
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
@@ -459,7 +459,7 @@ const rolePresets = {
     goalKey : 'buffer'
   },
   Investor : {
-    plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5},
+    plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5, spec:0},
     rules : [
       {type:'min', jar:'invest', value:15},
       {type:'ratio', max:50},
@@ -476,7 +476,7 @@ Spec : {
   ],
   bonus:false,
   goalKey:'double'
-},
+};
 
 /* удобная функция: двигаем слайдер по id на новое значение */
 function setSlider(id, value){
@@ -591,7 +591,6 @@ function rulesBroken(income){
   });
 }
 
-
   function updateGoalProgress(goal, ctx){
   /* ctx: {savings, investments, passiveIncome, monthExpenses} */
   let pct = 0, leftTxt = '';
@@ -659,7 +658,7 @@ window.startGame = n => {
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
 currentDiff   = difficulties[diffKey];
   
-['survival','comfort','save','invest','healthSpend','edu'].forEach(id=>{
+['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
   document.getElementById(id + 'Slider')
           .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
 });
@@ -676,7 +675,7 @@ savings       = currentDiff.startBonus$;   // бонус / штраф к ста�
     setSlider(field, Math.round(base*pc/100/10)*10);
   });
    /* шаг слайдеров зависит от сложности */
-['survival','comfort','save','invest','healthSpend','edu'].forEach(id=>{
+['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
   document.getElementById(id+'Slider')
           .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
 });
@@ -749,12 +748,13 @@ document.getElementById('savings').innerText =
     const comfort   =+document.getElementById('comfort').value;
     const savePlan  =+document.getElementById('save').value;
     const investPlan=+document.getElementById('invest').value;
+    const specPlan   = +document.getElementById('spec').value;
     const healthSp  =+document.getElementById('healthSpend').value;
     const edu       =+document.getElementById('edu').value;
     const extra     = document.getElementById('extra').value;
 
     let income=1000; if(extra==='да') income+=200;
-    const spend=survival+comfort+savePlan+investPlan+healthSp+edu;
+    const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu;
 
 /* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
@@ -781,26 +781,23 @@ if (Math.random() < currentDiff.eventProb) {
     const free = income - spend + penalty;
 savings   += savePlan + free;
 
-const growth = Math.random() <= 0.7
-             ? Math.random() * 0.03
-             : Math.random() * -0.01;
-investments = (investments + investPlan - crisis) * (1 + growth);
+const growth = Math.random() <= 0.7           // 70 % – рост, 30 % – падение
+             ? Math.random() * 0.03           // +0‒3 %
+             : Math.random() * -0.01;         // –0‒1 %
+investments  = (investments + investPlan - crisis) * (1 + growth);
+/* ─── спекуляции ─────────────────────────────── */
 specBalance += specPlan;
-function specReturnPct(){
-  const lvl  = {easy:0.02, normal:0.05, hard:0.10}[diffKey];
-  const sign = Math.random() < 0.55 ? 1 : -1;
-  return sign * lvl;
+const specPnl = specBalance * specReturnPct();
+specBalance += specPnl;
+
+if (specPlan > 0 || specPnl !== 0){
+  evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
 }
 const specPnl = specBalance * specReturnPct();
 specBalance  += specPnl;
 evt += specPlan > 0
      ? ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`
      : '';
-
-/* здоровье / счастье */
-if (evt !== `болезнь – ${currentDiff.sicknessHP} здоровья`) {
-  …
-}
 
     /* здоровье / счастье */
     if(evt!=='болезнь – 5 здоровья'){
