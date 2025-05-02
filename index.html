@@ -111,6 +111,22 @@
   <label class="block"><input type="radio" name="goal" value="tenk">    Накопить $10 000</label>
 </div>
 
+    <!-- ===== уровень сложности ===== -->
+<p class="font-semibold mt-4 mb-1">Сложность:</p>
+
+<label class="block">
+  <input type="radio" name="diff" value="easy"   checked>
+  <span class="ml-1">🟢 Лёгкий</span>
+</label>
+<label class="block">
+  <input type="radio" name="diff" value="normal">
+  <span class="ml-1">🟡 Средний</span>
+</label>
+<label class="block">
+  <input type="radio" name="diff" value="hard">
+  <span class="ml-1">🔴 Сложный</span>
+</label>
+
     <!-- автодолив -->
     <label class="flex items-center space-x-2 mt-4">
       <input id="autoAdjust" type="checkbox" class="h-4 w-4 text-blue-600 rounded">
@@ -320,6 +336,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 let activeRules = [];        // правила текущей роли
 let bonusFlag   = false;     // true → ±5 к happiness
 let currentGoal = null;      // объект цели или null
+  /* текущая сложность — заполним в startGame() */
+let currentDiff = difficulties.normal;   // default
 const goals = {
   buffer : { key:'buffer',  text:'Подушка на 12 месяцев',   check:g=>g.savings>=g.monthExpenses*12 },
   passive: { key:'passive', text:'Пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
@@ -329,6 +347,50 @@ const goals = {
   }
 };
 
+  const difficulties = {
+  /* ----------  EASY  -------------------------------------- */
+  easy : {
+    /* управление бегунками */
+    sliderStep      : 100,     // шаг ползунка, $   (крупный – меньше «возни»)
+
+    /* случайные события */
+    eventProb       : 0.25,    // суммарная вероятность, что «что-то» случится
+    eventWeights    : {        // как делится eventProb
+      minorExpense  : 0.50,    // 50 % от eventProb → мелкая трата
+      crisis        : 0.25,    // 25 %            → обвал инвестиций
+      sickness      : 0.25     // 25 %            → болезнь
+    },
+    minorExpense$   : 30,      // размер мелкой траты
+    crisisLossPct   : 0.04,    // -4 % от инвестиций
+    sicknessHP      : 3,       // -3 здоровья
+
+    /* стартовые послабления */
+    startBonus$     : 500      // +$500 к сбережениям в начале
+  },
+
+  /* ----------  NORMAL  ------------------------------------ */
+  normal : {
+    sliderStep      : 10,
+    eventProb       : 0.35,
+    eventWeights    : { minorExpense:0.45, crisis:0.30, sickness:0.25 },
+    minorExpense$   : 50,
+    crisisLossPct   : 0.06,
+    sicknessHP      : 5,
+    startBonus$     : 0
+  },
+
+  /* ----------  HARD  -------------------------------------- */
+  hard : {
+    sliderStep      : 1,
+    eventProb       : 0.45,
+    eventWeights    : { minorExpense:0.40, crisis:0.35, sickness:0.25 },
+    minorExpense$   : 70,
+    crisisLossPct   : 0.08,
+    sicknessHP      : 7,
+    startBonus$     : -200     // начинаем «в минусе» (долг)
+  }
+};
+  
 const tutSlides = [          // мини-туториал для Saver
   ['Шаг 1/3','Откладывайте ≥ 10 % дохода — формируйте «подушку».'],
   ['Шаг 2/3','Подушка на 12 мес → инвестируйте ≥ 15 %.'],
@@ -564,7 +626,11 @@ window.startGame = n => {
   document.getElementById('game-screen').classList.remove('hidden');
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked').value;
-  
+  /* ----------- Сложность ----------- */
+const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
+currentDiff   = difficulties[diffKey];
+savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
+
  if (mode === 'role') {
   const role = document.querySelector('input[name="role"]:checked').value,
         cfg  = rolePresets[role];
@@ -574,6 +640,12 @@ window.startGame = n => {
   Object.entries(cfg.plan).forEach(([field,pc])=>{
     setSlider(field, Math.round(base*pc/100/10)*10);
   });
+   /* шаг слайдеров зависит от сложности */
+['survival','comfort','save','invest','healthSpend','edu'].forEach(id=>{
+  document.getElementById(id+'Slider')
+          .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
+});
+
   startSavings = +document.getElementById('save').value;
   startInvestments = +document.getElementById('invest').value;
    if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
@@ -642,11 +714,27 @@ happiness = 90;
     const spend=survival+comfort+savePlan+investPlan+healthSp+edu;
 
     /* событие */
-    let evt='ничего', penalty=0, crisis=0;
-    const r=Math.random();
-    if(r<0.15){evt='мелкая трата – $50'; penalty=-50;}
-    else if(r<0.25){evt='кризис – 6 % инвестиций'; crisis=investments*0.06;}
-    else if(r<0.40){evt='болезнь – 5 здоровья'; health=Math.max(0,health-5);}
+/* ---------- случайное событие (с учётом сложности) ---------- */
+let evt = 'ничего', penalty = 0, crisis = 0;
+
+if (Math.random() < currentDiff.eventProb) {
+
+  const w = currentDiff.eventWeights;        // короче ссылка
+  const x = Math.random();
+
+  if (x < w.minorExpense) {                  // мелкая трата
+    evt     = `мелкая трата – $${currentDiff.minorExpense$}`;
+    penalty = -currentDiff.minorExpense$;
+
+  } else if (x < w.minorExpense + w.crisis) {// кризис инвестиций
+    evt    = `кризис – ${currentDiff.crisisLossPct*100} % инвестиций`;
+    crisis = investments * currentDiff.crisisLossPct;
+
+  } else {                                   // болезнь
+    evt    = `болезнь – ${currentDiff.sicknessHP} здоровья`;
+    health = Math.max(0, health - currentDiff.sicknessHP);
+  }
+}
 
     const free=income-spend+penalty;
     savings+=savePlan+free;
