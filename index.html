@@ -78,29 +78,38 @@
 
     <!-- режимы -->
     <p class="font-semibold mt-4 mb-1">Как начать?</p>
-    <label class="block"><input type="radio" name="mode" value="role" checked> <span class="ml-1">Выбрать роль</span></label>
-    <label class="block"><input type="radio" name="mode" value="goal"> <span class="ml-1">Выбрать цель</span></label>
-    <label class="block"><input type="radio" name="mode" value="free"> <span class="ml-1">Свободный план</span></label>
 
-    <!-- блок «Роль» -->
-  <div id="roleBlock" class="mt-3 bg-gray-50 p-3 rounded border hidden">
-  <p class="font-semibold mb-1">Роль:</p>
-  <div class="flex flex-col gap-1 sm:flex-row sm:gap-4">
-    <label><input type="radio" name="role" value="Saver" checked> 🐿️ Saver</label>
-    <label><input type="radio" name="role" value="Investor"> 📈 Investor</label>
-    <label><input type="radio" name="role" value="Spec"> 🎲 Speculator</label>
-  </div>
+<!-- Свободный план (по умолчанию) -->
+<label class="block">
+  <input type="radio" name="mode" value="free" checked>
+  <span class="ml-1">⚙️ Свободный план</span>
+</label>
+
+<!-- Выбрать роль -->
+<label class="block">
+  <input type="radio" name="mode" value="role">
+  <span class="ml-1">👤 Выбрать роль</span>
+</label>
+
+<!-- блок ролей (раскрывается) -->
+<div id="roleBlock" class="ml-6 mt-2 hidden">
+  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> 🐿️ Saver</label>
+  <label class="mr-4"><input type="radio" name="role" value="Investor"> 📈 Investor</label>
+  <label class="mr-4"><input type="radio" name="role" value="Spec">     🎲 Speculator</label>
 </div>
 
-    <!-- блок «Цель» (пока скрыт) -->
-    <div id="goalBlock" class="mt-4 hidden">
-      <label class="font-semibold mb-1">Цель:</label>
-      <select id="goalSelect" class="w-full border p-2 rounded">
-        <option value="buffer">Подушка 12 мес</option>
-        <option value="passive">Пассивный доход $1000/мес</option>
-        <option value="tenk">Накопить $10000</option>
-      </select>
-    </div>
+<!-- Выбрать цель -->
+<label class="block mt-2">
+  <input type="radio" name="mode" value="goal">
+  <span class="ml-1">🎯 Выбрать цель</span>
+</label>
+
+<!-- блок целей (раскрывается) -->
+<div id="goalBlock" class="ml-6 mt-2 hidden">
+  <label class="block"><input type="radio" name="goal" value="buffer"  checked> Подушка 12 мес</label>
+  <label class="block"><input type="radio" name="goal" value="passive"> Пассив $1000/мес</label>
+  <label class="block"><input type="radio" name="goal" value="tenk">    Накопить $10 000</label>
+</div>
 
     <!-- автодолив -->
     <label class="flex items-center space-x-2 mt-4">
@@ -520,7 +529,7 @@ window.startGame = n => {
 
   /* ---------------- цель ---------------- */
 if (mode === 'goal') {
-  const goalKey = document.getElementById('goalSelect').value; // buffer / passive / tenk
+  const goalKey = document.querySelector('input[name="goal"]:checked').value; // buffer / passive / tenk
   currentGoal = goals[goalKey];
   document.getElementById('goalText').textContent   = currentGoal.text;
   document.getElementById('goalStatus').textContent = 'в процессе';
@@ -648,11 +657,11 @@ function finish(reason){
 });
 
 /* переключаем отображение блоков на старт-экране */
-document.querySelectorAll('input[name="mode"]').forEach(radio=>{
-  radio.addEventListener('change',()=>{
-    const m = radio.value;
-    document.getElementById('roleBlock').classList.toggle('hidden', m !== 'role');
-    document.getElementById('goalBlock').classList.toggle('hidden', m !== 'goal');
+document.querySelectorAll('input[name="mode"]').forEach(r=>{
+  r.addEventListener('change', ()=>{
+    const m = r.value;
+    roleBlock.classList.toggle('hidden', m !== 'role');
+    goalBlock.classList.toggle('hidden', m !== 'goal');
   });
 });
 
