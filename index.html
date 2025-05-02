@@ -277,7 +277,14 @@
     <p>Сбережения: <span id="savings">$0</span></p>
     <p>Инвестиции: <span id="investments">$0</span></p>
     <p>Цель: <span id="goalText">–</span></p>
-    <p>Статус цели: <span id="goalStatus">–</span></p>
+    <!-- Прогресс цели -->
+    <div class="w-full h-4 bg-gray-300 rounded-full overflow-hidden mt-1">
+  <div id="goalBar" class="h-full bg-green-500 w-0 transition-all duration-300"></div>
+    </div>
+  <p class="text-sm text-gray-600">
+  <span id="goalPercent">0</span>% &nbsp;|&nbsp;
+  осталось <span id="goalLeft">–</span>
+</p>
   </div>
 
   <!-- История -->
@@ -308,19 +315,11 @@ let activeRules = [];        // правила текущей роли
 let bonusFlag   = false;     // true → ±5 к happiness
 let currentGoal = null;      // объект цели или null
 const goals = {
-  buffer : {
-    text : 'подушка на 12 месяцев',
-    check: g => g.savings >= g.monthExpenses * 12
-  },
-  passive: {
-    text : 'пассивный доход $1000/мес',
-    check: g => g.passiveIncome >= 1000
-  },
-  tenk: {
-    text : 'накопить $10 000',
-    check: g => g.savings >= 10000
-  }
+  buffer : { key:'buffer',  text:'подушка на 12 месяцев',   check:g=>g.savings>=g.monthExpenses*12 },
+  passive: { key:'passive', text:'пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
+  tenk   : { key:'tenk',    text:'накопить $10 000',        check:g=>g.savings>=10000 }
 };
+
 const tutSlides = [          // мини-туториал для Saver
   ['Шаг 1/3','Откладывайте ≥ 10 % дохода — формируйте «подушку».'],
   ['Шаг 2/3','Подушка на 12 мес → инвестируйте ≥ 15 %.'],
@@ -483,6 +482,30 @@ function rulesBroken(income){
   });
 }
 
+  function updateGoalProgress(goal, ctx){
+  /* ctx: {savings, passiveIncome, monthExpenses} */
+  let pct = 0, leftTxt = '';
+
+  if (goal.key === 'buffer'){
+    const need = ctx.monthExpenses * 12;
+    pct = Math.min(100, ctx.savings / need * 100);
+    leftTxt = (need - ctx.savings > 0) ? `$${(need-ctx.savings).toFixed(0)}` : '0';
+  }
+  else if (goal.key === 'passive'){
+    pct = Math.min(100, ctx.passiveIncome / 1000 * 100);
+    leftTxt = (1000 - ctx.passiveIncome > 0) ? `$${(1000-ctx.passiveIncome).toFixed(0)}` : '0';
+  }
+  else if (goal.key === 'tenk'){
+    pct = Math.min(100, ctx.savings / 10000 * 100);
+    leftTxt = (10000 - ctx.savings > 0) ? `$${(10000-ctx.savings).toFixed(0)}` : '0';
+  }
+
+  /* визуально */
+  document.getElementById('goalBar').style.width = pct + '%';
+  document.getElementById('goalPercent').textContent = Math.floor(pct);
+  document.getElementById('goalLeft').textContent    = leftTxt;
+}
+
   /* таблица-история */
   function pushHistory(evt,free){
     const row=document.createElement('tr');
@@ -533,6 +556,10 @@ if (mode === 'goal') {
   currentGoal = goals[goalKey];
   document.getElementById('goalText').textContent   = currentGoal.text;
   document.getElementById('goalStatus').textContent = 'в процессе';
+updateGoalProgress(
+  currentGoal,
+  { savings: 0, passiveIncome: 0, monthExpenses: 1 }  // стартовое состояние
+);
 } else {
   currentGoal = null;
   document.getElementById('goalText').textContent   = '–';
@@ -617,6 +644,11 @@ if (currentGoal){
     savings, passiveIncome, monthExpenses
   });
   document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
+  updateGoalProgress(currentGoal, {
+  savings,
+  passiveIncome,
+  monthExpenses
+});
   if (done){
     finish('Поздравляем! Вы достигли цели: ' + currentGoal.text);
     return;               // чтобы больше не вести расчёты после finish()
@@ -650,6 +682,11 @@ function finish(reason){
 
   /* (необязательно) обнулить статус цели */
   document.getElementById('goalStatus').textContent = '–';
+  
+  /* обнуляем прогресс-бар цели */
+document.getElementById('goalBar').style.width   = '0%';
+document.getElementById('goalPercent').textContent = 0;
+document.getElementById('goalLeft').textContent    = '–';
 }
   
   /* первичная инициализация */
