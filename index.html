@@ -595,18 +595,14 @@ goalHeader.textContent = 'Твоя цель: ' + currentGoal.text;
 
   /* ---------------- цель ---------------- */
 if (mode === 'goal') {
-  const goalKey = document.querySelector('input[name="goal"]:checked').value; // buffer / passive / tenk
-  currentGoal = goals[goalKey];
+  const goalKey     = document.querySelector('input[name="goal"]:checked').value;
+  currentGoal       = goals[goalKey];
+
   document.getElementById('goalText').textContent   = currentGoal.text;
   document.getElementById('goalStatus').textContent = 'в процессе';
-updateGoalProgress(
-  currentGoal,
-  { savings: 0, passiveIncome: 0, monthExpenses: 1 }  // стартовое состояние
-);
-} else {
-  currentGoal = null;
-  document.getElementById('goalText').textContent   = '–';
-  document.getElementById('goalStatus').textContent = '–';
+  updateGoalProgress(currentGoal, {
+    savings: 0, investments: 0, passiveIncome: 0, monthExpenses: 1
+  });
 }
 
 /* --- заголовок цели / роли --- */
