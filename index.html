@@ -549,14 +549,6 @@ function updateGlasses(income, survival, comfort,
   if (savePlan >= 0) { gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
   else               { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
 }
-
-  /* сбережения: может быть отрицательным */
-  const gS = document.getElementById('glassSavings');
-  const lS = document.getElementById('saveLabel');
-  if (savePlan >= 0){ gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
-  else              { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
-  setH('glassSavings', savePlan);
-
   setH('glassInvest',  Math.max(0, investPlan));   // только инвестиции
   setH('glassSpec',    Math.max(0, specPlan));     // только спекуляции ✓
 }
