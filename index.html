@@ -93,9 +93,9 @@
 
 <!-- блок ролей (раскрывается) -->
 <div id="roleBlock" class="ml-6 mt-2 hidden">
-  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> 🐿️ Saver</label>
-  <label class="mr-4"><input type="radio" name="role" value="Investor"> 📈 Investor</label>
-  <label class="mr-4"><input type="radio" name="role" value="Spec">     🎲 Speculator</label>
+  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> Saver</label>
+  <label class="mr-4"><input type="radio" name="role" value="Investor"> Investor</label>
+  <label class="mr-4"><input type="radio" name="role" value="Spec"> Speculator</label>
 </div>
 
 <!-- Выбрать цель -->
@@ -106,7 +106,7 @@
 
 <!-- блок целей (раскрывается) -->
 <div id="goalBlock" class="ml-6 mt-2 hidden">
-  <label class="block"><input type="radio" name="goal" value="buffer"  checked> Подушка 12 мес</label>
+  <label class="block"><input type="radio" name="goal" value="buffer"  checked> Подушка на 12 мес</label>
   <label class="block"><input type="radio" name="goal" value="passive"> Пассив $1000/мес</label>
   <label class="block"><input type="radio" name="goal" value="tenk">    Накопить $10 000</label>
 </div>
@@ -323,7 +323,7 @@ const goals = {
 };
 const tutSlides = [          // мини-туториал для Saver
   ['Шаг 1/3','Откладывайте ≥ 10 % дохода — формируйте «подушку».'],
-  ['Шаг 2/3','Подушка 12 мес → инвестируйте ≥ 15 %.'],
+  ['Шаг 2/3','Подушка на 12 мес → инвестируйте ≥ 15 %.'],
   ['Шаг 3/3','Базовые траты ≤ 50 % дохода.']
 ];
   /* === мини-график Баллов === */
@@ -366,7 +366,7 @@ const rolePresets = {
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
-      {type:'buf',  months:12}                // подушка 12 мес
+      {type:'buf',  months:12}                // подушка на 12 мес
     ],
     bonus:+5          // успех → +5 happiness, провал → –5
   },
