@@ -378,7 +378,7 @@ const gameScreen  = document.getElementById('game-screen');
 const rolePresets = {
   /* min / max — проценты от дохода; buf — минимальная «подушка» в месяцах */
   Saver : {
-    plan  : {survival:50, comfort:25, save:10, invest:5, health:5, edu:5},
+    plan  : {survival:50, comfort:25, save:10, invest:5, healthSpend:5, edu:5},
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
@@ -388,7 +388,7 @@ const rolePresets = {
     goalKey : 'buffer'
   },
   Investor : {
-    plan  : {survival:40, comfort:20, save:10, invest:20, health:5, edu:5},
+    plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5},
     rules : [
       {type:'min', jar:'invest', value:15},
       {type:'ratio', max:50},
@@ -398,7 +398,7 @@ const rolePresets = {
     goalKey : 'passive'
   },
   Spec : {
-    plan  : {survival:40, comfort:20, save:5,  invest:15, health:3, edu:2},
+    plan  : {survival:40, comfort:20, save:5,  invest:15, healthSpend:3, edu:2},
     rules : [
       {type:'min', jar:'save', value:5},
       {type:'ratio', max:50}
