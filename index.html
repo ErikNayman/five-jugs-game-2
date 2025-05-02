@@ -564,6 +564,9 @@ window.startGame = n => {
   document.getElementById('game-screen').classList.remove('hidden');
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked').value;
+
+  console.log('[startGame] mode =', mode); / ПРОВЕРКА
+  
  if (mode === 'role') {
   const role = document.querySelector('input[name="role"]:checked').value,
         cfg  = rolePresets[role];
@@ -578,6 +581,9 @@ window.startGame = n => {
    if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
    // назначаем цель, соответствующую роли
 currentGoal = goals[cfg.goalKey];
+
+       console.log('[role] currentGoal =', currentGoal);      // ПРОВЕРКА
+   
 document.getElementById('goalText').textContent   = currentGoal.text;
 document.getElementById('goalStatus').textContent = 'в процессе';
 updateGoalProgress(currentGoal, {
@@ -619,6 +625,10 @@ savings = 0;
 investments = 0;
 health = 100;
 happiness = 90;  
+
+  console.log('[startGame] goalHeader сейчас =',    // ПРОВЕРКА
+
+              
   updateIncomeExpenses(); updateBars();
 };
 
