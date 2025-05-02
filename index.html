@@ -578,10 +578,17 @@ updateGoalProgress(
   document.getElementById('goalStatus').textContent = '–';
 }
 
-  /* --- заголовок цели --- */
+/* --- заголовок цели --- */
 if (mode === 'goal' && currentGoal) {
+  // выбран режим «Цель» → берём текст самой цели
   goalHeader.textContent = 'Твоя цель: ' + currentGoal.text;
+} else if (mode === 'role') {
+  // выбран режим «Роль» → показываем выбранную роль
+  const roleNameRu = { Saver:'Сберегатель', Investor:'Инвестор', Spec:'Спекулянт' };
+  const role = document.querySelector('input[name="role"]:checked').value;
+  goalHeader.textContent = 'Твоя роль: ' + (roleNameRu[role] || role);
 } else {
+  // свободный план
   goalHeader.textContent = 'Твоя цель: Выжить';
 }
 
