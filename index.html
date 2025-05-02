@@ -548,7 +548,7 @@ function updateGlasses(income, survival, comfort,
   const lS = document.getElementById('glassSavingsVal');
   if (savePlan >= 0) { gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
   else               { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
-}
+
   setH('glassInvest',  Math.max(0, investPlan));   // только инвестиции
   setH('glassSpec',    Math.max(0, specPlan));     // только спекуляции ✓
 }
