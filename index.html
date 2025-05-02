@@ -122,6 +122,10 @@
 <!-- ═══════════ ИГРА ═══════════ -->
 <div id="game-screen" class="hidden p-6 space-y-6 max-w-7xl mx-auto">
 
+  <h2 id="goalHeader" class="text-xl font-bold text-center mb-4">
+  Твоя цель: –
+  </h2>
+  
   <!-- Верхний dashboard -->
   <div class="flex flex-wrap gap-6 mb-8 justify-center">
 
@@ -325,6 +329,12 @@ const tutSlides = [          // мини-туториал для Saver
   ['Шаг 2/3','Подушка на 12 мес → инвестируйте ≥ 15 %.'],
   ['Шаг 3/3','Базовые траты ≤ 50 % дохода.']
 ];
+
+  /* ссылки на элементы старт-экрана */
+const roleBlock   = document.getElementById('roleBlock');
+const goalBlock   = document.getElementById('goalBlock');
+const goalHeader  = document.getElementById('goalHeader');
+
   /* === мини-график Баллов === */
   const chart = new Chart(document.getElementById('scoreChart').getContext('2d'),{
     type:'line',
@@ -564,6 +574,13 @@ updateGoalProgress(
   currentGoal = null;
   document.getElementById('goalText').textContent   = '–';
   document.getElementById('goalStatus').textContent = '–';
+}
+
+  /* --- заголовок цели --- */
+if (mode === 'goal' && currentGoal) {
+  goalHeader.textContent = 'Твоя цель: ' + currentGoal.text;
+} else {
+  goalHeader.textContent = 'Твоя цель: Выжить';
 }
 
   /* для режимов goal / free ничего менять не надо */
