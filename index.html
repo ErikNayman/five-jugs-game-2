@@ -627,6 +627,7 @@ window.startGame = n => {
   document.getElementById('game-screen').classList.remove('hidden');
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked').value;
+  
   /* ----------- Сложность ----------- */
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
 currentDiff   = difficulties[diffKey];
@@ -637,7 +638,7 @@ currentDiff   = difficulties[diffKey];
 });
   
 savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
-
+  
  if (mode === 'role') {
   const role = document.querySelector('input[name="role"]:checked').value,
         cfg  = rolePresets[role];
@@ -707,6 +708,10 @@ document.getElementById('savings').innerText = `$${Math.round(savings)}`;
   updateIncomeExpenses(); updateBars();
 };
 
+  /* отобразить стартовые сбережения (могут быть < 0) */
+document.getElementById('savings').innerText =
+        `$${Math.round(savings)}`;
+  
   /* ХОД */
   window.runTurn = ()=>{
     turn++;
