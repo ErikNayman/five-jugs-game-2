@@ -739,7 +739,14 @@ document.getElementById('savings').innerText = `$${Math.round(savings)}`;
   /* отобразить стартовые сбережения (могут быть < 0) */
 document.getElementById('savings').innerText =
         `$${Math.round(savings)}`;
-  
+
+  function specReturnPct(){
+  if (currentDiff === difficulties.easy)  return (Math.random() < 0.55 ? 1 : -1) * 0.02;
+  if (currentDiff === difficulties.hard)  return (Math.random() < 0.55 ? 1 : -1) * 0.10;
+  /* normal */
+  return (Math.random() < 0.55 ? 1 : -1) * 0.05;
+}
+
   /* ХОД */
   window.runTurn = ()=>{
     turn++;
@@ -793,14 +800,9 @@ specBalance += specPnl;
 if (specPlan > 0 || specPnl !== 0){
   evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
 }
-const specPnl = specBalance * specReturnPct();
-specBalance  += specPnl;
-evt += specPlan > 0
-     ? ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`
-     : '';
 
     /* здоровье / счастье */
-    if(evt!=='болезнь – 5 здоровья'){
+    if(!evt.startsWith('болезнь')){
       if(survival<500) health-=((500-survival)/500)*100;
       else             health+=5;
       if(happiness>=90) health+=5;
