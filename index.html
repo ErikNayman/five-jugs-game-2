@@ -520,7 +520,7 @@ function setSlider(id, value){
   buildJar('eduSlider'     ,'eduFill'     ,'eduVal'     ,'edu',       2000);
   buildJar('specSlider','specFill','specVal','spec',2000);
 
- /* обновление верхних стаканов */
+/* обновление верхних стаканов */
 function updateGlasses(income, survival, comfort,
                        savePlan, investPlan, specPlan){
 
@@ -533,8 +533,8 @@ function updateGlasses(income, survival, comfort,
   setH('glassIncome',   income);
   setH('glassExpenses', survival + comfort);
   setH('glassSavings',  savePlan);
-  setH('glassInvest',   investPlan);
-  setH('glassSpec',     specPlan);
+  setH('glassInvest',   Math.max(0, investPlan));   // только инвестиции
+  setH('glassSpec',     Math.max(0, specPlan));     // только спекуляции
 
   /* ── подписи ────────────────────────────────────────── */
   document.getElementById('glassIncomeVal'  ).textContent = `$${income}`;
@@ -546,11 +546,11 @@ function updateGlasses(income, survival, comfort,
   /* сбережения могут быть отрицательными → красный фон/текст */
   const gS = document.getElementById('glassSavings');
   const lS = document.getElementById('glassSavingsVal');
-  if (savePlan >= 0) { gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
-  else               { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
-
-  setH('glassInvest',  Math.max(0, investPlan));   // только инвестиции
-  setH('glassSpec',    Math.max(0, specPlan));     // только спекуляции ✓
+  if (savePlan >= 0) {
+    gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text');
+  } else {
+    gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text');
+  }
 }
 
 function showTutorial(){
