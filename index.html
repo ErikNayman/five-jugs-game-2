@@ -31,6 +31,32 @@
   .glass{width:70px; height:140px; border:4px solid #555; border-radius:8px 8px 28px 28px;
          position:relative; background:#fff; overflow:hidden;}
   .liquid-glass{position:absolute; bottom:0; left:0; width:100%; height:0; transition:height .25s;}
+<style>
+  /* … существующие правила … */
+
+  .liquid-glass{               /* ← эта строка уже есть */
+    position:absolute; bottom:0; left:0;
+    width:100%; height:0;
+    transition:height .25s;
+  }
+
+  /* вставляем тут ↓↓↓ */
+  .glass-val{
+    position:absolute;
+    top:4px; left:0;
+    width:100%;
+    text-align:center;
+    font-size:14px;
+    font-weight:700;
+    pointer-events:none;
+  }
+
+  /* отрицательные сбережения */
+  .neg-liquid{background:#e11d48 !important;}
+  .neg-text  {color:#e11d48 !important;}
+
+  /* … дальнейшие стили … */
+</style>
 
   /* отрицательные сбережения */
   .neg-liquid{background:#e11d48 !important;}
@@ -142,37 +168,54 @@
   </h2>
   
   <!-- Верхний dashboard -->
-  <div class="flex flex-wrap gap-6 mb-8 justify-center">
+<div class="flex flex-wrap gap-6 mb-8 justify-center">
 
-    <!-- Доходы -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassIncome"  class="liquid-glass" style="background:#82A8AB"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
+  <!-- Доходы -->
+  <div class="glass-wrap">
+    <div class="glass">
+      <div id="glassIncome"  class="liquid-glass" style="background:#82A8AB"></div>
+      <span id="glassIncomeVal"   class="glass-val"></span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
+  </div>
 
-    <!-- Расходы -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassExpenses" class="liquid-glass" style="background:#A77F4B"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Расходы</p>
+  <!-- Расходы -->
+  <div class="glass-wrap">
+    <div class="glass">
+      <div id="glassExpenses" class="liquid-glass" style="background:#A77F4B"></div>
+      <span id="glassExpensesVal" class="glass-val"></span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Расходы</p>
+  </div>
 
-    <!-- Сбережения -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassSavings" class="liquid-glass" style="background:#728565"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Сбережения</p>
+  <!-- Сбережения -->
+  <div class="glass-wrap">
+    <div class="glass">
+      <div id="glassSavings" class="liquid-glass" style="background:#728565"></div>
+      <span id="glassSavingsVal"  class="glass-val"></span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Сбережения</p>
+  </div>
 
-    <!-- Инвестиции -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassInvest" class="liquid-glass" style="background:#3B4550"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Инвестиции</p>
+  <!-- Инвестиции -->
+  <div class="glass-wrap">
+    <div class="glass">
+      <div id="glassInvest" class="liquid-glass" style="background:#3B4550"></div>
+      <span id="glassInvestVal"   class="glass-val"></span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Инвестиции</p>
+  </div>
 
-    <!-- Спекуляции (пустой) -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassSpec" class="liquid-glass" style="background:#BF8200"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Спекуляции</p>
+  <!-- Спекуляции -->
+  <div class="glass-wrap">
+    <div class="glass">
+      <div id="glassSpec" class="liquid-glass" style="background:#BF8200"></div>
+      <span id="glassSpecVal"     class="glass-val"></span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Спекуляции</p>
+  </div>
+
+</div>
 
     <!-- Здоровье (верт. полоса) -->
     <div class="glass-wrap">
@@ -202,17 +245,26 @@
     </div>
   </div>
 
-  <!-- Доходы / Расходы текстом -->
-  <div class="grid grid-cols-2 gap-6">
-    <div>
-      <label class="block font-semibold mb-1">Доходы ($)</label>
-      <p id="incomeDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
-    </div>
-    <div>
-      <label class="block font-semibold mb-1">Расходы ($)</label>
-      <p id="expensesDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
-    </div>
+   <!-- Дополнительная работа + Доход/Расход одной строкой -->
+<div class="flex flex-wrap items-end gap-6 mb-4">
+  <div>
+    <label for="extra" class="block font-semibold mb-1">Доп. работа</label>
+    <select id="extra" class="border p-2 rounded">
+      <option value="нет">Нет</option>
+      <option value="да">Да</option>
+    </select>
   </div>
+
+  <!-- Доходы / Расходы текстом -->
+  <div>
+    <label class="block font-semibold mb-1">Доходы ($)</label>
+    <p id="incomeDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
+  </div>
+  <div>
+    <label class="block font-semibold mb-1">Расходы ($)</label>
+    <p id="expensesDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
+  </div>
+</div>
 
   <!-- Шесть кувшинов-ползунков -->
   <div class="flex flex-wrap gap-6 mb-8">
@@ -272,15 +324,6 @@
       <div class="jar-caption mt-1">Образование<br><span id="eduVal">0</span> $</div>
       <input id="edu" type="hidden" class="hidden-field" value="0">
     </div>
-  </div>
-
-  <!-- Дополнительная работа -->
-  <div>
-    <label for="extra" class="block font-semibold mb-1">Дополнительная работа</label>
-    <select id="extra" class="w-full border p-2 rounded max-w-xs">
-      <option value="нет">Нет</option>
-      <option value="да">Да</option>
-    </select>
   </div>
 
   <!-- Кнопка хода -->
@@ -493,17 +536,35 @@ function setSlider(id, value){
   buildJar('eduSlider'     ,'eduFill'     ,'eduVal'     ,'edu',       2000);
   buildJar('specSlider','specFill','specVal','spec',2000);
 
-  /* обновление верхних стаканов */
-function updateGlasses(income, survival, comfort, savePlan, investPlan, specPlan){
-  const full = income * 2 || 1;               // масштаб для всех стаканов
+ /* обновление верхних стаканов */
+function updateGlasses(income, survival, comfort,
+                       savePlan, investPlan, specPlan){
 
-  const setH = (id,v)=>{                       // helper-функция
-    document.getElementById(id).style.height =
-        (Math.min(Math.abs(v), full) / full * 100) + '%';
-  };
+  const full = income * 2 || 1;                      // масштаб для всех стаканов
+  const pct  = v => (Math.min(Math.abs(v), full) / full * 100) + '%';
 
+  const setH = (id, v) => { document.getElementById(id).style.height = pct(v); };
+
+  /* ── высота ─────────────────────────────────────────── */
   setH('glassIncome',   income);
   setH('glassExpenses', survival + comfort);
+  setH('glassSavings',  savePlan);
+  setH('glassInvest',   investPlan);
+  setH('glassSpec',     specPlan);
+
+  /* ── подписи ────────────────────────────────────────── */
+  document.getElementById('glassIncomeVal'  ).textContent = `$${income}`;
+  document.getElementById('glassExpensesVal').textContent = `$${survival + comfort}`;
+  document.getElementById('glassSavingsVal' ).textContent = `$${savePlan}`;
+  document.getElementById('glassInvestVal'  ).textContent = `$${investPlan}`;
+  document.getElementById('glassSpecVal'    ).textContent = `$${specPlan}`;
+
+  /* сбережения могут быть отрицательными → красный фон/текст */
+  const gS = document.getElementById('glassSavings');
+  const lS = document.getElementById('glassSavingsVal');
+  if (savePlan >= 0) { gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
+  else               { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
+}
 
   /* сбережения: может быть отрицательным */
   const gS = document.getElementById('glassSavings');
