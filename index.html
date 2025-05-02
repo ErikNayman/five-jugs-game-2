@@ -371,8 +371,6 @@
   }
 };
   
-document.addEventListener('DOMContentLoaded', ()=>{
-
   let turn = 0, maxTurns = 0;
   let savings = 0, investments = 0;
   let health = 100, happiness = 90;
@@ -383,6 +381,8 @@ let bonusFlag   = false;     // true → ±5 к happiness
 let currentGoal = null;      // объект цели или null
   /* текущая сложность — заполним в startGame() */
 let currentDiff = difficulties.normal;   // default
+document.addEventListener('DOMContentLoaded', ()=>{
+
 const goals = {
   buffer : { key:'buffer',  text:'Подушка на 12 месяцев',   check:g=>g.savings>=g.monthExpenses*12 },
   passive: { key:'passive', text:'Пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
@@ -630,6 +630,12 @@ window.startGame = n => {
   /* ----------- Сложность ----------- */
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
 currentDiff   = difficulties[diffKey];
+  
+['survival','comfort','save','invest','healthSpend','edu'].forEach(id=>{
+  document.getElementById(id + 'Slider')
+          .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
+});
+  
 savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
 
  if (mode === 'role') {
