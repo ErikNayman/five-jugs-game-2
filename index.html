@@ -693,10 +693,12 @@ savings = 0;
 investments = 0;
 health = 100;
 happiness = 90;  
-              
+/* ===== применяем бонус/штраф выбранной сложности ===== */
+savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
+document.getElementById('savings').innerText = `$${Math.round(savings)}`;
+  
   updateIncomeExpenses(); updateBars();
 };
-
 
   /* ХОД */
   window.runTurn = ()=>{
@@ -713,26 +715,25 @@ happiness = 90;
     let income=1000; if(extra==='да') income+=200;
     const spend=survival+comfort+savePlan+investPlan+healthSp+edu;
 
-    /* событие */
-/* ---------- случайное событие (с учётом сложности) ---------- */
+/* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
 
 if (Math.random() < currentDiff.eventProb) {
+  /* «бросаем кубик» второй раз, чтобы выбрать тип события */
+  const w = currentDiff.eventWeights;          // короче ссылаться
+  const dice = Math.random();
 
-  const w = currentDiff.eventWeights;        // короче ссылка
-  const x = Math.random();
-
-  if (x < w.minorExpense) {                  // мелкая трата
-    evt     = `мелкая трата – $${currentDiff.minorExpense$}`;
+  if (dice < w.minorExpense) {                 // мелкая трата
     penalty = -currentDiff.minorExpense$;
+    evt = `мелкая трата – $${currentDiff.minorExpense$}`;
 
-  } else if (x < w.minorExpense + w.crisis) {// кризис инвестиций
-    evt    = `кризис – ${currentDiff.crisisLossPct*100} % инвестиций`;
+  } else if (dice < w.minorExpense + w.crisis) {   // кризис
     crisis = investments * currentDiff.crisisLossPct;
+    evt = `кризис – ${Math.round(currentDiff.crisisLossPct * 100)} % инвестиций`;
 
-  } else {                                   // болезнь
-    evt    = `болезнь – ${currentDiff.sicknessHP} здоровья`;
+  } else {                                     // болезнь
     health = Math.max(0, health - currentDiff.sicknessHP);
+    evt = `болезнь – ${currentDiff.sicknessHP} здоровья`;
   }
 }
 
