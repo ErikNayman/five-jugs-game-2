@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   let turn = 0, maxTurns = 0;
   let savings = 0, investments = 0;
   let health = 100, happiness = 90;
+  let startSavings = 0, startInvestments = 0;
   const scores = [];
 let activeRules = [];        // правила текущей роли
 let bonusFlag   = false;     // true → ±5 к happiness
@@ -564,6 +565,8 @@ window.startGame = n => {
   Object.entries(cfg.plan).forEach(([field,pc])=>{
     setSlider(field, Math.round(base*pc/100/10)*10);
   });
+   startSavings     = +document.getElementById('save').value;
+  startInvestments = +document.getElementById('invest').value;   
   if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
    // назначаем цель, соответствующую роли
     currentGoal = goals[cfg.goalKey];
@@ -608,7 +611,11 @@ if (mode === 'goal' && currentGoal) {
 
   /* для режимов goal / free ничего менять не надо */
   /* обнуляем состояние игры */
-  turn = 0; savings = 0; investments = 0; health = 100; happiness = 90;
+turn = 0;
+savings = startSavings = 0;
+investments = startInvestments = 0;
+health = 100;
+happiness = 90;
   updateIncomeExpenses(); updateBars();
 };
 
