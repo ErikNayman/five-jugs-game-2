@@ -151,93 +151,81 @@
   Твоя цель: Выжить
   </h2>
   
-  <!-- Верхний dashboard -->
-<div class="flex flex-wrap gap-6 mb-8 justify-center">
+<!-- ═══ Верхний dashboard ═══ -->
+<div id="topDash"
+     class="w-full flex flex-wrap justify-center gap-x-12 gap-y-6
+            pt-4 md:pt-0 mb-10">
 
-  <!-- Доходы -->
-  <div class="glass-wrap">
-    <div class="glass">
-      <div id="glassIncome"  class="liquid-glass" style="background:#82A8AB"></div>
-      <span id="glassIncomeVal"   class="glass-val"></span>
+  <!-- Кувшины-стаканы -->
+  <template id="glassTpl">
+    <div class="glass-wrap">
+      <div class="glass">
+        <!-- уровень жидкости -->
+        <div class="liquid-glass"></div>
+        <!-- подпись-цифра -->
+        <span class="glass-val">0</span>
+      </div>
+      <p class="mt-1 font-semibold text-center text-sm caption">–</p>
     </div>
-    <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
+  </template>
+
+  <!-- вставляем 5 штук -->
+  <div class="glass-wrap" id="gIncome">
+    <div class="glass"><div id="glassIncome"  class="liquid-glass bg-[#82A8AB]"></div>
+      <span id="glassIncomeVal"  class="glass-val">0</span></div>
+    <p class="caption">Доходы</p>
   </div>
 
-  <!-- Расходы -->
-  <div class="glass-wrap">
-    <div class="glass">
-      <div id="glassExpenses" class="liquid-glass" style="background:#A77F4B"></div>
-      <span id="glassExpensesVal" class="glass-val"></span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Расходы</p>
+  <div class="glass-wrap" id="gExpenses">
+    <div class="glass"><div id="glassExpenses" class="liquid-glass bg-[#A77F4B]"></div>
+      <span id="glassExpensesVal" class="glass-val">0</span></div>
+    <p class="caption">Расходы</p>
   </div>
 
-  <!-- Сбережения -->
-  <div class="glass-wrap">
-    <div class="glass">
-      <div id="glassSavings" class="liquid-glass" style="background:#728565"></div>
-      <span id="glassSavingsVal"  class="glass-val"></span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Сбережения</p>
+  <div class="glass-wrap" id="gSavings">
+    <div class="glass"><div id="glassSavings" class="liquid-glass bg-[#728565]"></div>
+      <span id="glassSavingsVal"  class="glass-val">0</span></div>
+    <p class="caption">Сбережения</p>
   </div>
 
-  <!-- Инвестиции -->
-  <div class="glass-wrap">
-    <div class="glass">
-      <div id="glassInvest" class="liquid-glass" style="background:#3B4550"></div>
-      <span id="glassInvestVal"   class="glass-val"></span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Инвестиции</p>
+  <div class="glass-wrap" id="gInvest">
+    <div class="glass"><div id="glassInvest"  class="liquid-glass bg-[#3B4550]"></div>
+      <span id="glassInvestVal"   class="glass-val">0</span></div>
+    <p class="caption">Инвестиции</p>
   </div>
 
-  <!-- Спекуляции -->
-  <div class="glass-wrap">
-    <div class="glass">
-      <div id="glassSpec" class="liquid-glass" style="background:#BF8200"></div>
-      <span id="glassSpecVal"     class="glass-val"></span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Спекуляции</p>
+  <div class="glass-wrap" id="gSpec">
+    <div class="glass"><div id="glassSpec"   class="liquid-glass bg-[#BF8200]"></div>
+      <span id="glassSpecVal"     class="glass-val">0</span></div>
+    <p class="caption">Спекуляции</p>
   </div>
 
+  <!-- Вертикальные полосы -->
+  <div class="glass-wrap">
+    <div class="vbar">
+      <div id="vHealthFill" class="vbar-fill bg-[#22c55e]"></div>
+      <span id="vHealthTxt" class="glass-val">100%</span>
+    </div>
+    <p class="caption">Здоровье</p>
+  </div>
+
+  <div class="glass-wrap">
+    <div class="vbar">
+      <div id="vHappyFill" class="vbar-fill bg-[#facc15]"></div>
+      <span id="vHappyTxt" class="glass-val">90%</span>
+    </div>
+    <p class="caption">Счастье</p>
+  </div>
+
+  <!-- Крупная цифра Баллов -->
+  <div class="glass-wrap">
+    <div class="mini-chart-box">
+      <canvas id="scoreChart"></canvas>
+      <span id="scoreBig">0</span>
+    </div>
+    <p class="caption">Баллы</p>
+  </div>
 </div>
-
-    <!-- Здоровье (верт. полоса) -->
-    <div class="glass-wrap">
-      <div class="vbar">
-        <div id="vHealthFill" class="vbar-fill" style="background:#22c55e"></div>
-        <span id="vHealthTxt" class="vbar-text">100%</span>
-      </div>
-      <p class="mt-1 font-semibold text-center text-sm">Здоровье</p>
-    </div>
-
-    <!-- Счастье -->
-    <div class="glass-wrap">
-      <div class="vbar">
-        <div id="vHappyFill" class="vbar-fill" style="background:#facc15"></div>
-        <span id="vHappyTxt" class="vbar-text">90%</span>
-      </div>
-      <p class="mt-1 font-semibold text-center text-sm">Счастье</p>
-    </div>
-
-    <!-- Мини-график Баллы -->
-    <div class="glass-wrap">
-      <div class="mini-chart-box">
-        <canvas id="scoreChart"></canvas>
-        <span id="scoreBig">0</span>
-      </div>
-      <p class="mt-1 font-semibold text-center text-sm">Баллы</p>
-    </div>
-  </div>
-
-   <!-- Дополнительная работа + Доход/Расход одной строкой -->
-<div class="flex flex-wrap items-end gap-6 mb-4">
-  <div>
-    <label for="extra" class="block font-semibold mb-1">Доп. работа</label>
-    <select id="extra" class="border p-2 rounded">
-      <option value="нет">Нет</option>
-      <option value="да">Да</option>
-    </select>
-  </div>
 
   <!-- Доходы / Расходы текстом -->
   <div>
