@@ -206,14 +206,23 @@
   <div class="grid grid-cols-2 gap-6">
     <div>
       <label class="block font-semibold mb-1">Доходы ($)</label>
-      <p id="incomeDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
+      <p id="incomeDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
     </div>
     <div>
       <label class="block font-semibold mb-1">Расходы ($)</label>
-      <p id="expensesDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
+      <p id="expensesDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
     </div>
   </div>
 
+    <!-- Дополнительная работа -->
+  <div>
+    <label for="extra" class="block font-semibold mb-1">Доп. работа</label>
+    <select id="extra" class="w-32 border p-2 rounded max">
+      <option value="нет">Нет</option>
+      <option value="да">Да</option>
+    </select>
+  </div>
+  
   <!-- Шесть кувшинов-ползунков -->
   <div class="flex flex-wrap gap-6 mb-8">
 
@@ -272,15 +281,6 @@
       <div class="jar-caption mt-1">Образование<br><span id="eduVal">0</span> $</div>
       <input id="edu" type="hidden" class="hidden-field" value="0">
     </div>
-  </div>
-
-  <!-- Дополнительная работа -->
-  <div>
-    <label for="extra" class="block font-semibold mb-1">Дополнительная работа</label>
-    <select id="extra" class="w-full border p-2 rounded max-w-xs">
-      <option value="нет">Нет</option>
-      <option value="да">Да</option>
-    </select>
   </div>
 
   <!-- Кнопка хода -->
