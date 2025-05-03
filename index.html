@@ -32,16 +32,6 @@
          position:relative; background:#fff; overflow:hidden;}
   .liquid-glass{position:absolute; bottom:0; left:0; width:100%; height:0; transition:height .25s;}
 
-  .glass-val{
-    position:absolute;
-    top:4px; left:0;
-    width:100%;
-    text-align:center;
-    font-size:14px;
-    font-weight:700;
-    pointer-events:none;
-  }
-
   /* отрицательные сбережения */
   .neg-liquid{background:#e11d48 !important;}
   .neg-text  {color:#e11d48 !important;}
@@ -136,11 +126,11 @@
   <span class="ml-1">🔴 Сложный</span>
 </label>
 
-//    <!-- автодолив -->
-//    <label class="flex items-center space-x-2 mt-4">
-//      <input id="autoAdjust" type="checkbox" class="h-4 w-4 text-blue-600 rounded">
-//      <span class="text-sm">Автоматически добавлять остаток в Сбережения</span>
-//    </label>
+    <!-- автодолив -->
+    <label class="flex items-center space-x-2 mt-4">
+      <input id="autoAdjust" type="checkbox" class="h-4 w-4 text-blue-600 rounded">
+      <span class="text-sm">Автоматически добавлять остаток в Сбережения</span>
+    </label>
   </div>
 </div>
 
@@ -151,91 +141,78 @@
   Твоя цель: Выжить
   </h2>
   
-<!-- ═══ Верхний dashboard ═══ -->
-<div id="topDash"
-     class="w-full flex flex-wrap justify-center items-start gap-x-12 gap-y-6 pt-4 md:pt-0 mb-10">
+  <!-- Верхний dashboard -->
+  <div class="flex flex-wrap gap-6 mb-8 justify-center">
 
-  <!-- Кувшины-стаканы -->
-  <template id="glassTpl">
+    <!-- Доходы -->
     <div class="glass-wrap">
-      <div class="glass">
-        <!-- уровень жидкости -->
-        <div class="liquid-glass"></div>
-        <!-- подпись-цифра -->
-        <span class="glass-val">0</span>
+      <div class="glass"><div id="glassIncome"  class="liquid-glass" style="background:#82A8AB"></div></div>
+      <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
+    </div>
+
+    <!-- Расходы -->
+    <div class="glass-wrap">
+      <div class="glass"><div id="glassExpenses" class="liquid-glass" style="background:#A77F4B"></div></div>
+      <p class="mt-1 font-semibold text-center text-sm">Расходы</p>
+    </div>
+
+    <!-- Сбережения -->
+    <div class="glass-wrap">
+      <div class="glass"><div id="glassSavings" class="liquid-glass" style="background:#728565"></div></div>
+      <p class="mt-1 font-semibold text-center text-sm">Сбережения</p>
+    </div>
+
+    <!-- Инвестиции -->
+    <div class="glass-wrap">
+      <div class="glass"><div id="glassInvest" class="liquid-glass" style="background:#3B4550"></div></div>
+      <p class="mt-1 font-semibold text-center text-sm">Инвестиции</p>
+    </div>
+
+    <!-- Спекуляции (пустой) -->
+    <div class="glass-wrap">
+      <div class="glass"><div id="glassSpec" class="liquid-glass" style="background:#BF8200"></div></div>
+      <p class="mt-1 font-semibold text-center text-sm">Спекуляции</p>
+    </div>
+
+    <!-- Здоровье (верт. полоса) -->
+    <div class="glass-wrap">
+      <div class="vbar">
+        <div id="vHealthFill" class="vbar-fill" style="background:#22c55e"></div>
+        <span id="vHealthTxt" class="vbar-text">100%</span>
       </div>
-      <p class="mt-1 font-semibold text-center text-sm caption">–</p>
+      <p class="mt-1 font-semibold text-center text-sm">Здоровье</p>
     </div>
-  </template>
 
-  <!-- вставляем 5 штук -->
-  <div class="glass-wrap" id="gIncome">
-    <div class="glass"><div id="glassIncome"  class="liquid-glass bg-[#82A8AB]"></div>
-      <span id="glassIncomeVal"  class="glass-val">0</span></div>
-    <p class="caption">Доходы</p>
-  </div>
-
-  <div class="glass-wrap" id="gExpenses">
-    <div class="glass"><div id="glassExpenses" class="liquid-glass bg-[#A77F4B]"></div>
-      <span id="glassExpensesVal" class="glass-val">0</span></div>
-    <p class="caption">Расходы</p>
-  </div>
-
-  <div class="glass-wrap" id="gSavings">
-    <div class="glass"><div id="glassSavings" class="liquid-glass bg-[#728565]"></div>
-      <span id="glassSavingsVal"  class="glass-val">0</span></div>
-    <p class="caption">Сбережения</p>
-  </div>
-
-  <div class="glass-wrap" id="gInvest">
-    <div class="glass"><div id="glassInvest"  class="liquid-glass bg-[#3B4550]"></div>
-      <span id="glassInvestVal"   class="glass-val">0</span></div>
-    <p class="caption">Инвестиции</p>
-  </div>
-
-  <div class="glass-wrap" id="gSpec">
-    <div class="glass"><div id="glassSpec"   class="liquid-glass bg-[#BF8200]"></div>
-      <span id="glassSpecVal"     class="glass-val">0</span></div>
-    <p class="caption">Спекуляции</p>
-  </div>
-
-  <!-- Вертикальные полосы -->
-  <div class="glass-wrap">
-    <div class="vbar">
-      <div id="vHealthFill" class="vbar-fill bg-[#22c55e]"></div>
-      <span id="vHealthTxt" class="glass-val">100%</span>
+    <!-- Счастье -->
+    <div class="glass-wrap">
+      <div class="vbar">
+        <div id="vHappyFill" class="vbar-fill" style="background:#facc15"></div>
+        <span id="vHappyTxt" class="vbar-text">90%</span>
+      </div>
+      <p class="mt-1 font-semibold text-center text-sm">Счастье</p>
     </div>
-    <p class="caption">Здоровье</p>
-  </div>
 
-  <div class="glass-wrap">
-    <div class="vbar">
-      <div id="vHappyFill" class="vbar-fill bg-[#facc15]"></div>
-      <span id="vHappyTxt" class="glass-val">90%</span>
+    <!-- Мини-график Баллы -->
+    <div class="glass-wrap">
+      <div class="mini-chart-box">
+        <canvas id="scoreChart"></canvas>
+        <span id="scoreBig">0</span>
+      </div>
+      <p class="mt-1 font-semibold text-center text-sm">Баллы</p>
     </div>
-    <p class="caption">Счастье</p>
   </div>
-
-  <!-- Крупная цифра Баллов -->
-  <div class="glass-wrap">
-    <div class="mini-chart-box">
-      <canvas id="scoreChart"></canvas>
-      <span id="scoreBig">0</span>
-    </div>
-    <p class="caption">Баллы</p>
-  </div>
-</div>
 
   <!-- Доходы / Расходы текстом -->
-  <div>
-    <label class="block font-semibold mb-1">Доходы ($)</label>
-    <p id="incomeDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
+  <div class="grid grid-cols-2 gap-6">
+    <div>
+      <label class="block font-semibold mb-1">Доходы ($)</label>
+      <p id="incomeDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">Расходы ($)</label>
+      <p id="expensesDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
+    </div>
   </div>
-  <div>
-    <label class="block font-semibold mb-1">Расходы ($)</label>
-    <p id="expensesDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
-  </div>
-</div>
 
   <!-- Шесть кувшинов-ползунков -->
   <div class="flex flex-wrap gap-6 mb-8">
@@ -295,6 +272,15 @@
       <div class="jar-caption mt-1">Образование<br><span id="eduVal">0</span> $</div>
       <input id="edu" type="hidden" class="hidden-field" value="0">
     </div>
+  </div>
+
+  <!-- Дополнительная работа -->
+  <div>
+    <label for="extra" class="block font-semibold mb-1">Дополнительная работа</label>
+    <select id="extra" class="w-full border p-2 rounded max-w-xs">
+      <option value="нет">Нет</option>
+      <option value="да">Да</option>
+    </select>
   </div>
 
   <!-- Кнопка хода -->
@@ -507,37 +493,27 @@ function setSlider(id, value){
   buildJar('eduSlider'     ,'eduFill'     ,'eduVal'     ,'edu',       2000);
   buildJar('specSlider','specFill','specVal','spec',2000);
 
-/* обновление верхних стаканов */
-function updateGlasses(income, survival, comfort,
-                       savePlan, investPlan, specPlan){
+  /* обновление верхних стаканов */
+function updateGlasses(income, survival, comfort, savePlan, investPlan, specPlan){
+  const full = income * 2 || 1;               // масштаб для всех стаканов
 
-  const full = income * 2 || 1;                      // масштаб для всех стаканов
-  const pct  = v => (Math.min(Math.abs(v), full) / full * 100) + '%';
+  const setH = (id,v)=>{                       // helper-функция
+    document.getElementById(id).style.height =
+        (Math.min(Math.abs(v), full) / full * 100) + '%';
+  };
 
-  const setH = (id, v) => { document.getElementById(id).style.height = pct(v); };
-
-  /* ── высота ─────────────────────────────────────────── */
   setH('glassIncome',   income);
   setH('glassExpenses', survival + comfort);
-  setH('glassSavings',  savePlan);
-  setH('glassInvest',   Math.max(0, investPlan));   // только инвестиции
-  setH('glassSpec',     Math.max(0, specPlan));     // только спекуляции
 
-  /* ── подписи ────────────────────────────────────────── */
-  document.getElementById('glassIncomeVal'  ).textContent = `$${income}`;
-  document.getElementById('glassExpensesVal').textContent = `$${survival + comfort}`;
-  document.getElementById('glassSavingsVal' ).textContent = `$${savePlan}`;
-  document.getElementById('glassInvestVal'  ).textContent = `$${investPlan}`;
-  document.getElementById('glassSpecVal'    ).textContent = `$${specPlan}`;
-
-  /* сбережения могут быть отрицательными → красный фон/текст */
+  /* сбережения: может быть отрицательным */
   const gS = document.getElementById('glassSavings');
-  const lS = document.getElementById('glassSavingsVal');
-  if (savePlan >= 0) {
-    gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text');
-  } else {
-    gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text');
-  }
+  const lS = document.getElementById('saveLabel');
+  if (savePlan >= 0){ gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
+  else              { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
+  setH('glassSavings', savePlan);
+
+  setH('glassInvest',  Math.max(0, investPlan));   // только инвестиции
+  setH('glassSpec',    Math.max(0, specPlan));     // только спекуляции ✓
 }
 
 function showTutorial(){
