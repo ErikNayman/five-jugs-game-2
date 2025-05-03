@@ -50,9 +50,17 @@
   #scoreBig  {position:absolute; top:0; left:0; width:100%; text-align:center;
               font-size:18px; font-weight:700; pointer-events:none;}
   </style>
+  <style>
+#toastBox{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+          z-index:9000;font-size:14px;font-weight:600;color:#fff;}
+.toast{background:#3b82f6;padding:8px 14px;margin-top:8px;border-radius:6px;
+       opacity:0;animation:fade 4s forwards;}
+@keyframes fade{0%{opacity:0}10%{opacity:1}90%{opacity:1}100%{opacity:0}}
+</style>
 </head>
 
 <body class="bg-gray-100">
+  <div id="toastBox"></div>   <!-- контейнер для всплывашек -->
 
 <!-- ═══════════ СТАРТ ═══════════ -->
   <!-- мини-туториал (скрыт по умолчанию) -->
@@ -331,6 +339,23 @@
       <tbody id="historyTable" class="text-center"></tbody>
     </table>
   </div>
+</div> <!-- ← закрывается <div id="game-screen"> -->
+
+<!-- 🏆 кнопка -->
+<button id="openAch"
+        class="fixed top-4 right-4 z-20 bg-yellow-500 text-white
+               w-12 h-12 rounded-full shadow-md">🏆</button>
+
+<!-- Модалка -->
+<div id="achModal" class="fixed inset-0 bg-black/60 hidden
+            items-center justify-center z-40">
+  <div class="bg-white rounded shadow p-6 w-11/12 max-w-md">
+    <h3 class="text-xl font-bold mb-4">Мои достижения</h3>
+    <table class="w-full text-sm" id="achTable"></table>
+    <button id="closeAch" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
+      Закрыть
+    </button>
+  </div>
 </div>
 
 <!-- ═══════════ JS ═══════════ -->
@@ -402,6 +427,24 @@ const goals = {
   }
 };
 
+  const achievements = [
+  { id:'save100',   text:'Первые $100 сбережений',        check:g=>g.savings >= 100           },
+  { id:'save1k',    text:'Сбережения $1 000',             check:g=>g.savings >= 1000          },
+  { id:'invest5k',  text:'Инвестиции $5 000',             check:g=>g.investments >= 5000      },
+  { id:'health100', text:'Вернуть здоровье до 100 %',     check:g=>g.health === 100           },
+  { id:'specGuru',  text:'x2 капитал за счёт спекуляций', check:g=>g.specBalance >= g.startSpec*2 }
+];
+
+  /* === localStorage helpers for achievements ================= */
+  function loadAch(){
+    return JSON.parse(localStorage.fiveJarsAchievements || '{}');
+  }
+  function saveAch(obj){
+    localStorage.fiveJarsAchievements = JSON.stringify(obj);
+  }
+  /* текущее состояние достижений: {id: timestamp, …}  */
+  let achState = loadAch();
+  
 const tutSlides = [          // мини-туториал для Saver
   ['Шаг 1/3','Откладывайте ≥ 10 % дохода — формируйте «подушку».'],
   ['Шаг 2/3','Подушка на 12 мес → инвестируйте ≥ 15 %.'],
@@ -414,6 +457,28 @@ const goalBlock   = document.getElementById('goalBlock');
 const goalHeader  = document.getElementById('goalHeader');
 const startScreen = document.getElementById('start-screen');
 const gameScreen  = document.getElementById('game-screen');
+
+  /* ====== кнопка «🏆» и модалка достижений ====== */
+  document.getElementById('openAch').onclick =
+    () => document.getElementById('achModal').classList.remove('hidden');
+
+  document.getElementById('closeAch').onclick =
+    () => document.getElementById('achModal').classList.add('hidden');
+
+  function renderAchTable(){
+    const tb = document.getElementById('achTable');
+    tb.innerHTML = achievements.map(a=>{
+      const ok = !!achState[a.id];
+      return `<tr>
+        <td class="p-1 pr-3">${ok ? '✅' : '⬜️'}</td>
+        <td class="p-1">${a.text}</td>
+        <td class="p-1 text-xs text-gray-500">
+             ${ok ? new Date(achState[a.id]).toLocaleDateString() : '—'}
+        </td>
+      </tr>`;
+    }).join('');
+  }
+  renderAchTable();   // первичная отрисовка
 
   /* === мини-график Баллов === */
   const chart = new Chart(document.getElementById('scoreChart').getContext('2d'),{
@@ -647,6 +712,26 @@ else if (goal.key === 'double'){
     document.getElementById('scoreBig').textContent = score;
   }
 
+  /* ===== достижения игрока ===== */
+function updateAchievements(ctx){
+  achievements.forEach(a=>{
+    if(!achState[a.id] && a.check(ctx)){
+       achState[a.id] = Date.now();     // помечаем как открыт
+       saveAch(achState);               // пишем в localStorage
+       toast('🏆&nbsp;Достижение: ' + a.text);  // всплывашка
+       renderAchTable();                // если таблица открыта – обновить
+    }
+  });
+}
+  /* ===== всплывающее уведомление ===== */
+function toast(html){
+  const div = document.createElement('div');
+  div.className = 'toast';
+  div.innerHTML = html;
+  document.getElementById('toastBox').append(div);
+  setTimeout(()=>div.remove(), 4000);
+}
+  
   /* старт */
 window.startGame = n => {
   maxTurns = n;
@@ -859,6 +944,10 @@ if (currentGoal){
     return;               // чтобы больше не вести расчёты после finish()
   }
 }
+
+updateAchievements({
+  savings, investments, health, specBalance, startSpec
+});
 
     /* финиш? */
     if(health<=0||happiness<=0||turn>=maxTurns){
