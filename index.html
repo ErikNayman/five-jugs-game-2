@@ -383,7 +383,7 @@
   let turn = 0, maxTurns = 0;
   let savings = 0, investments = 0;
   let specBalance = 0; let startSpec = 0;
-  let health = 100, happiness = 90;
+  let health = 100, happiness = 100;
   let startSavings = 0, startInvestments = 0;
   const scores = [];
 let activeRules = [];        // правила текущей роли
@@ -731,7 +731,7 @@ investments = 0;
 specBalance = 0;
 startSpec   = 0;
 health = 100;
-happiness = 90;  
+happiness = 100;  
 /* ===== применяем бонус/штраф выбранной сложности ===== */
 savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
   
@@ -807,7 +807,7 @@ if (specPlan !== 0 || specBalance !== 0) {
     if(!evt.startsWith('болезнь')){
       if(survival<500) health-=((500-survival)/500)*100;
       else             health+=5;
-      if(happiness>=90) health+=5;
+      if(happiness=100) health+=5;
       health+=(healthSp/500)*50;
     }
     health=Math.round(Math.max(0,Math.min(100,health)));
@@ -875,7 +875,7 @@ function finish(reason){
   startScreen.classList.remove('hidden');
   /* сбрасываем здоровье/счастье и их бары */
   health = 100;
-  happiness = 90;
+  happiness = 100;
   updateBars();
   
   /* 2) ───── обнуляем график Баллов ───── */
