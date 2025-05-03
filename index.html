@@ -138,7 +138,7 @@
 <div id="game-screen" class="hidden p-6 space-y-6 max-w-7xl mx-auto">
 
   <h2 id="goalHeader" class="text-xl font-bold text-center mb-4">
-  Твоя цель: Выжить
+  Прогресс твоей цели ВЫЖИТЬ
   </h2>
   
   <!-- Верхний dashboard -->
@@ -695,7 +695,7 @@ updateGoalProgress(currentGoal, {
                    +document.getElementById('comfort').value
 });
 
-goalHeader.textContent = 'Твоя цель: ' + currentGoal.text;
+goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
 } else {
   activeRules = []; bonusFlag = false;
 }
@@ -714,9 +714,9 @@ if (mode === 'goal') {
 
 /* --- заголовок цели / роли --- */
 if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-  goalHeader.textContent = 'Твоя цель: ' + currentGoal.text;
+  goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
 } else {                               // свободный план – цели нет
-  goalHeader.textContent = 'Твоя цель: Выжить';
+  goalHeader.textContent = 'Прогресс твоей цели ВЫЖИТЬ';
 }
 
   /* для режимов goal / free ничего менять не надо */
