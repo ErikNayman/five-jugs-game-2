@@ -93,16 +93,8 @@
   <label class="mr-4"><input type="radio" name="role" value="Spec"> Speculator</label>
 </div>
 
-<!-- Выбрать цель -->
-<p class="font-semibold mt-4 mb-1">🎯 Выбрать цель</p>
-
-<!-- блок целей (раскрывается) -->
-<div id="goalBlock" class="ml-6 mt-2">
-  <label class="block"><input type="radio" name="goal" value="buffer"  checked> Подушка на 12 мес</label>
-  <label class="block"><input type="radio" name="goal" value="passive"> Пассивный доход $1000/мес</label>
-  <label class="block"><input type="radio" name="goal" value="tenk">    Накопить $10 000</label>
-</div>
-
+<p id="roleGoalHint" class="mt-2 text-sm text-gray-600"></p>
+    
     <!-- ─── СЛОЖНОСТЬ ─── -->
 <p class="font-semibold mt-4 mb-1">💡 Сложность</p>
 <div class="space-y-1 ml-6">
@@ -644,6 +636,25 @@ Spec : {
   goalKey:'double'
 }
 };
+
+/* === Подсказка цели для выбранной роли ==================== */
+function updateRoleGoalHint(){
+  const role = document.querySelector('input[name="role"]:checked')?.value;
+  if (!role) return;
+
+  const goalKey = rolePresets[role].goalKey;     // buffer / passive / double …
+  const text    = goals[goalKey].text;
+  document.getElementById('roleGoalHint').textContent = 'Цель: ' + text;
+}
+
+/* реагируем на переключение роли */
+document.querySelectorAll('input[name="role"]').forEach(r=>{
+  r.addEventListener('change', updateRoleGoalHint);
+});
+
+/* вызвать один раз при загрузке страницы */
+updateRoleGoalHint();
+
 
 /* удобная функция: двигаем слайдер по id на новое значение */
 function setSlider(id, value){
