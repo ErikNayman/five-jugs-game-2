@@ -151,11 +151,16 @@
   <!-- Верхний dashboard -->
   <div class="flex flex-wrap gap-6 mb-8 justify-center">
 
-    <!-- Доходы -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassIncome"  class="liquid-glass" style="background:#82A8AB"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
-    </div>
+<!-- Доходы -->
+<div class="glass-wrap">
+  <div class="glass">
+      <!-- активный доход (дно) -->
+      <div id="glassIncomeActive"  class="liquid-glass" style="background:#82A8AB"></div>
+      <!-- пассивный доход (над активным) -->
+      <div id="glassIncomePassive" class="liquid-glass" style="background:#4ade80"></div>
+  </div>
+  <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
+</div>
 
     <!-- Расходы -->
     <div class="glass-wrap">
@@ -536,8 +541,19 @@ function updateTrophyCounter(){
   const badge = document.getElementById('achCount');
   badge.textContent = unlocked;            // пишем число
 
-  // показываем, если есть хотя бы одно достижение
-  badge.classList.toggle('hidden', unlocked === 0);
+  // --- вариант «показывать всегда» ---
+badge.classList.remove('hidden');        // без toggle
+
+if (unlocked === 0){
+  badge.classList.add   ('bg-gray-400');
+  badge.classList.remove('bg-red-600','bg-green-600');
+}else if (unlocked === total){
+  badge.classList.add   ('bg-green-600');
+  badge.classList.remove('bg-gray-400','bg-red-600');
+}else{
+  badge.classList.add   ('bg-red-600');
+  badge.classList.remove('bg-gray-400','bg-green-600');
+}
 
   // (необязательно) можно перекрашивать при 100 %
   if (unlocked === total) {
@@ -630,15 +646,15 @@ function setSlider(id, value){
   buildJar('specSlider','specFill','specVal','spec',2000);
 
   /* обновление верхних стаканов */
-function updateGlasses(income, survival, comfort, savePlan, investPlan, specPlan){
+function updateGlasses(activeIncome,passiveIncome, survival, comfort, savePlan, investPlan, specPlan){
   const full = BASE_INCOME * 2 || 1;               // масштаб для всех стаканов
-
   const setH = (id,v)=>{                       // helper-функция
     document.getElementById(id).style.height =
         (Math.min(Math.abs(v), full) / full * 100) + '%';
   };
-
-  setH('glassIncome',   income);
+  const incomeTotal = activeIncome + passiveIncome;
+  setH('glassIncomeActive',  activeIncome);
+  setH('glassIncomePassive', incomeTotal);
   setH('glassExpenses', survival + comfort);
 
   /* сбережения: может быть отрицательным */
@@ -688,7 +704,6 @@ function showTutorial(){
     let income = BASE_INCOME;           // 1000 $
     if (extra === 'да') income += 200;  // доп-работа
 
-// пассивный доход: 5 % годовых от инвест. + 3 % от сбережений, делим на 12 мес
 const passive = (investments * 0.05 + savings * 0.03) / 12;
 income += passive;
     
@@ -701,9 +716,14 @@ if (document.getElementById('autoAdjust').checked) {
     return;                                  // выходим: updateIncomeExpenses вызовется снова
   }
 }
-document.getElementById('incomeDisplay').innerText   = `$${income.toFixed(0)}`;
+
+    const passiveIncome = passive;
+    const activeIncome  = income - passiveIncome;
+    
+document.getElementById('incomeDisplay').innerText =
+      `$${activeIncome.toFixed(0)}  +  $${passiveIncome.toFixed(0)}`;
     document.getElementById('expensesDisplay').innerText = `$${spend}`;
-    updateGlasses(income,survival,comfort,savePlan,investPlan,specPlan);
+    updateGlasses(activeIncome,passiveIncome,survival,comfort,savePlan,investPlan,specPlan);
   }
 
 function rulesBroken(income){
@@ -974,7 +994,7 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
     if(!evt.startsWith('болезнь')){
       if(survival<500) health-=((500-survival)/500)*100;
       else             health+=5;
-      if(happiness=100) health+=5;
+      if(happiness>=90) health+=5;
       health+=(healthSp/500)*50;
     }
     health=Math.round(Math.max(0,Math.min(100,health)));
