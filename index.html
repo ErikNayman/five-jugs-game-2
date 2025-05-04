@@ -222,27 +222,35 @@
 
 </div> <!-- конец flex-обёртки dashboard -->
 
-  <!-- Доходы / Расходы / Доп. работа -->
-  <div class="p-4 bg-white/70 rounded-lg shadow inline-block">
-  <div class="grid grid-cols-3 gap-6"><div class="grid grid-cols-3 gap-6">  
+ <!-- Доходы / Расходы / Доп. работа -->
+<div class="p-4 bg-white/70 rounded-lg shadow inline-block">
+  <div class="grid grid-cols-3 gap-6">      <!-- ❶ одна сетка -->
+    <!-- Доходы -->
     <div>
       <label class="block font-semibold mb-1">Доходы ($)</label>
-      <p id="incomeDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
-    </div>   
-    <div>
-      <label class="block font-semibold mb-1">Расходы ($)</label>
-      <p id="expensesDisplay" class="w-40 border p-2 rounded bg-gray-50">$0</p>
-    </div>
-  <div>
-    <label for="extra" class="block font-semibold mb-1">Доп. работа</label>
-    <select id="extra" class="w-40 border p-2 rounded max">
-      <option value="нет">Нет</option>
-      <option value="да">Да</option>
-    </select>
-  </div>
-    </div>
+      <p id="incomeDisplay"
+         class="w-40 border p-2 rounded bg-gray-50">$0</p>
     </div>
 
+    <!-- Расходы -->
+    <div>
+      <label class="block font-semibold mb-1">Расходы ($)</label>
+      <p id="expensesDisplay"
+         class="w-40 border p-2 rounded bg-gray-50">$0</p>
+    </div>
+
+    <!-- Доп. работа -->
+    <div>
+      <label for="extra" class="block font-semibold mb-1">Доп. работа</label>
+      <select id="extra"
+              class="w-40 border p-2 rounded">
+        <option value="нет">Нет</option>
+        <option value="да">Да</option>
+      </select>
+    </div>
+  </div>                                     <!-- /grid -->
+</div>                                       <!-- /card -->
+    
   <p class="w-full text-center text-xl font-bold mb-4">
   Для достижения цели можешь изменять свои траты:
 </p>
