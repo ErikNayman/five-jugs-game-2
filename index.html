@@ -349,7 +349,6 @@
                rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
 </button>
 
-
 <!-- Модалка -->
 <div id="achModal" class="fixed inset-0 bg-black/60 hidden
             items-center justify-center z-40">
@@ -357,7 +356,7 @@
     <h3 class="text-xl font-bold mb-4">Мои достижения</h3>
     <table class="w-full text-sm" id="achTable"></table>
     <button id="resetAch"
-        class="mt-3 text-sm text-red-600 underline">Сбросить прогресс
+        class="mt-3 text-sm text-red-600 underline">Сбросить достижения
     </button>
     <button id="resetBest"
         class="mt-1 text-sm text-red-600 underline">Сбросить рекорды
@@ -809,9 +808,13 @@ window.startGame = n => {
   /* скрываем старт, показываем игру */
   document.getElementById('start-screen').classList.add('hidden');
   document.getElementById('game-screen').classList.remove('hidden');
+    /* ---------- СБРОС ДОСТИЖЕНИЙ перед новой игрой ---------- */
+  achState = {};                // очищаем объект
+  saveAch(achState);            // пишем пустой объект в localStorage
+  renderAchTable();             // обновляем таблицу модалки
+  updateTrophyCounter();        // и счётчик на кнопке 🏆
   /* ---------------- пресеты ---------------- */
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-  
+  const mode = document.querySelector('input[name="mode"]:checked').value; 
   /* ----------- Сложность ----------- */
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
 currentDiff   = difficulties[diffKey];
