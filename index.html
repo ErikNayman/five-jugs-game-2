@@ -496,7 +496,6 @@ const tutSlides = [          // мини-туториал для Saver
 
   /* ссылки на элементы старт-экрана */
 const roleBlock   = document.getElementById('roleBlock');
-const goalBlock   = document.getElementById('goalBlock');
 const goalHeader  = document.getElementById('goalHeader');
 const startScreen = document.getElementById('start-screen');
 const gameScreen  = document.getElementById('game-screen');
@@ -648,8 +647,8 @@ function updateRoleGoalHint(){
 }
 
 /* реагируем на переключение роли */
-document.querySelectorAll('input[name="role"]').forEach(r=>{
-  r.addEventListener('change', updateRoleGoalHint);
+// document.querySelectorAll('input[name="role"]').forEach(r=>{
+//  r.addEventListener('change', updateRoleGoalHint);
 });
 
 /* вызвать один раз при загрузке страницы */
@@ -853,133 +852,91 @@ function toast(html, fresh = false){
   document.getElementById('toastBox').append(div);
   setTimeout(()=>div.remove(), 4000);
 }
-  
-  /* старт */
-window.startGame = n => {
+
+ window.startGame = (n) => {
   maxTurns = n;
-  document.getElementById('maxTurns').innerText = n;
-  /* скрываем старт, показываем игру */
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('game-screen').classList.remove('hidden');
-    /* ---------- СБРОС ДОСТИЖЕНИЙ перед новой игрой ---------- */
-  achState = {};                // очищаем объект
-  saveAch(achState);            // пишем пустой объект в localStorage
-  renderAchTable();             // обновляем таблицу модалки
-  updateTrophyCounter();        // и счётчик на кнопке 🏆
-  /* ---------------- пресеты ---------------- */
-  const mode = document.querySelector('input[name="mode"]:checked')?.value || 'role';
-  /* ----------- Сложность ----------- */
-const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
-currentDiff   = difficulties[diffKey];
-currentDiffKey = diffKey;   // сохраняем, чтобы использовать вне startGame
+  document.getElementById('maxTurns').textContent = n;
 
-['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
-  document.getElementById(id + 'Slider')
-          .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
-});
-  
-savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
-  
-if (mode === 'role') {
-  /* ── 1. базовая инициализация под выбранную роль ────────── */
-  const role = document.querySelector('input[name="role"]:checked').value,
-        cfg  = rolePresets[role];
+  /* показываем экран игры */
+  startScreen.classList.add('hidden');
+  gameScreen.classList.remove('hidden');
 
-  activeRules = cfg.rules;
-  bonusFlag   = !!cfg.bonus;
+  /* ---------- сбрасываем достижения ---------- */
+  achState = {};
+  saveAch(achState);
+  renderAchTable();
+  updateTrophyCounter();
 
-  const base = 1000;                     // опорный доход
-  Object.entries(cfg.plan).forEach(([field, pct])=>{
-    // приводим к шагу слайдера, чтобы не «застревало» между делениями
-    const snap = Math.round(base * pct / 100 / currentDiff.sliderStep) * currentDiff.sliderStep;
-    setSlider(field, snap);
+  /* ---------- читаем выбранные опции ---------- */
+  const mode     = document.querySelector('input[name="mode"]:checked')?.value || 'role';
+  const diffKey  = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
+  currentDiff    = difficulties[diffKey];
+  currentDiffKey = diffKey;
+
+  /* шаг у слайдеров под сложность */
+  ['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
+    document.getElementById(id+'Slider').noUiSlider.updateOptions({ step: currentDiff.sliderStep });
   });
 
-  /* ── 2. ограничиваем диапазон «Выживания» для Saver ─────── */
-  const survivalSlider = document.getElementById('survivalSlider').noUiSlider;
+  /* ---------- переменные роли (доступны ВЕЗДЕ в функции) ---------- */
+  let role = null;          // ← объявили заранее
+  let cfg  = null;
 
-  if (role === 'Saver') {                // только Сберегатель
-    survivalSlider.updateOptions({
-      range   : { min: 0, max: 500 },
-      step    : currentDiff.sliderStep,
-      connect : [true, false]
+  /* ---------- режим ROLE ---------- */
+  if (mode === 'role') {
+    role = document.querySelector('input[name="role"]:checked').value;
+    cfg  = rolePresets[role];
+
+    activeRules = cfg.rules;
+    bonusFlag   = !!cfg.bonus;
+
+    /* пресет значений кувшинов */
+    const base = 1000;
+    Object.entries(cfg.plan).forEach(([field, pct])=>{
+      const snap = Math.round(base * pct / 100 / currentDiff.sliderStep) * currentDiff.sliderStep;
+      setSlider(field, snap);
     });
-    // если бегунок стоял выше потолка — опускаем
-    if (+document.getElementById('survival').value > 500) {
-      survivalSlider.set(500);
+
+    /* ограничение «Выживания» для Сберегателя */
+    const survivalSlider = document.getElementById('survivalSlider').noUiSlider;
+    if (role === 'Saver') {
+      survivalSlider.updateOptions({ range:{min:0,max:500}, step:currentDiff.sliderStep, connect:[true,false] });
+      if (+document.getElementById('survival').value > 500) survivalSlider.set(500);
+    } else {
+      survivalSlider.updateOptions({ range:{min:0,max:2000}, step:currentDiff.sliderStep, connect:[true,false] });
     }
-  } else {                               // Investor / Speculator
-    survivalSlider.updateOptions({
-      range   : { min: 0, max: 2000 },
-      step    : currentDiff.sliderStep,
-      connect : [true, false]
-    });
+  } else {
+    activeRules = [];
+    bonusFlag   = false;
   }
-} // ← закрывает if (mode === 'role')
-   
-   /* шаг слайдеров зависит от сложности */
-['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
-  document.getElementById(id+'Slider')
-          .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
-});
 
-  startSavings = +document.getElementById('save').value;
+  /* ---------- начальные состояния ---------- */
+  turn          = 0;
+  savings       = currentDiff.startBonus$;
+  investments   = specBalance = startSpec = 0;
+  health        = happiness   = 100;
+  startSavings  = +document.getElementById('save').value;
   startInvestments = +document.getElementById('invest').value;
-   if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
-   // назначаем цель, соответствующую роли
-currentGoal = goals[cfg.goalKey];
-   
-document.getElementById('goalText').textContent   = currentGoal.text;
-document.getElementById('goalStatus').textContent = 'в процессе';
-updateGoalProgress(currentGoal, {
-  savings        : startSavings,
-  investments    : startInvestments,
-  passiveIncome  : 0,
-  monthExpenses  : +document.getElementById('survival').value +
-                   +document.getElementById('comfort').value
-});
 
-goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
-} else {
-  activeRules = []; bonusFlag = false;
-}
+  /* ---------- цель, если есть ---------- */
+  if (cfg) {                               // режим role
+    currentGoal = goals[cfg.goalKey];
+    goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
+  } else {
+    currentGoal = null;                    // песочница
+    goalHeader.textContent = 'Песочница — нет выбранной цели';
+  }
 
-  /* ---------------- цель ---------------- */
-if (mode === 'goal') {
-  const goalKey     = document.querySelector('input[name="goal"]:checked').value;
-  currentGoal       = goals[goalKey];
+  if (role === 'Saver' && !localStorage.saverTut) setTimeout(showTutorial, 300);
 
-  document.getElementById('goalText').textContent   = currentGoal.text;
-  document.getElementById('goalStatus').textContent = 'в процессе';
-  updateGoalProgress(currentGoal, {
-    savings: 0, investments: 0, passiveIncome: 0, monthExpenses: 1
-  });
-}
-
-/* --- заголовок цели / роли --- */
-if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-  goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
-} else {                               // свободный план – цели нет
-  goalHeader.textContent = 'Песочница — нет выбранной цели';
-}
-
-  /* для режимов goal / free ничего менять не надо */
-  /* обнуляем состояние игры */
-turn = 0;
-savings = 0;
-investments = 0;
-specBalance = 0;
-startSpec   = 0;
-health = 100;
-happiness = 100;  
-/* ===== применяем бонус/штраф выбранной сложности ===== */
-savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
-  updateIncomeExpenses(); updateBars(); updateTrophyCounter();
+  updateIncomeExpenses();
+  updateBars();
+  updateTrophyCounter();
 };
-
+  
   /* отобразить стартовые сбережения (могут быть < 0) */
-document.getElementById('savings').innerText =
-        `$${Math.round(savings)}`;
+// document.getElementById('savings').innerText =
+//        `$${Math.round(savings)}`;
 
   function specReturnPct(){
   if (currentDiff === difficulties.easy)  return (Math.random() < 0.55 ? 1 : -1) * 0.02;
@@ -1143,12 +1100,6 @@ document.getElementById('goalLeft').textContent    = '–';
   updateIncomeExpenses(); updateBars();
 });
 
-/* переключаем отображение блоков на старт-экране */
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener('change', ()=>{
-    const m = r.value;
-    /* roleBlock всегда виден */
-    goalBlock.classList.toggle('hidden', m !== 'goal');
   });
 });
 
