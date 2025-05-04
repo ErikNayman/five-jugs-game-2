@@ -388,7 +388,7 @@
     sicknessHP      : 3,       // -3 здоровья
 
     /* стартовые послабления */
-    startBonus$     : 500      // +$500 к сбережениям в начале
+    startBonus$     : 0      // +$0 к сбережениям в начале
   },
 
   /* ----------  NORMAL  ------------------------------------ */
@@ -437,6 +437,8 @@ const goals = {
   }
 };
 
+  const BASE_INCOME = 1000;        // базовая ставка, по ней калибруем стакан
+  
   const achievements = [
   { id:'save100',   text:'Первые $100 сбережений',        check:g=>g.savings >= 100           },
   { id:'save1k',    text:'Сбережения $1 000',             check:g=>g.savings >= 1000          },
@@ -629,7 +631,7 @@ function setSlider(id, value){
 
   /* обновление верхних стаканов */
 function updateGlasses(income, survival, comfort, savePlan, investPlan, specPlan){
-  const full = income * 2 || 1;               // масштаб для всех стаканов
+  const full = BASE_INCOME * 2 || 1;               // масштаб для всех стаканов
 
   const setH = (id,v)=>{                       // helper-функция
     document.getElementById(id).style.height =
@@ -683,7 +685,13 @@ function showTutorial(){
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
 
-    let income=1000; if(extra==='да') income+=200;
+    let income = BASE_INCOME;           // 1000 $
+    if (extra === 'да') income += 200;  // доп-работа
+
+// пассивный доход: 5 % годовых от инвест. + 3 % от сбережений, делим на 12 мес
+const passive = (investments * 0.05 + savings * 0.03) / 12;
+income += passive;
+    
     const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu;
 /* ----- автодолив свободного остатка в Сбережения ----- */
 if (document.getElementById('autoAdjust').checked) {
@@ -693,7 +701,7 @@ if (document.getElementById('autoAdjust').checked) {
     return;                                  // выходим: updateIncomeExpenses вызовется снова
   }
 }
-    document.getElementById('incomeDisplay').innerText   = `$${income}`;
+document.getElementById('incomeDisplay').innerText   = `$${income.toFixed(0)}`;
     document.getElementById('expensesDisplay').innerText = `$${spend}`;
     updateGlasses(income,survival,comfort,savePlan,investPlan,specPlan);
   }
@@ -996,7 +1004,7 @@ if (bonusFlag){
     if(health>70)    score+=20;
     if(happiness>70) score+=20;
     const passive=(investments*0.05+savings*0.03)/12;
-    if(passive>1000) score+=30;
+    if(passive>=1000) score+=30;
     updateChart(score);
 
     /* ------------ проверка достижения цели ------------ */
