@@ -607,17 +607,17 @@ if (unlocked === 0){
 const rolePresets = {
   /* min / max — проценты от дохода; buf — минимальная «подушка» в месяцах */
   Saver : {
-    plan  : {survival:50, comfort:25, save:10, invest:5, healthSpend:5, edu:5, spec:0},
+    plan  : {survival:50, comfort:40, save:10, invest:0, healthSpend:0, edu:0, spec:0},
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
-      {type:'buf',  months:12}                // Подушка на 12 мес
+      {type:'buf',  months:3}                // Подушка на 12 мес
     ],
     bonus:+5, // успех → +5 happiness, провал → –5
     goalKey : 'buffer'
   },
   Investor : {
-    plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5, spec:0},
+    plan  : {survival:50, comfort:20, save:10, invest:20, healthSpend:0, edu:0, spec:0},
     rules : [
       {type:'min', jar:'invest', value:15},
       {type:'ratio', max:50},
@@ -627,7 +627,7 @@ const rolePresets = {
     goalKey : 'passive'
   },
 Spec : {
-  plan  : {survival:40, comfort:20, save:5, invest:15, healthSpend:3, edu:2, spec:10},
+  plan  : {survival:50, comfort:20, save:10, invest:0, healthSpend:0, edu:0, spec:20},
   rules : [
     { type:'min', jar:'spec', value:10 },
     { type:'ratio', max:50 }
@@ -880,15 +880,43 @@ currentDiffKey = diffKey;   // сохраняем, чтобы использов
   
 savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
   
- if (mode === 'role') {
+if (mode === 'role') {
+  /* ── 1. базовая инициализация под выбранную роль ────────── */
   const role = document.querySelector('input[name="role"]:checked').value,
         cfg  = rolePresets[role];
-  activeRules = cfg.rules;             // ← запоминаем правила
-  bonusFlag   = !!cfg.bonus;           // true/false
-  const base  = 1000;
-  Object.entries(cfg.plan).forEach(([field,pc])=>{
-    setSlider(field, Math.round(base*pc/100/10)*10);
+
+  activeRules = cfg.rules;
+  bonusFlag   = !!cfg.bonus;
+
+  const base = 1000;                     // опорный доход
+  Object.entries(cfg.plan).forEach(([field, pct])=>{
+    // приводим к шагу слайдера, чтобы не «застревало» между делениями
+    const snap = Math.round(base * pct / 100 / currentDiff.sliderStep) * currentDiff.sliderStep;
+    setSlider(field, snap);
   });
+
+  /* ── 2. ограничиваем диапазон «Выживания» для Saver ─────── */
+  const survivalSlider = document.getElementById('survivalSlider').noUiSlider;
+
+  if (role === 'Saver') {                // только Сберегатель
+    survivalSlider.updateOptions({
+      range   : { min: 0, max: 500 },
+      step    : currentDiff.sliderStep,
+      connect : [true, false]
+    });
+    // если бегунок стоял выше потолка — опускаем
+    if (+document.getElementById('survival').value > 500) {
+      survivalSlider.set(500);
+    }
+  } else {                               // Investor / Speculator
+    survivalSlider.updateOptions({
+      range   : { min: 0, max: 2000 },
+      step    : currentDiff.sliderStep,
+      connect : [true, false]
+    });
+  }
+} // ← закрывает if (mode === 'role')
+   
    /* шаг слайдеров зависит от сложности */
 ['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
   document.getElementById(id+'Slider')
@@ -1025,7 +1053,7 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
     health=Math.round(Math.max(0,Math.min(100,health)));
 
     if(extra==='да') health=Math.max(0,health-5);
-    if(comfort<500)  happiness-=((500-comfort)/500)*10;
+    if(comfort<400)  happiness-=((400-comfort)/400)*10;
     if(extra==='да') happiness-=5;
     happiness=Math.round(Math.max(0,happiness));
 
