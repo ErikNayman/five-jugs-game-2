@@ -61,16 +61,6 @@
   <body class="bg-gray-100">
   <div id="toastBox"></div>
 
-    <script>
-    function toast(html){
-      const div=document.createElement('div');
-      div.className='toast';
-      div.innerHTML=html;
-      document.getElementById('toastBox').append(div);
-      setTimeout(()=>div.remove(),4000);
-    }
-  </script>
-
 <!-- ═══════════ СТАРТ ═══════════ -->
   <!-- мини-туториал (скрыт по умолчанию) -->
 <div id="tutorial" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
@@ -350,10 +340,15 @@
   </div>
 </div> <!-- ← закрывается <div id="game-screen"> -->
 
-<!-- 🏆 кнопка -->
 <button id="openAch"
         class="fixed top-4 right-4 z-20 bg-yellow-500 text-white
-               w-12 h-12 rounded-full shadow-md">🏆</button>
+               w-12 h-12 rounded-full shadow-md relative">
+  🏆
+  <span id="achCount"
+        class="absolute -top-1 -right-1 bg-red-600 text-xs
+               rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+</button>
+
 
 <!-- Модалка -->
 <div id="achModal" class="fixed inset-0 bg-black/60 hidden
@@ -482,7 +477,6 @@ const gameScreen  = document.getElementById('game-screen');
     achState = {};
     saveAch(achState);
     renderAchTable();
-    updateTrophyCounter();
   }
 };
   
