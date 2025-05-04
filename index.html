@@ -88,12 +88,12 @@
 
 <!-- Выбрать роль -->
 <label class="block">
-  <input type="radio" name="mode" value="role">
+  <input type="radio" name="mode" value="role" checked>
   <span class="ml-1">👤 Выбрать роль</span>
 </label>
 
 <!-- блок ролей (раскрывается) -->
-<div id="roleBlock" class="ml-6 mt-2 hidden">
+<div id="roleBlock" class="ml-6 mt-2">
   <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> Saver</label>
   <label class="mr-4"><input type="radio" name="role" value="Investor"> Investor</label>
   <label class="mr-4"><input type="radio" name="role" value="Spec"> Speculator</label>
@@ -135,7 +135,7 @@
 
     <!-- 🛠 Своя схема (песочница) -->
 <label class="block">
-  <input type="radio" name="mode" value="custom" checked>
+  <input type="radio" name="mode" value="custom">
   <span class="ml-1">🛠 Своя&nbsp;схема</span>
 </label>
 
@@ -1113,8 +1113,8 @@ document.getElementById('goalLeft').textContent    = '–';
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
   r.addEventListener('change', ()=>{
     const m = r.value;
-    roleBlock.classList.toggle('hidden', m !== 'role');
     goalBlock.classList.toggle('hidden', m !== 'goal');
+    /* roleBlock всегда видим, поэтому без toggle */
   });
 });
 
