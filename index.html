@@ -103,20 +103,24 @@
   <label class="block"><input type="radio" name="goal" value="tenk">    Накопить $10 000</label>
 </div>
 
-<p class="font-semibold mt-4 mb-1">Сложность:</p>
+    <!-- ─── СЛОЖНОСТЬ ─── -->
+<p class="font-semibold mt-4 mb-1">💡 Сложность</p>
+<div class="space-y-1 ml-6">
+  <label class="inline-flex items-center gap-1">
+    <input type="radio" name="diff" value="easy"   class="accent-green-600" checked>
+    Лёгкий
+  </label><br>
 
-<label class="block">
-  <input type="radio" name="diff" value="easy" checked>
-  <span class="ml-1">🟢 Лёгкий</span>
-</label>
-<label class="block">
-  <input type="radio" name="diff" value="normal">
-  <span class="ml-1">🟡 Средний</span>
-</label>
-<label class="block">
-  <input type="radio" name="diff" value="hard">
-  <span class="ml-1">🔴 Сложный</span>
-</label>
+  <label class="inline-flex items-center gap-1">
+    <input type="radio" name="diff" value="normal" class="accent-yellow-500">
+    Средний
+  </label><br>
+
+  <label class="inline-flex items-center gap-1">
+    <input type="radio" name="diff" value="hard"   class="accent-red-600">
+    Сложный
+  </label>
+</div>
 
     <!-- автодолив -->
     <label class="flex items-center space-x-2 mt-4">
