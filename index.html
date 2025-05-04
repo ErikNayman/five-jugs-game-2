@@ -723,7 +723,7 @@ function rulesBroken(income){
 
     /* --- правило «подушка ≥ N месяцев» --- */
     if (r.type === 'buf')
-      return (surv + comf) > 0 && savings / (surv + comf) < r.months;
+      return surv > 0 && savings / surv < r.months;
   });
 }
 
@@ -998,7 +998,7 @@ if (bonusFlag){
 
     /* ------------ проверка достижения цели ------------ */
 if (currentGoal){
-  const monthExpenses = survival + comfort;
+  const monthExpenses = survival;
   const passiveIncome = (investments*0.05 + savings*0.03) / 12;
   const done = currentGoal.check({
     savings, passiveIncome, monthExpenses
