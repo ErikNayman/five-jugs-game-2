@@ -439,7 +439,7 @@ const goals = {
   { id:'save1k',    text:'Сбережения $1 000',             check:g=>g.savings >= 1000          },
   { id:'invest5k',  text:'Инвестиции $5 000',             check:g=>g.investments >= 5000      },
   { id:'health100', text:'Вернуть здоровье до 100 %',     check:g=>g.health === 100           },
-  { id:'specGuru',  text:'x2 капитал за счёт спекуляций', check:g=>g.specBalance >= g.startSpec*2 }
+  { id:'specGuru',  text:'x2 капитал за счёт спекуляций', check:g => g.startSpec > 0 && g.specBalance >= g.startSpec * 2 }
 ];
 
   /* === localStorage helpers for achievements ================= */
@@ -918,6 +918,7 @@ const growth = Math.random() <= 0.7           // 70 % – рост, 30 % – п�
 investments  = (investments + investPlan - crisis) * (1 + growth);
 /* ─── спекуляции ─────────────────────────────── */
 if (specPlan !== 0 || specBalance !== 0) {
+if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
   specBalance += specPlan;                     // новый взнос / вывод
   const specPnl = specBalance * specReturnPct(); // доход-убыток за ход
   specBalance += specPnl;                      // итоговый баланс
