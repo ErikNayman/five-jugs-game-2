@@ -86,10 +86,10 @@
     <!-- режимы -->
     <p class="font-semibold mt-4 mb-1">Как начать?</p>
 
-<!-- Свободный план (по умолчанию) -->
+<!-- 🛠 Своя схема (песочница) -->
 <label class="block">
-  <input type="radio" name="mode" value="free" checked>
-  <span class="ml-1">⚙️ Свободный план</span>
+  <input type="radio" name="mode" value="custom" checked>
+  <span class="ml-1">🛠 Своя&nbsp;схема</span>
 </label>
 
 <!-- Выбрать роль -->
@@ -147,7 +147,7 @@
   <h2 id="goalHeader" class="text-xl font-bold text-center mb-4">
   Прогресс твоей цели ВЫЖИТЬ
   </h2>
-  
+
 <!-- ═══ Верхний dashboard (3 логических блока) ═══ -->
 <div class="flex flex-col lg:flex-row gap-6 mb-8 justify-center">
 
@@ -925,7 +925,7 @@ if (mode === 'goal') {
 if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
   goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
 } else {                               // свободный план – цели нет
-  goalHeader.textContent = 'Прогресс твоей цели ВЫЖИТЬ';
+  goalHeader.textContent = 'Песочница — нет выбранной цели';
 }
 
   /* для режимов goal / free ничего менять не надо */
