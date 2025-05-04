@@ -189,36 +189,36 @@
     </div>
   </div>
 
-  <!-- ── ② Здоровье + Счастье + Баллы ── -->
-  <div class="p-4 bg-white/70 rounded-lg shadow flex gap-6 justify-center mx-auto">
-<!-- Здоровье (верт. полоса) -->
-    <div class="glass-wrap">
-      <div class="vbar">
-        <div id="vHealthFill" class="vbar-fill" style="background:#22c55e"></div>
-        <span id="vHealthTxt" class="vbar-text">100%</span>
-      </div>
-      <p class="mt-1 font-semibold text-center text-sm">Здоровье</p>
-    </div>
+ <!-- ── ② Здоровье + Счастье + Баллы ── -->
+<div class="p-4 bg-white/70 rounded-lg shadow flex gap-6 justify-center items-end mx-auto">
 
-    <!-- Счастье -->
-    <div class="glass-wrap">
-      <div class="vbar">
-        <div id="vHappyFill" class="vbar-fill" style="background:#facc15"></div>
-        <span id="vHappyTxt" class="vbar-text">100%</span>
-      </div>
-      <p class="mt-1 font-semibold text-center text-sm">Счастье</p>
+  <!-- Здоровье -->
+  <div class="glass-wrap">
+    <div class="vbar">
+      <div id="vHealthFill" class="vbar-fill" style="background:#22c55e"></div>
+      <span id="vHealthTxt" class="vbar-text">100%</span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Здоровье</p>
+  </div>
 
-    <!-- Мини-график Баллы -->
-    <div class="glass-wrap">
-      <div class="mini-chart-box">
-        <canvas id="scoreChart"></canvas>
-        <span id="scoreBig">0</span>
-      </div>
-      <p class="mt-1 font-semibold text-center text-sm">Баллы</p>
+  <!-- Счастье -->
+  <div class="glass-wrap">
+    <div class="vbar">
+      <div id="vHappyFill" class="vbar-fill" style="background:#facc15"></div>
+      <span id="vHappyTxt" class="vbar-text">100%</span>
     </div>
+    <p class="mt-1 font-semibold text-center text-sm">Счастье</p>
   </div>
+
+  <!-- Баллы -->
+  <div class="glass-wrap">
+    <div class="mini-chart-box">
+      <canvas id="scoreChart"></canvas>
+      <span id="scoreBig">0</span>
+    </div>
+    <p class="mt-1 font-semibold text-center text-sm">Баллы</p>
   </div>
+</div>
 
 </div> <!-- конец flex-обёртки dashboard -->
 
