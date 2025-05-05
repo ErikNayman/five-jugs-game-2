@@ -618,7 +618,7 @@ const rolePresets = {
       {type:'min', jar:'save',   value:10},
       {type:'comfortMax', max:40},                 // comfort ≤ 40 %
     ],
-    bonus:+5,
+    bonus:+5, // успех → +5 happiness, провал → –5
     goalKey : 'buffer'
   },
   Investor : {
@@ -633,8 +633,8 @@ const rolePresets = {
 Spec : {
   plan  : {survival:40, comfort:20, save:0, invest:0, healthSpend:0, edu:0, spec:40},
   rules : [
-    {type:'min', jar:'spec', value:10},
-    {type:'comfortMax', max:20}
+    { type:'min', jar:'spec', value:10 },
+    { type:'comfortMax', max:20 }
   ],
   bonus:false,
   goalKey:'double'
@@ -729,8 +729,7 @@ function showTutorial(){
     const healthSp =+document.getElementById('healthSpend').value;
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
-    extraSel.classList.toggle('bg-red-100', extra === 'да');
-    
+
     let income = BASE_INCOME;           // 1000 $
     if (extra === 'да') income += 200;  // доп-работа
 
@@ -774,7 +773,7 @@ function rulesBroken(income){
       if (r.jar === 'spec')   return pct(sp) < r.value;
     }
 
-    /* --- правило «комфорт ≤ max %» --- */
+        /* --- правило «комфорт ≤ max %» --- */
     if (r.type === 'comfortMax')
       return pct(comf) > r.max;
 
@@ -1023,42 +1022,41 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
 if (!evt.startsWith('болезнь')) {
 
   /* ---------- здоровье ---------- */
-  if (survival < SURV_SAFE) {
-    const ratio = (SURV_SAFE - survival) / SURV_SAFE;   // 0 … 1
-    health -= ratio * 100;
-  } else if (survival >= SURV_BONUS) {
-    health += 5;
-  }
-  health += (healthSp / 500) * 50;                      // траты на здоровье
+if (survival < SURV_SAFE) {
+  const ratio = (SURV_SAFE - survival) / SURV_SAFE;      // 0 … 1
+  health -= ratio * 100;                                 // линейно до –100
+} else if (survival >= SURV_BONUS) {
+  health += 5;                                           // небольшой бонус
+}
+health += (healthSp / 500) * 50;                         // траты на здоровье
 
-  /* ---------- счастье (комфорт) ---------- */
-  if (comfort < COMF_SAFE) {
-    const ratio = (COMF_SAFE - comfort) / COMF_SAFE;
-    happiness -= ratio * HAPPY_K;                       // до –8
-  } else if (comfort >= COMF_BONUS) {
-    happiness += 2;
-  }
+/* ---------- счастье ------------ */
+if (comfort < COMF_SAFE) {
+  const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
+  happiness -= ratio * HAPPY_K;                          // до –8
+} else if (comfort >= COMF_BONUS) {
+  happiness += 2;                                        // бонус
+}
 
-  /* штраф за подработку */
-  if (extra === 'да') happiness -= 3;
+/* штраф за подработку */
+if (extra === 'да') happiness -= 3;
 
-  /* ---------- счастье за «подушку» ---------- */
+/* ---------- счастье за «подушку» ---------- */
   const bufferTarget = survival * 3;                    // 3-месячная подушка
   const bufRatio     = Math.min(savings / bufferTarget, 1);
   if (bufRatio < 1)  happiness -= (1 - bufRatio) * 2;   // –0 … –2
-  else               happiness += 1;                    // +1 если подушка есть
+  else               happiness += 1;                    // +1 если подушка есть  
 }
 
-/* приведение к 0…100 %  — оставляем вне большого if */
+/* приведение к 0…100 % */
 health    = Math.round(Math.max(0, Math.min(100, health)));
 happiness = Math.round(Math.max(0, Math.min(100, happiness)));
 
-/* бонус/штраф за выполнение правил */
+    /* бонус или штраф по итогам правил */
 if (bonusFlag){
   const bad = rulesBroken(income);
   happiness = Math.max(0, Math.min(100, happiness + (bad ? -5 : +5)));
 }
-
     /* интерфейс */
     document.getElementById('turn').innerText=turn;
     document.getElementById('event').innerText=evt;
