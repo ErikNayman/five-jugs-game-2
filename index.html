@@ -88,28 +88,29 @@
 
 <!-- блок ролей -->
 <div id="roleBlock" class="ml-6 mt-2">
-  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> Saver</label>
-  <label class="mr-4"><input type="radio" name="role" value="Investor"> Investor</label>
-  <label class="mr-4"><input type="radio" name="role" value="Spec"> Speculator</label>
+  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> Сберегатель</label>
+  <label class="mr-4"><input type="radio" name="role" value="Investor"> Инвестор</label>
+  <label class="mr-4"><input type="radio" name="role" value="Spec"> Спекулянт</label>
 </div>
 
 <p id="roleGoalHint" class="mt-2 text-sm text-gray-600"></p>
     
     <!-- ─── СЛОЖНОСТЬ ─── -->
 <p class="font-semibold mt-4 mb-1">💡 Сложность</p>
-<div class="space-y-1 ml-6">
-  <label class="inline-flex items-center gap-1">
-    <input type="radio" name="diff" value="easy"   class="accent-green-600" checked>
+<div class="flex items-center gap-4 flex-wrap ml-6">
+  <label class="flex items-center gap-1">
+    <input type="radio" name="diff" value="easy"
+           class="accent-green-600" checked>
     Лёгкий
-  </label><br>
-
-  <label class="inline-flex items-center gap-1">
-    <input type="radio" name="diff" value="normal" class="accent-yellow-500">
+  </label>
+  <label class="flex items-center gap-1">
+    <input type="radio" name="diff" value="normal"
+           class="accent-yellow-500">
     Средний
-  </label><br>
-
-  <label class="inline-flex items-center gap-1">
-    <input type="radio" name="diff" value="hard"   class="accent-red-600">
+  </label>
+  <label class="flex items-center gap-1">
+    <input type="radio" name="diff" value="hard"
+           class="accent-red-600">
     Сложный
   </label>
 </div>
@@ -945,7 +946,7 @@ if (currentGoal) {                     // цель (для режима goal И�
   /* для режимов goal / free ничего менять не надо */
   /* обнуляем состояние игры */
 turn = 0;
-savings = 0;
+savings = currentDiff.startBonus$ + (role === 'Investor' ? 1000 : 0);
 investments = 0;
 specBalance = 0;
 startSpec   = 0;
