@@ -1187,7 +1187,12 @@ document.querySelectorAll('input[name="mode"]').forEach(r=>{
     goalBlock.classList.toggle('hidden', m !== 'goal');
   });
 });
-
+  
+/* --- FAQ панель --- */
+const faqPanel = document.getElementById('faqPanel');
+document.getElementById('openFaq').onclick = () =>
+  faqPanel.classList.toggle('-translate-x-full');
+  
 </script>
 </body>
 </html>
