@@ -617,9 +617,8 @@ const rolePresets = {
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'comfortMax', max:40},                 // comfort ≤ 40 %
-      {type:'buf',  months:3}                // Подушка на 3 мес
     ],
-    bonus:+5, // успех → +5 happiness, провал → –5
+    bonus:+5,
     goalKey : 'buffer'
   },
   Investor : {
@@ -627,7 +626,6 @@ const rolePresets = {
     rules : [
       {type:'min', jar:'invest', value:15},
       {type:'comfortMax', max:20},
-      {type:'buf',  months:6}
     ],
     bonus:+5,
     goalKey : 'passive'
@@ -635,8 +633,8 @@ const rolePresets = {
 Spec : {
   plan  : {survival:40, comfort:20, save:0, invest:0, healthSpend:0, edu:0, spec:40},
   rules : [
-    { type:'min', jar:'spec', value:10 },
-    { type:'comfortMax', max:20 }
+    {type:'min', jar:'spec', value:10},
+    {type:'comfortMax', max:20}
   ],
   bonus:false,
   goalKey:'double'
@@ -731,7 +729,8 @@ function showTutorial(){
     const healthSp =+document.getElementById('healthSpend').value;
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
-
+    extraSel.classList.toggle('bg-red-100', extra === 'да');
+    
     let income = BASE_INCOME;           // 1000 $
     if (extra === 'да') income += 200;  // доп-работа
 
@@ -775,7 +774,7 @@ function rulesBroken(income){
       if (r.jar === 'spec')   return pct(sp) < r.value;
     }
 
-        /* --- правило «комфорт ≤ max %» --- */
+    /* --- правило «комфорт ≤ max %» --- */
     if (r.type === 'comfortMax')
       return pct(comf) > r.max;
 
@@ -1040,14 +1039,19 @@ if (comfort < COMF_SAFE) {
   happiness += 2;                                        // бонус
 }
 
+/* --- счастье за наличие/отсутствие подушки ------------------- */
+const bufferTarget = survival * 3;                       // 3-месячная подушка
+const ratio     = Math.min(savings / bufferTarget, 1); // 0 … 1
+if (ratio < 1)  happiness -= (1 - ratio) * 2;      // −0 … −2
+else                happiness += 1;                      // +1, если цель выполнена
+ 
 /* штраф за подработку */
 if (extra === 'да') happiness -= 3;
 }
-
+   
 /* приведение к 0…100 % */
 health    = Math.round(Math.max(0, Math.min(100, health)));
 happiness = Math.round(Math.max(0, Math.min(100, happiness)));
-
 
     /* бонус или штраф по итогам правил */
 if (bonusFlag){
