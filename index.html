@@ -993,7 +993,7 @@ document.getElementById('savings').innerText =
 /* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
 
-if (Math.random() < currentDiff.eventProb) {
+//if (Math.random() < currentDiff.eventProb) {
   /* «бросаем кубик» второй раз, чтобы выбрать тип события */
   const w = currentDiff.eventWeights;          // короче ссылаться
   const dice = Math.random();
@@ -1011,7 +1011,8 @@ if (Math.random() < currentDiff.eventProb) {
     evt = `болезнь – ${currentDiff.sicknessHP} здоровья`;
   }
 }
-
+toast(`📣 <strong>${evt}</strong>`, true);
+  
     const free = income - spend + penalty;
 savings   += savePlan + free;
 
