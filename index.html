@@ -485,6 +485,7 @@ const goals = {
 };
 
   const BASE_INCOME = 1000;        // базовая ставка, по ней калибруем стакан
+  let salaryBonus = 0;   // всё, что «накинули» за образование
   const SURV_SAFE       = 500;  // <$ 500  → убыль здоровья
   const SURV_BONUS      = 600;  // >=600   → +5 здоровья за ход
   const COMF_SAFE       = 300;  // <$ 300  → убыль счастья
@@ -712,7 +713,7 @@ function setSlider(id, value){
 
   /* обновление верхних стаканов */
 function updateGlasses(activeIncome,passiveIncome, survival, comfort, savePlan, investPlan, specPlan){
-  const full = BASE_INCOME * 2 || 1;               // масштаб для всех стаканов
+  const full = (BASE_INCOME + salaryBonus) * 2 || 1;               // масштаб для всех стаканов
   const setH = (id,v)=>{                       // helper-функция
     document.getElementById(id).style.height =
         (Math.min(Math.abs(v), full) / full * 100) + '%';
@@ -766,7 +767,7 @@ function showTutorial(){
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
 
-    let income = BASE_INCOME;           // 1000 $
+    let income = BASE_INCOME + salaryBonus;           // 1000 $
     if (extra === 'да') income += 200;  // подработка
 
 const passive = (investments * 0.05 + savings * 0.03) / 12;
@@ -1014,9 +1015,15 @@ document.getElementById('savings').innerText =
     const specPlan   = +document.getElementById('spec').value;
     const healthSp  =+document.getElementById('healthSpend').value;
     const edu       =+document.getElementById('edu').value;
+    const raise   = edu * 0.10;               // +10 % от вложенного
+if (raise > 0){
+  salaryBonus += raise;                   // надбавка накапливается
+  evt += ` | повышение зарплаты +$${raise.toFixed(0)}`;
+  toast(`🎓 Зарплата выросла на $${raise.toFixed(0)} благодаря обучению`, true);
+}
     const extra     = document.getElementById('extra').value;
 
-    let income=1000; if(extra==='да') income+=200;
+    let income = BASE_INCOME + salaryBonus;; if(extra==='да') income+=200;
     const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu;
 
 /* ===== событие с учётом сложности ===== */
