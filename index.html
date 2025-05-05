@@ -1036,17 +1036,17 @@ if (comfort < COMF_SAFE) {
   const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
   happiness -= ratio * HAPPY_K;                          // до –8
 } else if (comfort >= COMF_BONUS) {
-  happiness += 2;                                        // бону
+  happiness += 2;                                        // бонус
+}
 
-/* --- счастье за наличие/отсутствие подушки ------------------- */
+/* штраф за подработку */
+if (extra === 'да') happiness -= 3;
+
+  /* --- счастье за наличие/отсутствие подушки ------------------- */
 const bufferTarget = survival * 3;                       // 3-месячная подушка
 const ratio     = Math.min(savings / bufferTarget, 1); // 0 … 1
 if (ratio < 1)  happiness -= (1 - ratio) * 2;      // −0 … −2
 else                happiness += 1;                      // +1, если цель выполнена
- 
-/* штраф за подработку */
-if (extra === 'да') happiness -= 3;
-}
    
 /* приведение к 0…100 % */
 health    = Math.round(Math.max(0, Math.min(100, health)));
@@ -1057,6 +1057,7 @@ if (bonusFlag){
   const bad = rulesBroken(income);
   happiness = Math.max(0, Math.min(100, happiness + (bad ? -5 : +5)));
 }
+  }
     /* интерфейс */
     document.getElementById('turn').innerText=turn;
     document.getElementById('event').innerText=evt;
