@@ -1015,20 +1015,20 @@ document.getElementById('savings').innerText =
     const specPlan   = +document.getElementById('spec').value;
     const healthSp  =+document.getElementById('healthSpend').value;
     const edu       =+document.getElementById('edu').value;
-    const raise   = edu * 0.10;               // +10 % от вложенного
-if (raise > 0){
-  salaryBonus += raise;                   // надбавка накапливается
-  evt += ` | повышение зарплаты +$${raise.toFixed(0)}`;
-  toast(`🎓 Зарплата выросла на $${raise.toFixed(0)} благодаря обучению`, true);
-}
     const extra     = document.getElementById('extra').value;
-
     let income = BASE_INCOME + salaryBonus;; if(extra==='да') income+=200;
     const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu;
 
 /* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
 
+    const raise   = edu * 0.10;               // +10 % от вложенного
+if (raise > 0){
+  salaryBonus += raise;                   // надбавка накапливается
+  evt += ` | повышение зарплаты +$${raise.toFixed(0)}`;
+  toast(`🎓 Зарплата выросла на $${raise.toFixed(0)} благодаря обучению`, true);
+}
+  
 //if (Math.random() < currentDiff.eventProb) {
   /* «бросаем кубик» второй раз, чтобы выбрать тип события */
   const w = currentDiff.eventWeights;
