@@ -615,6 +615,7 @@ const rolePresets = {
     ],
     bonus:+5, // успех → +5 happiness, провал → –5
     goalKey : 'buffer'
+    maxSurvival : 500
   },
   Investor : {
     plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5, spec:0},
@@ -625,6 +626,7 @@ const rolePresets = {
     ],
     bonus:+5,
     goalKey : 'passive'
+    maxSurvival : 2000
   },
 Spec : {
   plan  : {survival:40, comfort:20, save:5, invest:15, healthSpend:3, edu:2, spec:10},
@@ -634,6 +636,7 @@ Spec : {
   ],
   bonus:false,
   goalKey:'double'
+  maxSurvival : 2000
 }
 };
 
@@ -662,7 +665,7 @@ function setSlider(id, value){
 };
 
   /* шесть кувшинов */
-  buildJar('survivalSlider','survivalFill','survivalVal','survival',500);
+  buildJar('survivalSlider','survivalFill','survivalVal','survival',2000);
   buildJar('comfortSlider' ,'comfortFill' ,'comfortVal' ,'comfort' ,2000);
   buildJar('saveSlider'    ,'saveFill'    ,'saveLabel'  ,'save'    ,2000);
   buildJar('investSlider'  ,'investFill'  ,'investVal'  ,'invest'  ,2000);
@@ -888,6 +891,18 @@ savings       = currentDiff.startBonus$;   // бонус / штраф к ста�
   const base  = 1000;
   Object.entries(cfg.plan).forEach(([field,pc])=>{
     setSlider(field, Math.round(base*pc/100/10)*10);
+  /* ── ограничиваем верхний предел «Выживание» для выбранной роли ── */
+const survSlider = document.getElementById('survivalSlider').noUiSlider;
+const maxSurv    = cfg.maxSurvival || 2000;
+
+survSlider.updateOptions({
+  range : { min: 0, max: maxSurv }
+});
+
+/* если текущее значение оказалось выше нового потолка – понижаем */
+if (+document.getElementById('survival').value > maxSurv){
+  setSlider('survival', maxSurv);
+}
   });
    /* шаг слайдеров зависит от сложности */
 ['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
@@ -914,6 +929,8 @@ updateGoalProgress(currentGoal, {
 goalHeader.textContent = 'Прогресс твоей цели: ' + currentGoal.text;
 } else {
   activeRules = []; bonusFlag = false;
+   document.getElementById('survivalSlider')
+          .noUiSlider.updateOptions({ range:{min:0,max:2000} });
 }
 
   /* ---------------- цель ---------------- */
