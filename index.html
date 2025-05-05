@@ -1012,6 +1012,7 @@ let evt = 'ничего', penalty = 0, crisis = 0;
   }
 //}
 
+    toast(`📣 <strong>${evt}</strong>`, true);
     const free = income - spend + penalty;
 savings   += savePlan + free;
 
