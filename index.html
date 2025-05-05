@@ -449,7 +449,10 @@ const goals = {
 };
 
   const BASE_INCOME = 1000;        // базовая ставка, по ней калибруем стакан
-  const HAPPY_SAFE = 300;   // $ «зона комфорта» – ниже начинаем терять счастье
+  const SURV_SAFE       = 500;  // <$ 500  → убыль здоровья
+  const SURV_BONUS      = 600;  // >=600   → +5 здоровья за ход
+  const COMF_SAFE       = 300;  // <$ 300  → убыль счастья
+  const COMF_BONUS      = 400;  // >=400   → +2 счастья за ход
   const HAPPY_K    = 8;     // максимум −8 ед. счастья за ход
   const HAPPY_BONUS_THRESHOLD = 400; // ≥400 $ даёт небольшой плюс
   
@@ -1020,25 +1023,25 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
 /* здоровье / счастье */
 if (!evt.startsWith('болезнь')) {
 
-  /* --- здоровье --- */
-  if (survival < 500)  health -= ((500 - survival) / 500) * 100;
-  else                 health += 5;
-  health += (healthSp / 500) * 50;
+  /* ---------- здоровье ---------- */
+if (survival < SURV_SAFE) {
+  const ratio = (SURV_SAFE - survival) / SURV_SAFE;      // 0 … 1
+  health -= ratio * 100;                                 // линейно до –100
+} else if (survival >= SURV_BONUS) {
+  health += 5;                                           // небольшой бонус
+}
+health += (healthSp / 500) * 50;                         // траты на здоровье
 
-  /* --- счастье --- */
-  // 2-а. дискомфорт: comfort < 300 $
-  if (comfort < HAPPY_SAFE) {
-    const ratio = (HAPPY_SAFE - comfort) / HAPPY_SAFE; // 0 … 1
-    happiness -= ratio * HAPPY_K;                      // линейный спад (0 … −8)
-  }
+/* ---------- счастье ------------ */
+if (comfort < COMF_SAFE) {
+  const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
+  happiness -= ratio * HAPPY_K;                          // до –8
+} else if (comfort >= COMF_BONUS) {
+  happiness += 2;                                        // бонус
+}
 
-  // 2-б. хороший комфорт: ≥ 400 $  → лёгкий бонус
-  if (comfort >= HAPPY_BONUS_THRESHOLD) {
-    happiness += 2;            // +2 ед. за ход максимум
-  }
-
-  // 2-в. штраф за подработку: –3 (было –5)
-  if (extra === 'да') happiness -= 3;
+/* штраф за подработку */
+if (extra === 'да') happiness -= 3;
 }
 
 /* приведение к 0…100 % */
