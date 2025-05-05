@@ -440,7 +440,7 @@ let currentDiffKey  = 'easy';
 document.addEventListener('DOMContentLoaded', ()=>{
 
 const goals = {
-  buffer : { key:'buffer',  text:'Подушка на 3 месяца',   check:g=>g.savings>=g.monthExpenses*12 },
+  buffer : { key:'buffer',  text:'Подушка на 3 месяца',   check:g=>g.savings>=g.monthExpenses*3 },
   passive: { key:'passive', text:'Пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
   tenk   : { key:'tenk',    text:'Накопить $10 000',        check:g=>g.savings>=10000 },
   double : { key:'double', text :'Удвоить капитал',    // сравниваем текущие накопления с тем, что было на старте игры
@@ -682,7 +682,7 @@ function updateGlasses(activeIncome,passiveIncome, survival, comfort, savePlan, 
   };
   const incomeTotal = activeIncome + passiveIncome;
   setH('glassIncomeActive',  activeIncome);
-  setH('glassIncomePassive', incomeTotal);
+  setH('glassIncomePassive', passiveIncome);
   setH('glassExpenses', survival + comfort);
 
   /* сбережения: может быть отрицательным */
