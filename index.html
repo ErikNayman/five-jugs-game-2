@@ -449,6 +449,9 @@ const goals = {
 };
 
   const BASE_INCOME = 1000;        // базовая ставка, по ней калибруем стакан
+  const HAPPY_SAFE = 300;   // $ «зона комфорта» – ниже начинаем терять счастье
+  const HAPPY_K    = 8;     // максимум −8 ед. счастья за ход
+  const HAPPY_BONUS_THRESHOLD = 400; // ≥400 $ даёт небольшой плюс
   
   const achievements = [
   { id:'save100',   text:'Первые $100 сбережений',        check:g=>g.savings >= 100           },
@@ -1014,19 +1017,34 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
   evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
 }
 
-    /* здоровье / счастье */
-    if(!evt.startsWith('болезнь')){
-      if(survival<500) health-=((500-survival)/500)*100;
-      else             health+=5;
-      if(happiness>=70) health+=5;
-      health+=(healthSp/500)*50;
-    }
-    health=Math.round(Math.max(0,Math.min(100,health)));
+/* здоровье / счастье */
+if (!evt.startsWith('болезнь')) {
 
-    if(extra==='да') health=Math.max(0,health-5);
-    if(comfort<500)  happiness-=((500-comfort)/500)*10;
-    if(extra==='да') happiness-=5;
-    happiness=Math.round(Math.max(0,happiness));
+  /* --- здоровье --- */
+  if (survival < 500)  health -= ((500 - survival) / 500) * 100;
+  else                 health += 5;
+  health += (healthSp / 500) * 50;
+
+  /* --- счастье --- */
+  // 2-а. дискомфорт: comfort < 300 $
+  if (comfort < HAPPY_SAFE) {
+    const ratio = (HAPPY_SAFE - comfort) / HAPPY_SAFE; // 0 … 1
+    happiness -= ratio * HAPPY_K;                      // линейный спад (0 … −8)
+  }
+
+  // 2-б. хороший комфорт: ≥ 400 $  → лёгкий бонус
+  if (comfort >= HAPPY_BONUS_THRESHOLD) {
+    happiness += 2;            // +2 ед. за ход максимум
+  }
+
+  // 2-в. штраф за подработку: –3 (было –5)
+  if (extra === 'да') happiness -= 3;
+}
+
+/* приведение к 0…100 % */
+health    = Math.round(Math.max(0, Math.min(100, health)));
+happiness = Math.round(Math.max(0, Math.min(100, happiness)));
+
 
     /* бонус или штраф по итогам правил */
 if (bonusFlag){
