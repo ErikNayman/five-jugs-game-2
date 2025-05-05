@@ -993,9 +993,9 @@ document.getElementById('savings').innerText =
 /* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
 
-if (Math.random() < currentDiff.eventProb) {
+//if (Math.random() < currentDiff.eventProb) {
   /* «бросаем кубик» второй раз, чтобы выбрать тип события */
-  const w = currentDiff.eventWeights;          // короче ссылаться
+  const w = currentDiff.eventWeights;
   const dice = Math.random();
 
   if (dice < w.minorExpense) {                 // мелкая трата
@@ -1010,7 +1010,7 @@ if (Math.random() < currentDiff.eventProb) {
     health = Math.max(0, health - currentDiff.sicknessHP);
     evt = `болезнь – ${currentDiff.sicknessHP} здоровья`;
   }
-}
+//}
 
     const free = income - spend + penalty;
 savings   += savePlan + free;
