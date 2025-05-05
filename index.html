@@ -616,7 +616,7 @@ const rolePresets = {
     plan  : {survival:50, comfort:40, save:10, invest:0, healthSpend:0, edu:0, spec:0},
     rules : [
       {type:'min', jar:'save',   value:10},
-      {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
+      {type:'comfortMax', max:40},                 // comfort ≤ 40 %
       {type:'buf',  months:3}                // Подушка на 3 мес
     ],
     bonus:+5, // успех → +5 happiness, провал → –5
@@ -626,7 +626,7 @@ const rolePresets = {
     plan  : {survival:40, comfort:20, save:10, invest:20, healthSpend:5, edu:5, spec:0},
     rules : [
       {type:'min', jar:'invest', value:15},
-      {type:'ratio', max:50},
+      {type:'comfortMax', max:20},
       {type:'buf',  months:6}
     ],
     bonus:+5,
@@ -636,7 +636,7 @@ Spec : {
   plan  : {survival:40, comfort:20, save:0, invest:0, healthSpend:0, edu:0, spec:40},
   rules : [
     { type:'min', jar:'spec', value:10 },
-    { type:'ratio', max:50 }
+    { type:'comfortMax', max:20 }
   ],
   bonus:false,
   goalKey:'double'
@@ -775,9 +775,9 @@ function rulesBroken(income){
       if (r.jar === 'spec')   return pct(sp) < r.value;
     }
 
-    /* --- правило «survival+comfort ≤ max %» --- */
-    if (r.type === 'ratio')
-      return pct(surv + comf) > r.max;
+        /* --- правило «комфорт ≤ max %» --- */
+    if (r.type === 'comfortMax')
+      return pct(comf) > r.max;
 
     /* --- правило «подушка ≥ N месяцев» --- */
     if (r.type === 'buf')
