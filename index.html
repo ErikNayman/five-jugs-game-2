@@ -1036,8 +1036,7 @@ if (comfort < COMF_SAFE) {
   const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
   happiness -= ratio * HAPPY_K;                          // до –8
 } else if (comfort >= COMF_BONUS) {
-  happiness += 2;                                        // бонус
-}
+  happiness += 2;                                        // бону
 
 /* --- счастье за наличие/отсутствие подушки ------------------- */
 const bufferTarget = survival * 3;                       // 3-месячная подушка
