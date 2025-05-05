@@ -893,13 +893,17 @@ savings       = currentDiff.startBonus$;   // бонус / штраф к ста�
   Object.entries(cfg.plan).forEach(([field,pc])=>{
     setSlider(field, Math.round(base*pc/100/10)*10);
   });
+  /* ======== ✨ ДОБАВЛЯЕМ БОНУС ИНВЕСТОРУ ✨ ======== */
+  if (role === 'Investor') {
+    savings += 1000;                   // стартовый бонус
+  }
    /* шаг слайдеров зависит от сложности */
 ['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
   document.getElementById(id+'Slider')
           .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
 });
 
-  startSavings = +document.getElementById('save').value;
+  startSavings = +document.getElementById('save').value + savings;
   startInvestments = +document.getElementById('invest').value;
    if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
    // назначаем цель, соответствующую роли
