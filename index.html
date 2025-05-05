@@ -607,11 +607,11 @@ if (unlocked === 0){
 const rolePresets = {
   /* min / max — проценты от дохода; buf — минимальная «подушка» в месяцах */
   Saver : {
-    plan  : {survival:50, comfort:25, save:10, invest:5, healthSpend:5, edu:5, spec:0},
+    plan  : {survival:50, comfort:40, save:10, invest:0, healthSpend:0, edu:0, spec:0},
     rules : [
       {type:'min', jar:'save',   value:10},
       {type:'ratio', max:50},                 // survival+comfort ≤ 50 %
-      {type:'buf',  months:12}                // Подушка на 12 мес
+      {type:'buf',  months:3}                // Подушка на 12 мес
     ],
     bonus:+5, // успех → +5 happiness, провал → –5
     goalKey : 'buffer'
@@ -627,7 +627,7 @@ const rolePresets = {
     goalKey : 'passive'
   },
 Spec : {
-  plan  : {survival:40, comfort:20, save:5, invest:15, healthSpend:3, edu:2, spec:10},
+  plan  : {survival:40, comfort:20, save:0, invest:0, healthSpend:0, edu:0, spec:40},
   rules : [
     { type:'min', jar:'spec', value:10 },
     { type:'ratio', max:50 }
@@ -662,7 +662,7 @@ function setSlider(id, value){
 };
 
   /* шесть кувшинов */
-  buildJar('survivalSlider','survivalFill','survivalVal','survival',2000);
+  buildJar('survivalSlider','survivalFill','survivalVal','survival',500);
   buildJar('comfortSlider' ,'comfortFill' ,'comfortVal' ,'comfort' ,2000);
   buildJar('saveSlider'    ,'saveFill'    ,'saveLabel'  ,'save'    ,2000);
   buildJar('investSlider'  ,'investFill'  ,'investVal'  ,'invest'  ,2000);
