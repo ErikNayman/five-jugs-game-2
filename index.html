@@ -1023,41 +1023,42 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
 if (!evt.startsWith('болезнь')) {
 
   /* ---------- здоровье ---------- */
-if (survival < SURV_SAFE) {
-  const ratio = (SURV_SAFE - survival) / SURV_SAFE;      // 0 … 1
-  health -= ratio * 100;                                 // линейно до –100
-} else if (survival >= SURV_BONUS) {
-  health += 5;                                           // небольшой бонус
+  if (survival < SURV_SAFE) {
+    const ratio = (SURV_SAFE - survival) / SURV_SAFE;   // 0 … 1
+    health -= ratio * 100;
+  } else if (survival >= SURV_BONUS) {
+    health += 5;
+  }
+  health += (healthSp / 500) * 50;                      // траты на здоровье
+
+  /* ---------- счастье (комфорт) ---------- */
+  if (comfort < COMF_SAFE) {
+    const ratio = (COMF_SAFE - comfort) / COMF_SAFE;
+    happiness -= ratio * HAPPY_K;                       // до –8
+  } else if (comfort >= COMF_BONUS) {
+    happiness += 2;
+  }
+
+  /* штраф за подработку */
+  if (extra === 'да') happiness -= 3;
+
+  /* ---------- счастье за «подушку» ---------- */
+  const bufferTarget = survival * 3;                    // 3-месячная подушка
+  const bufRatio     = Math.min(savings / bufferTarget, 1);
+  if (bufRatio < 1)  happiness -= (1 - bufRatio) * 2;   // –0 … –2
+  else               happiness += 1;                    // +1 если подушка есть
 }
-health += (healthSp / 500) * 50;                         // траты на здоровье
 
-/* ---------- счастье ------------ */
-if (comfort < COMF_SAFE) {
-  const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
-  happiness -= ratio * HAPPY_K;                          // до –8
-} else if (comfort >= COMF_BONUS) {
-  happiness += 2;                                        // бонус
-}
-
-/* штраф за подработку */
-if (extra === 'да') happiness -= 3;
-
-  /* --- счастье за наличие/отсутствие подушки ------------------- */
-const bufferTarget = survival * 3;                       // 3-месячная подушка
-const ratio     = Math.min(savings / bufferTarget, 1); // 0 … 1
-if (ratio < 1)  happiness -= (1 - ratio) * 2;      // −0 … −2
-else                happiness += 1;                      // +1, если цель выполнена
-   
-/* приведение к 0…100 % */
+/* приведение к 0…100 %  — оставляем вне большого if */
 health    = Math.round(Math.max(0, Math.min(100, health)));
 happiness = Math.round(Math.max(0, Math.min(100, happiness)));
 
-    /* бонус или штраф по итогам правил */
+/* бонус/штраф за выполнение правил */
 if (bonusFlag){
   const bad = rulesBroken(income);
   happiness = Math.max(0, Math.min(100, happiness + (bad ? -5 : +5)));
 }
-  }
+
     /* интерфейс */
     document.getElementById('turn').innerText=turn;
     document.getElementById('event').innerText=evt;
