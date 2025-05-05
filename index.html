@@ -385,10 +385,10 @@
   </div>
 </div>
 
-    <!-- ───────── Кнопка ❓ и панель FAQ ───────── -->
+    <!-- ───────── Кнопка ? и панель FAQ ───────── -->
 <button id="openFaq" class="fixed top-4 right-20 z-30
         bg-indigo-500 text-white w-12 h-12 rounded-full shadow-md">
-  ❓
+  ?
 </button>
 
 <div id="faqPanel" class="fixed top-0 left-0 h-full w-72 bg-white/95
@@ -401,7 +401,7 @@
     <p class="mt-2 text-sm leading-snug">
       • Добавьте подработку (но счастье снизится).<br>
       • Увеличивайте инвестиции — это растит пассивный доход.<br>
-      • Повышайте «Образование» → шанс события «повышение зарплаты».
+      • Инвестируйте в Образование → повышение зарплаты на 10% от инвестиций.
     </p>
   </details>
 
@@ -767,7 +767,7 @@ function showTutorial(){
     const extra    = document.getElementById('extra').value;
 
     let income = BASE_INCOME;           // 1000 $
-    if (extra === 'да') income += 200;  // доп-работа
+    if (extra === 'да') income += 200;  // подработка
 
 const passive = (investments * 0.05 + savings * 0.03) / 12;
 income += passive;
