@@ -1278,18 +1278,10 @@ document.querySelectorAll('input[name="mode"]').forEach(r=>{
 
 /* ---------- FAQ-панель ---------- */
 const faqPanel = document.getElementById('faqPanel');
-document.getElementById('openFaq').onclick = () =>
-  faqPanel.classList.toggle('-translate-x-full');
+document.getElementById('openFaq').onclick =
+  () => faqPanel.classList.toggle('-translate-x-full');
 
-  /* универсальная вспышка */
-function blink(sel){
-  const el = document.querySelector(sel);
-  if(!el) return;
-  el.classList.add('ring-4','ring-amber-400');
-  setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
-}
-
-  /* универсальная вспышка */
+/* универсальная вспышка */
 function blink(sel){
   const el = document.querySelector(sel);
   if(!el) return;
@@ -1313,29 +1305,7 @@ if (incomePartsHint) incomePartsHint.addEventListener('click', () => {
 const expensesHint    = document.querySelectorAll('#faqPanel summary')[3];
 if (expensesHint) expensesHint.addEventListener('click',
   () => blink('#glassExpenses'));
-  
-/* ---------- Подсветка кувшина при клике на «Как увеличить доход?» ---------- */
-const incomeHint = document.querySelector('#faqPanel summary');
-if (incomeHint) {
-  incomeHint.addEventListener('click', () => {
-    const glass = document.getElementById('glassIncomeActive');
-    if (!glass) return;
 
-    glass.classList.add('ring-4', 'ring-blue-400');          // подсвечиваем
-    setTimeout(() => glass.classList.remove('ring-4', 'ring-blue-400'), 3000); // снимаем через 3 с
-  });
-}
-/* Income-highlight */
-document.querySelectorAll('#faqPanel summary')[2]   // «Из чего складываются доходы?»
-  .addEventListener('click', () => {
-    blink('#glassIncomeActive');
-  });
-
-/* Expenses-highlight */
-document.querySelectorAll('#faqPanel summary')[3]   // «Что считается расходами?»
-  .addEventListener('click', () => {
-    blink('#glassExpenses');
-  });
 
 </script>
 </body>
