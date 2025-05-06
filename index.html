@@ -151,12 +151,23 @@
 <div id="game-screen" class="hidden p-6 space-y-6 max-w-7xl mx-auto">
 
 <h2 id="goalHeader"
-    class="fixed top-4 right-40
-           text-2xl md:text-3xl
-           font-bold text-right
-           z-20">
+    class="text-2xl font-bold text-center mt-4">
+  Прогресс цели: <span id="goalName"></span>
+  — <span id="goalStatus" class="text-base font-semibold">–</span>
 </h2>
 
+<!-- Просто переносим СТАРЫЙ прогресс-бар на новое место -->
+<div class="w-full max-w-lg mx-auto">
+  <div class="w-full h-4 bg-gray-300 rounded-full overflow-hidden mt-2">
+    <div id="goalBar"
+         class="h-full bg-green-500 w-0 transition-all duration-300"></div>
+  </div>
+  <p class="text-center text-sm mt-1">
+    <span id="goalPercent">0</span>% | осталось
+    <span id="goalLeft">–</span>
+  </p>
+</div>
+  
 <!-- ═══ Верхний dashboard (3 логических блока) ═══ -->
 <div class="flex flex-col lg:flex-row gap-6 mb-8 justify-center">
 
@@ -1041,7 +1052,8 @@ updateGoalProgress(currentGoal, {
   monthExpenses  : +document.getElementById('survival').value
 });
 
-goalHeader.textContent = 'Прогресс твоей цели ' + currentGoal.text;
+document.getElementById('goalName').textContent = currentGoal.text;
+document.getElementById('goalStatus').textContent = 'в процессе';
 } else {
   activeRules = []; bonusFlag = false;
 }
