@@ -1281,6 +1281,14 @@ const faqPanel = document.getElementById('faqPanel');
 document.getElementById('openFaq').onclick = () =>
   faqPanel.classList.toggle('-translate-x-full');
 
+  /* универсальная вспышка */
+function blink(sel){
+  const el = document.querySelector(sel);
+  if(!el) return;
+  el.classList.add('ring-4','ring-amber-400');
+  setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
+}
+  
 /* ---------- Подсветка кувшина при клике на «Как увеличить доход?» ---------- */
 const incomeHint = document.querySelector('#faqPanel summary');
 if (incomeHint) {
@@ -1303,14 +1311,6 @@ document.querySelectorAll('#faqPanel summary')[3]   // «Что считаетс
   .addEventListener('click', () => {
     blink('#glassExpenses');
   });
-
-/* универсальная вспышка */
-function blink(sel){
-  const el = document.querySelector(sel);
-  if(!el) return;
-  el.classList.add('ring-4','ring-amber-400');
-  setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
-}
 
 </script>
 </body>
