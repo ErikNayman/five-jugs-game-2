@@ -1288,6 +1288,31 @@ function blink(sel){
   el.classList.add('ring-4','ring-amber-400');
   setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
 }
+
+  /* универсальная вспышка */
+function blink(sel){
+  const el = document.querySelector(sel);
+  if(!el) return;
+  el.classList.add('ring-4','ring-amber-400');
+  setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
+}
+
+/* 0. «Как увеличить доход?» – активный доход */
+const incomeHint      = document.querySelectorAll('#faqPanel summary')[0];
+if (incomeHint) incomeHint.addEventListener('click',
+  () => blink('#glassIncomeActive'));
+
+/* 1. «Из чего складываются доходы?» – оба стакана доходов */
+const incomePartsHint = document.querySelectorAll('#faqPanel summary')[2];
+if (incomePartsHint) incomePartsHint.addEventListener('click', () => {
+  blink('#glassIncomeActive');
+  blink('#glassIncomePassive');
+});
+
+/* 2. «Что считается расходами?» – стакан расходов */
+const expensesHint    = document.querySelectorAll('#faqPanel summary')[3];
+if (expensesHint) expensesHint.addEventListener('click',
+  () => blink('#glassExpenses'));
   
 /* ---------- Подсветка кувшина при клике на «Как увеличить доход?» ---------- */
 const incomeHint = document.querySelector('#faqPanel summary');
