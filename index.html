@@ -1292,6 +1292,25 @@ if (incomeHint) {
     setTimeout(() => glass.classList.remove('ring-4', 'ring-blue-400'), 3000); // снимаем через 3 с
   });
 }
+/* Income-highlight */
+document.querySelectorAll('#faqPanel summary')[2]   // «Из чего складываются доходы?»
+  .addEventListener('click', () => {
+    blink('#glassIncomeActive');
+  });
+
+/* Expenses-highlight */
+document.querySelectorAll('#faqPanel summary')[3]   // «Что считается расходами?»
+  .addEventListener('click', () => {
+    blink('#glassExpenses');
+  });
+
+/* универсальная вспышка */
+function blink(sel){
+  const el = document.querySelector(sel);
+  if(!el) return;
+  el.classList.add('ring-4','ring-amber-400');
+  setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
+}
 
 </script>
 </body>
