@@ -1116,12 +1116,11 @@ if (mode === 'goal') {
 
 /* --- заголовок цели / роли --- */
 if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-  goalHeader.textContent = 'Прогресс твоей цели ' + currentGoal.text;
+  goalHeader.textContent = 'Прогресс твоей цели ' «' + currentGoal.text + '»';
 } else {                               // свободный план – цели нет
   goalHeader.textContent = 'Песочница — нет выбранной цели';
 }
 
-  /* для режимов goal / free ничего менять не надо */
   /* обнуляем состояние игры */
 turn = 0;
 savings = currentDiff.startBonus$ + (role === 'Investor' ? 1000 : 0);
