@@ -361,8 +361,8 @@
     <p>Сбережения: <span id="savings">$0</span></p>
     <p>Инвестиции: <span id="investments">$0</span></p>
   <p class="text-sm text-gray-600">
-  <span id="goalPercent">0</span>% &nbsp;|&nbsp;
-  осталось <span id="goalLeft">–</span>
+  <span id="goalPercentMini">0</span>% &nbsp;|&nbsp;
+  осталось <span id="goalLeftMini">–</span>
 </p>
   </div>
 
@@ -949,6 +949,10 @@ else if (goal.key === 'double'){
   document.getElementById('goalBar').style.width = pct + '%';
   document.getElementById('goalPercent').textContent = Math.floor(pct);
   document.getElementById('goalLeft').textContent    = leftTxt;
+    const miniPct  = document.getElementById('goalPercentMini'),
+      miniLeft = document.getElementById('goalLeftMini');
+if (miniPct)  miniPct.textContent  = Math.floor(pct);
+if (miniLeft) miniLeft.textContent = leftTxt;
 }
 
   /* таблица-история */
@@ -1008,6 +1012,7 @@ window.startGame = n => {
   updateTrophyCounter();        // и счётчик на кнопке 🏆
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked')?.value || 'role';
+  let   role = null;
   /* ----------- Сложность ----------- */
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
 currentDiff   = difficulties[diffKey];
@@ -1021,8 +1026,8 @@ currentDiffKey = diffKey;   // сохраняем, чтобы использов
 savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
   
  if (mode === 'role') {
-  const role = document.querySelector('input[name="role"]:checked').value,
-        cfg  = rolePresets[role];
+  role = document.querySelector('input[name="role"]:checked').value;
+  const cfg  = rolePresets[role];
   activeRules = cfg.rules;             // ← запоминаем правила
   bonusFlag   = !!cfg.bonus;           // true/false
   const base  = 1000;
