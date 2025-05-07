@@ -144,6 +144,19 @@
       <span class="text-sm">Автоматически добавлять остаток в Сбережения</span>
     </label>
 
+    <!-- 🆕 Блок «Режим игры» -->
+<p class="font-semibold mt-4 mb-1">Режим игры</p>
+
+<label class="block">
+  <input type="radio" name="mode" value="role" checked>
+  <span class="ml-1">🎯 Ролевая игра (Saver / Investor / Spec)</span>
+</label>
+
+<label class="block">
+  <input type="radio" name="mode" value="custom">
+  <span class="ml-1">🛠 Своя схема</span>
+</label>
+
     <!-- 🛠 Своя схема (песочница) -->
 <label class="block">
   <input type="radio" name="mode" value="custom">
@@ -1116,7 +1129,7 @@ if (mode === 'goal') {
 
 /* --- заголовок цели / роли --- */
 if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-  goalHeader.textContent = 'Прогресс цели: ' + currentGoal.text;
+  goalHeader.textContent = 'Прогресс цели ' + currentGoal.text;
 } else {                               // свободный план – цели нет
   goalHeader.textContent = 'Песочница — нет выбранной цели';
 }
