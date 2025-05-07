@@ -1042,7 +1042,7 @@ savings       = currentDiff.startBonus$;   // бонус / штраф к ста�
    // назначаем цель, соответствующую роли
 currentGoal = goals[cfg.goalKey];
    
-document.getElementById('goalText').textContent   = currentGoal.text;
+document.getElementById('goalName').textContent   = currentGoal.text;
 document.getElementById('goalStatus').textContent = 'в процессе';
 updateGoalProgress(currentGoal, {
   savings        : startSavings,
@@ -1062,7 +1062,7 @@ if (mode === 'goal') {
   const goalKey     = document.querySelector('input[name="goal"]:checked').value;
   currentGoal       = goals[goalKey];
 
-  document.getElementById('goalText').textContent   = currentGoal.text;
+  document.getElementById('goalName').textContent   = currentGoal.text;
   document.getElementById('goalStatus').textContent = 'в процессе';
   updateGoalProgress(currentGoal, {
     savings: 0, investments: 0, passiveIncome: 0, monthExpenses: 1
@@ -1071,7 +1071,7 @@ if (mode === 'goal') {
 
 /* --- заголовок цели / роли --- */
 if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-  goalHeader.textContent = 'Прогресс твоей цели ' + currentGoal.text;
+//  goalHeader.textContent = 'Прогресс твоей цели ' + currentGoal.text;
 } else {                               // свободный план – цели нет
   goalHeader.textContent = 'Песочница — нет выбранной цели';
 }
