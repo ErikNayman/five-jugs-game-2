@@ -768,7 +768,7 @@ const rolePresets = {
     goalKey : 'passive'
   },
 Spec : {
-  plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:00},
+  plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:0},
   rules : [
     { type:'min', jar:'spec', value:10 },
     { type:'comfortMax', max:55 }
@@ -803,13 +803,12 @@ function setSlider(id, value){
 };
 
   /* шесть кувшинов */
-  buildJar('survivalSlider','survivalFill','survivalVal','survival',100,500);
-  buildJar('comfortSlider' ,'comfortFill' ,'comfortVal' ,'comfort' ,0,2000);
-  buildJar('saveSlider'    ,'saveFill'    ,'saveLabel'  ,'save'    ,0,2000);
-  buildJar('investSlider'  ,'investFill'  ,'investVal'  ,'invest'  ,0,2000);
-  buildJar('healthSpendSlider'  ,'healthFill'  ,'healthVal'  ,'healthSpend',0,2000);
-  buildJar('eduSlider'     ,'eduFill'     ,'eduVal'     ,'edu',0,       2000);
-  buildJar('specSlider','specFill','specVal','spec',0,2000);
+buildJar('survivalSlider', 'survivalFill', 'survivalVal', 'survival', 100, 500);
+buildJar('comfortSlider',  'comfortFill',  'comfortVal',  'comfort',  0,   2000);
+buildJar('saveSlider',     'saveFill',     'saveLabel',   'save',     0,   2000);
+buildJar('investSlider',   'investFill',   'investVal',   'invest',   0,   2000);
+buildJar('healthSpendSlider','healthFill', 'healthVal',   'healthSpend',0, 2000);
+buildJar('eduSlider',      'eduFill',      'eduVal',      'edu',      0,   2000);
 
   /* обновление верхних стаканов */
 function updateGlasses(activeIncome,passiveIncome, survival, comfort, savePlan, investPlan, specPlan){
