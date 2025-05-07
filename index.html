@@ -1054,7 +1054,7 @@ window.startGame = n => {
   renderAchTable();             // обновляем таблицу модалки
   updateTrophyCounter();        // и счётчик на кнопке 🏆
   /* ---------------- пресеты ---------------- */
-  const mode = document.querySelector('input[name="mode"]:checked')?.value || 'role';
+  const mode = document.querySelector('input[name="mode"]:checked')?.value ?? 'role';
   let   role = null;
   /* ----------- Сложность ----------- */
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
