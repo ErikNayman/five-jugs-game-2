@@ -277,86 +277,85 @@
 </div>                                       <!-- /card -->
     
   <!-- Шесть кувшинов-ползунков -->
-  <h3 class="w-full text-center text-lg font-semibold mb-2">
-  Здесь ты можешь увеличить свои доходы
-</h3>
-<div class="flex flex-wrap gap-6 mb-8">
+  <!-- ═════ Банки: 3 группы + 9 бегунков в одну линию ═════ -->
+<div class="grid gap-6 mb-8
+            lg:grid-cols-9               <!-- на широком экране 9 равных ячеек -->
+            sm:grid-cols-3">             <!-- на мобильных по 3 -->
 
-     <!-- Сбережения -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="saveFill" class="liquid"></div></div>
-      <div id="saveSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Сбережения<br><span id="saveLabel">0</span> $</div>
-      <input id="save" type="hidden" class="hidden-field" value="0">
-    </div>
-
-    <!-- Инвестиции -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="investFill" class="liquid"></div></div>
-      <div id="investSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Инвестиции<br><span id="investVal">0</span> $</div>
-      <input id="invest" type="hidden" class="hidden-field" value="0">
-    </div>
-
-      <!-- Образование -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="eduFill" class="liquid"></div></div>
-      <div id="eduSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Образование<br><span id="eduVal">0</span> $</div>
-      <input id="edu" type="hidden" class="hidden-field" value="0">
-    </div>
+  <!-- ─────── Заголовки (строка 1) ─────── -->
+  <div class="col-span-3 text-center text-lg font-semibold">
+    Здесь ты можешь увеличить свои доходы
+  </div>
+  <div class="col-span-3 text-center text-lg font-semibold">
+    Здесь ты устанавливаешь свои расходы
+  </div>
+  <div class="col-span-3 text-center text-lg font-semibold">
+    Здесь ты можешь как много заработать, так и потерять
   </div>
 
-<!-- ──────── Блок 2. Расходы ──────── -->
-<h3 class="w-full text-center text-lg font-semibold mb-2">
-  Здесь ты устанавливаешь свои расходы
-</h3>
-<div class="flex flex-wrap gap-6 mb-8">
+  <!-- ─────── Банки (строка 2) ─────── -->
 
-    <!-- Выживание -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="survivalFill" class="liquid"></div></div>
-      <div id="survivalSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Выживание<br><span id="survivalVal">500</span> $</div>
-      <input id="survival" type="hidden" class="hidden-field" value="500">
-    </div>
+  <!-- Сбережения -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="saveFill" class="liquid"></div></div>
+    <div id="saveSlider" class="slider-v"></div>
+    <div class="jar-caption">Сбережения<br><span id="saveLabel">0</span> $</div>
+    <input id="save" type="hidden" class="hidden-field" value="0">
+  </div>
 
-    <!-- Комфорт -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="comfortFill" class="liquid"></div></div>
-      <div id="comfortSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Комфорт<br><span id="comfortVal">500</span> $</div>
-      <input id="comfort" type="hidden" class="hidden-field" value="500">
-    </div>
+  <!-- Инвестиции -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="investFill" class="liquid"></div></div>
+    <div id="investSlider" class="slider-v"></div>
+    <div class="jar-caption">Инвестиции<br><span id="investVal">0</span> $</div>
+    <input id="invest" type="hidden" class="hidden-field" value="0">
+  </div>
 
-      <!-- Здоровье -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="healthFill" class="liquid"></div></div>
-      <div id="healthSpendSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Здоровье<br><span id="healthVal">0</span> $</div>
-      <input id="healthSpend" type="hidden" class="hidden-field" value="0">
-    </div>
-    </div>
+  <!-- Образование -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="eduFill" class="liquid"></div></div>
+    <div id="eduSlider" class="slider-v"></div>
+    <div class="jar-caption">Образование<br><span id="eduVal">0</span> $</div>
+    <input id="edu" type="hidden" class="hidden-field" value="0">
+  </div>
 
-  <!-- ──────── Блок 3. Прочее ──────── -->
-<h3 class="w-full text-center text-lg font-semibold mb-2">
-  Здесь ты можешь как много заработать, так и потерять
-</h3>
-<div class="flex flex-wrap gap-6 mb-8">
-  
-    <!-- Спекуляции -->
-<div class="jar-wrap">
-  <div class="jar"><div id="specFill" class="liquid"></div></div>
-  <div id="specSlider" class="slider-v"></div>
-  <div class="jar-caption mt-1">Спекуляции<br><span id="specVal">0</span> $</div>
-  <input id="spec" type="hidden" class="hidden-field" value="0">
-</div>
+  <!-- Выживание -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="survivalFill" class="liquid"></div></div>
+    <div id="survivalSlider" class="slider-v"></div>
+    <div class="jar-caption">Выживание<br><span id="survivalVal">500</span> $</div>
+    <input id="survival" type="hidden" class="hidden-field" value="500">
+  </div>
+
+  <!-- Комфорт -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="comfortFill" class="liquid"></div></div>
+    <div id="comfortSlider" class="slider-v"></div>
+    <div class="jar-caption">Комфорт<br><span id="comfortVal">500</span> $</div>
+    <input id="comfort" type="hidden" class="hidden-field" value="500">
+  </div>
+
+  <!-- Здоровье -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="healthFill" class="liquid"></div></div>
+    <div id="healthSpendSlider" class="slider-v"></div>
+    <div class="jar-caption">Здоровье<br><span id="healthVal">0</span> $</div>
+    <input id="healthSpend" type="hidden" class="hidden-field" value="0">
+  </div>
+
+  <!-- Спекуляции -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="specFill" class="liquid"></div></div>
+    <div id="specSlider" class="slider-v"></div>
+    <div class="jar-caption">Спекуляции<br><span id="specVal">0</span> $</div>
+    <input id="spec" type="hidden" class="hidden-field" value="0">
+  </div>
 
   <!-- Бизнес -->
   <div class="jar-wrap">
     <div class="jar"><div id="businessFill" class="liquid"></div></div>
     <div id="businessSlider" class="slider-v"></div>
-    <div class="jar-caption mt-1">Бизнес<br><span id="businessVal">0</span> $</div>
+    <div class="jar-caption">Бизнес<br><span id="businessVal">0</span> $</div>
     <input id="business" type="hidden" class="hidden-field" value="0">
   </div>
 
@@ -364,11 +363,12 @@
   <div class="jar-wrap">
     <div class="jar"><div id="freelanceFill" class="liquid"></div></div>
     <div id="freelanceSlider" class="slider-v"></div>
-    <div class="jar-caption mt-1">Фриланс<br><span id="freelanceVal">0</span> $</div>
+    <div class="jar-caption">Фриланс<br><span id="freelanceVal">0</span> $</div>
     <input id="freelance" type="hidden" class="hidden-field" value="0">
   </div>
 
 </div>
+
   
   <!-- Кнопка хода -->
 <button onclick="runTurn()"
