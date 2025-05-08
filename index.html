@@ -166,6 +166,18 @@
   Прогресс цели <span id="goalName"></span>
   — <span id="goalStatus" class="text-base font-semibold">–</span>
 </h2>
+  
+<div class="flex justify-center mt-4">   <!-- центрируем -->
+  <button onclick="runTurn()"
+          class="w-12 h-12 rounded-full bg-blue-600/90 hover:bg-blue-600
+                 text-white flex items-center justify-center shadow-md"
+          title="Сделать ход">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+         width="20" height="20" fill="currentColor">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
+  </button>
+</div>
 
 <div class="w-full max-w-lg mx-auto">
   <div class="w-full h-4 bg-gray-300 rounded-full overflow-hidden mt-2">
@@ -379,20 +391,6 @@
   </div>
 
 </div>
-
-  
-  <!-- Кнопка хода -->
-<button onclick="runTurn()"
-        class="fixed top-4 left-4 z-20 w-12 h-12 rounded-full
-               bg-blue-600/90 hover:bg-blue-600 text-white
-               flex items-center justify-center shadow-md"
-        title="Сделать ход">
-  <!-- стрелка вперёд -->
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-       width="20" height="20" fill="currentColor">
-    <path d="M8 5v14l11-7z"/>
-  </svg>
-</button>
 
   <!-- Краткая статистика -->
   <div class="text-center space-y-2">
