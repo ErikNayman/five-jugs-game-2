@@ -109,7 +109,7 @@
 
 <!-- блок ролей -->
 <div id="roleBlock" class="ml-6 mt-2">
-  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked> Сберегатель</label>
+  <label class="mr-4"><input type="radio" name="role" value="Saver"    checked required> Сберегатель</label>
   <label class="mr-4"><input type="radio" name="role" value="Investor"> Инвестор</label>
   <label class="mr-4"><input type="radio" name="role" value="Spec"> Спекулянт</label>
 </div>
@@ -142,23 +142,21 @@
       <span class="text-sm">Автоматически добавлять остаток в Сбережения</span>
     </label>
 
-    <!-- 🛠 Своя схема (песочница) -->
+    <!-- 🆕 Блок «Режим игры» -->
+<p class="font-semibold mt-4 mb-1">Режим игры</p>
+
+<label class="block">
+  <input type="radio" name="mode" value="role" checked>
+  <span class="ml-1">🎯 Ролевая игра (Saver / Investor / Spec)</span>
+</label>
+
 <label class="block">
   <input type="radio" name="mode" value="custom">
-  <span class="ml-1">🛠 Своя&nbsp;схема</span>
+  <span class="ml-1">🛠 Своя схема</span>
 </label>
 
   </div>
 </div>
-
-
-
-
-
-
-
-
-
 
 <!-- ═══════════ ИГРА ═══════════ -->
 <div id="game-screen" class="hidden p-6 space-y-6 max-w-7xl mx-auto">
@@ -283,122 +281,106 @@
   </div>                                     <!-- /grid -->
 </div>                                       <!-- /card -->
     
-  <p class="w-full text-center text-xl font-bold mb-4">
-  Для достижения цели можешь изменять свои траты:
-</p>
   
-  <!-- Шесть кувшинов-ползунков -->
-  <div class="flex flex-wrap gap-6 mb-8">
 
-    <!-- Выживание -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="survivalFill" class="liquid"></div></div>
-      <div id="survivalSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Выживание<br><span id="survivalVal">500</span> $</div>
-      <input id="survival" type="hidden" class="hidden-field" value="500">
-    </div>
 
-    <!-- Комфорт -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="comfortFill" class="liquid"></div></div>
-      <div id="comfortSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Комфорт<br><span id="comfortVal">500</span> $</div>
-      <input id="comfort" type="hidden" class="hidden-field" value="500">
-    </div>
 
-    <!-- Сбережения -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="saveFill" class="liquid"></div></div>
-      <div id="saveSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Сбережения<br><span id="saveLabel">0</span> $</div>
-      <input id="save" type="hidden" class="hidden-field" value="0">
-    </div>
 
-    <!-- Инвестиции -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="investFill" class="liquid"></div></div>
-      <div id="investSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Инвестиции<br><span id="investVal">0</span> $</div>
-      <input id="invest" type="hidden" class="hidden-field" value="0">
-    </div>
 
-    <!-- Спекуляции -->
-<div class="jar-wrap">
-  <div class="jar"><div id="specFill" class="liquid"></div></div>
-  <div id="specSlider" class="slider-v"></div>
-  <div class="jar-caption mt-1">Спекуляции<br><span id="specVal">0</span> $</div>
-  <input id="spec" type="hidden" class="hidden-field" value="0">
-</div>
-    
-    <!-- Здоровье -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="healthFill" class="liquid"></div></div>
-      <div id="healthSpendSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Здоровье<br><span id="healthVal">0</span> $</div>
-      <input id="healthSpend" type="hidden" class="hidden-field" value="0">
-    </div>
+<!-- Шесть кувшинов-ползунков -->
+  <!-- ═════ Банки: 3 группы + 9 бегунков в одну линию ═════ -->
+<div class="grid gap-6 mb-8
+            lg:grid-cols-9               <!-- на широком экране 9 равных ячеек -->
+            sm:grid-cols-3">             <!-- на мобильных по 3 -->
 
-    <!-- Образование -->
-    <div class="jar-wrap">
-      <div class="jar"><div id="eduFill" class="liquid"></div></div>
-      <div id="eduSlider" class="slider-v"></div>
-      <div class="jar-caption mt-1">Образование<br><span id="eduVal">0</span> $</div>
-      <input id="edu" type="hidden" class="hidden-field" value="0">
-    </div>
+<!-- ─────── Заголовки (строка 1) ─────── -->
+  <div class="col-span-3 text-center text-lg font-semibold">
+    Здесь ты можешь увеличить свои доходы
+  </div>
+  <div class="col-span-3 text-center text-lg font-semibold">
+    Здесь ты устанавливаешь свои расходы
+  </div>
+  <div class="col-span-3 text-center text-lg font-semibold">
+    Здесь ты можешь как много заработать, так и потерять
   </div>
 
+  <!-- ─────── Банки (строка 2) ─────── -->
 
+  <!-- Сбережения -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="saveFill" class="liquid"></div></div>
+    <div id="saveSlider" class="slider-v"></div>
+    <div class="jar-caption">Сбережения<br><span id="saveLabel">0</span> $</div>
+    <input id="save" type="hidden" class="hidden-field" value="0">
+  </div>
 
+  <!-- Инвестиции -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="investFill" class="liquid"></div></div>
+    <div id="investSlider" class="slider-v"></div>
+    <div class="jar-caption">Инвестиции<br><span id="investVal">0</span> $</div>
+    <input id="invest" type="hidden" class="hidden-field" value="0">
+  </div>
 
+  <!-- Образование -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="eduFill" class="liquid"></div></div>
+    <div id="eduSlider" class="slider-v"></div>
+    <div class="jar-caption">Образование<br><span id="eduVal">0</span> $</div>
+    <input id="edu" type="hidden" class="hidden-field" value="0">
+  </div>
 
+  <!-- Выживание -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="survivalFill" class="liquid"></div></div>
+    <div id="survivalSlider" class="slider-v"></div>
+    <div class="jar-caption">Выживание<br><span id="survivalVal">500</span> $</div>
+    <input id="survival" type="hidden" class="hidden-field" value="500">
+  </div>
 
+  <!-- Комфорт -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="comfortFill" class="liquid"></div></div>
+    <div id="comfortSlider" class="slider-v"></div>
+    <div class="jar-caption">Комфорт<br><span id="comfortVal">500</span> $</div>
+    <input id="comfort" type="hidden" class="hidden-field" value="500">
+  </div>
 
+  <!-- Здоровье -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="healthFill" class="liquid"></div></div>
+    <div id="healthSpendSlider" class="slider-v"></div>
+    <div class="jar-caption">Здоровье<br><span id="healthVal">0</span> $</div>
+    <input id="healthSpend" type="hidden" class="hidden-field" value="0">
+  </div>
 
+  <!-- Спекуляции -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="specFill" class="liquid"></div></div>
+    <div id="specSlider" class="slider-v"></div>
+    <div class="jar-caption">Спекуляции<br><span id="specVal">0</span> $</div>
+    <input id="spec" type="hidden" class="hidden-field" value="0">
+  </div>
 
+  <!-- Бизнес -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="businessFill" class="liquid"></div></div>
+    <div id="businessSlider" class="slider-v"></div>
+    <div class="jar-caption">Бизнес<br><span id="businessVal">0</span> $</div>
+    <input id="business" type="hidden" class="hidden-field" value="0">
+  </div>
 
+  <!-- Фриланс -->
+  <div class="jar-wrap">
+    <div class="jar"><div id="freelanceFill" class="liquid"></div></div>
+    <div id="freelanceSlider" class="slider-v"></div>
+    <div class="jar-caption">Фриланс<br><span id="freelanceVal">0</span> $</div>
+    <input id="freelance" type="hidden" class="hidden-field" value="0">
+  </div>
 
+</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
   <!-- Кнопка хода -->
 <button onclick="runTurn()"
         class="fixed top-4 left-4 z-20 w-12 h-12 rounded-full
@@ -420,8 +402,8 @@
     <p>Сбережения: <span id="savings">$0</span></p>
     <p>Инвестиции: <span id="investments">$0</span></p>
   <p class="text-sm text-gray-600">
-  <span id="goalPercent">0</span>% &nbsp;|&nbsp;
-  осталось <span id="goalLeft">–</span>
+  <span id="goalPercentMini">0</span>% &nbsp;|&nbsp;
+  осталось <span id="goalLeftMini">–</span>
 </p>
   </div>
 
@@ -780,26 +762,28 @@ if (unlocked === 0){
   });
 
   /* кувшин-ползунок */
-  function buildJar(sliderId, fillId, valId, hiddenId, max){
+function buildJar(sliderId, fillId, valId, hiddenId, minVal, maxVal){
 
-    const slider=document.getElementById(sliderId);
-    const fill  =document.getElementById(fillId);
-    const valEl =document.getElementById(valId);
-    const hidden=document.getElementById(hiddenId);
+  const slider = document.getElementById(sliderId);
+  const fill   = document.getElementById(fillId);
+  const valEl  = document.getElementById(valId);
+  const hidden = document.getElementById(hiddenId);
 
-    noUiSlider.create(slider,{
-      start:+hidden.value, orientation:'vertical', direction:'rtl',
-      step:10, connect:[true,false], range:{min:0,max:max}
-    });
+  noUiSlider.create(slider,{
+    start      : +hidden.value, orientation: 'vertical',
+    direction  : 'rtl',
+    step       : 10, connect: [true,false],
+    range      : { min: minVal,  max: maxVal }
+  });
 
-    slider.noUiSlider.on('update', v=>{
-      const num=Math.round(v[0]);
-      fill.style.height=(num/max*100)+'%';
-      valEl.textContent=num;
-      hidden.value=num;
-      updateIncomeExpenses();
-    });
-  }
+  slider.noUiSlider.on('update', v=>{
+    const num = Math.round(v[0]);
+    fill.style.height = (num / maxVal * 100) + '%';
+    valEl.textContent = num;
+    hidden.value      = num;
+    updateIncomeExpenses();
+  });
+}
 
       /* --- пресеты ролей (проценты от БАЗОВОГО дохода 1000 $) --- */
 const rolePresets = {
@@ -823,7 +807,7 @@ const rolePresets = {
     goalKey : 'passive'
   },
 Spec : {
-  plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:00},
+  plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:0},
   rules : [
     { type:'min', jar:'spec', value:10 },
     { type:'comfortMax', max:55 }
@@ -858,15 +842,17 @@ function setSlider(id, value){
 };
 
   /* шесть кувшинов */
-  buildJar('survivalSlider','survivalFill','survivalVal','survival',500);
-  buildJar('comfortSlider' ,'comfortFill' ,'comfortVal' ,'comfort' ,2000);
-  buildJar('saveSlider'    ,'saveFill'    ,'saveLabel'  ,'save'    ,2000);
-  buildJar('investSlider'  ,'investFill'  ,'investVal'  ,'invest'  ,2000);
-  buildJar('healthSpendSlider'  ,'healthFill'  ,'healthVal'  ,'healthSpend',2000);
-  buildJar('eduSlider'     ,'eduFill'     ,'eduVal'     ,'edu',       2000);
-buildJar('specSlider','specFill','specVal','spec',2000);
 
+buildJar('survivalSlider', 'survivalFill', 'survivalVal', 'survival', 100, 500);
+buildJar('comfortSlider',  'comfortFill',  'comfortVal',  'comfort',  0,   2000);
+buildJar('saveSlider',     'saveFill',     'saveLabel',   'save',     0,   2000);
+buildJar('investSlider',   'investFill',   'investVal',   'invest',   0,   2000);
+buildJar('healthSpendSlider','healthFill', 'healthVal',   'healthSpend',0, 2000);
+buildJar('eduSlider',      'eduFill',      'eduVal',      'edu',      0,   2000);
+buildJar('specSlider','specFill','specVal','spec',0,2000);
 
+buildJar('businessSlider', 'businessFill', 'businessVal', 'business',  0, 2000);
+buildJar('freelanceSlider','freelanceFill','freelanceVal','freelance', 0, 2000);
 
 
   /* обновление верхних стаканов */
@@ -924,10 +910,8 @@ function showTutorial(){
     const healthSp =+document.getElementById('healthSpend').value;
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
-
-
-
-
+    const businessPlan  = +document.getElementById('business').value;
+    const freelancePlan = +document.getElementById('freelance').value;
 
     let income = BASE_INCOME + salaryBonus;           // 1000 $
     if (extra === 'да') income += 200;  // подработка
@@ -935,9 +919,8 @@ function showTutorial(){
 const passive = (investments * 0.05 + savings * 0.03) / 12;
 income += passive;
     
-    const spend = survival + comfort + savePlan + investPlan + specPlan 
-+ healthSp+edu;
-
+    const spend = survival + comfort + savePlan + investPlan + specPlan
+            + healthSp + edu + businessPlan + freelancePlan;
 /* ----- автодолив свободного остатка в Сбережения ----- */
 if (document.getElementById('autoAdjust').checked) {
   const rest = income - spend;
@@ -1014,14 +997,11 @@ else if (goal.key === 'double'){
   document.getElementById('goalBar').style.width = pct + '%';
   document.getElementById('goalPercent').textContent = Math.floor(pct);
   document.getElementById('goalLeft').textContent    = leftTxt;
+    const miniPct  = document.getElementById('goalPercentMini'),
+      miniLeft = document.getElementById('goalLeftMini');
+if (miniPct)  miniPct.textContent  = Math.floor(pct);
+if (miniLeft) miniLeft.textContent = leftTxt;
 }
-
-
-
-
-
-
-
 
   /* таблица-история */
   function pushHistory(evt,free){
@@ -1079,14 +1059,14 @@ window.startGame = n => {
   renderAchTable();             // обновляем таблицу модалки
   updateTrophyCounter();        // и счётчик на кнопке 🏆
   /* ---------------- пресеты ---------------- */
-  const mode = document.querySelector('input[name="mode"]:checked')?.value || 'role';
-
+  const mode = document.querySelector('input[name="mode"]:checked')?.value ?? 'role';
+  let   role = null;
   /* ----------- Сложность ----------- */
 const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
 currentDiff   = difficulties[diffKey];
 currentDiffKey = diffKey;   // сохраняем, чтобы использовать вне startGame
 
-['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
+['survival','comfort','save','invest','healthSpend','edu','spec', 'business','freelance'].forEach(id=>{
   document.getElementById(id + 'Slider')
           .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
 });
@@ -1094,8 +1074,8 @@ currentDiffKey = diffKey;   // сохраняем, чтобы использов
 savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
   
  if (mode === 'role') {
-  const role = document.querySelector('input[name="role"]:checked').value,
-        cfg  = rolePresets[role];
+  role = document.querySelector('input[name="role"]:checked').value;
+  const cfg  = rolePresets[role];
   activeRules = cfg.rules;             // ← запоминаем правила
   bonusFlag   = !!cfg.bonus;           // true/false
   const base  = 1000;
@@ -1147,7 +1127,7 @@ if (mode === 'goal') {
 
 /* --- заголовок цели / роли --- */
 if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-//  goalHeader.textContent = 'Прогресс твоей цели ' + currentGoal.text;
+  goalHeader.textContent = 'Прогресс цели ' + currentGoal.text;
 } else {                               // свободный план – цели нет
   goalHeader.textContent = 'Песочница — нет выбранной цели';
 }
