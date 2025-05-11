@@ -1220,11 +1220,12 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
 if (!evt.startsWith('болезнь')) {
 
   /* ---------- здоровье ---------- */
-if (survival < SURV_SAFE) {
-  const ratio = (SURV_SAFE - survival) / SURV_SAFE;      // 0 … 1
-  health -= ratio * 100;                                 // линейно до –100
+  if (survival < SURV_SAFE) {
+    const ratio = (SURV_SAFE - survival) / SURV_SAFE;   // 0…1
+    health    -= ratio * 80;   // –16 HP за $100
+    happiness -= ratio * 25;   // –5  Happy за $100
 } else if (survival >= SURV_BONUS) {
-  health += 5;                                           // небольшой бонус
+    health += 5;               // бонус, если тратим ≥ $600
 }
 health += (healthSp / 500) * 50;                         // траты на здоровье
 
