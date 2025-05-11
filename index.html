@@ -292,12 +292,6 @@
     </div>
   </div>                                     <!-- /grid -->
 </div>                                       <!-- /card -->
-    
-  
-
-
-
-
 
 <!-- Шесть кувшинов-ползунков -->
   <!-- ═════ Банки: 3 группы + 9 бегунков в одну линию ═════ -->
@@ -625,7 +619,7 @@ const goals = {
   const SURV_BONUS      = 600;  // >=600   → +5 здоровья за ход
   const COMF_SAFE       = 300;  // <$ 300  → убыль счастья
   const COMF_BONUS      = 400;  // >=400   → +2 счастья за ход
-  const HAPPY_K    = 8;     // максимум −8 ед. счастья за ход
+  const HAPPY_K    = 12;     // максимум −12 ед. счастья за ход
   const HAPPY_BONUS_THRESHOLD = 400; // ≥400 $ даёт небольшой плюс
   
   const achievements = [
@@ -1232,13 +1226,16 @@ health += (healthSp / 500) * 50;                         // траты на зд
 /* ---------- счастье ------------ */
 if (comfort < COMF_SAFE) {
   const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
-  happiness -= ratio * HAPPY_K;                          // до –8
+  happiness -= Math.pow(ratio, 1.2) * 15;
 } else if (comfort >= COMF_BONUS) {
   happiness += 2;                                        // бонус
 }
 
 /* штраф за подработку */
-if (extra === 'да') happiness -= 3;
+const happyPenalty = currentDiffKey === 'easy' ? 2
+                    : currentDiffKey === 'hard' ? 4 : 3;
+if (extra === 'да') happiness -= happyPenalty;
+if (extra === 'да') health -= 1;
 
 /* ---------- счастье за «подушку» ---------- */
   const bufferTarget = survival * 3;                    // 3-месячная подушка
