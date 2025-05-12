@@ -905,11 +905,11 @@ function showTutorial(){
     const savePlan =+document.getElementById('save').value;
     const investPlan=+document.getElementById('invest').value;
     const specPlan = +document.getElementById('spec').value;
+    const businessPlan  = +document.getElementById('business').value;
+    const freelancePlan = +document.getElementById('freelance').value;
     const healthSp =+document.getElementById('healthSpend').value;
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
-    const businessPlan  = +document.getElementById('business').value;
-    const freelancePlan = +document.getElementById('freelance').value;
 
     let income = BASE_INCOME + salaryBonus;           // 1000 $
     if (extra === 'да') income += 200;  // подработка
@@ -1326,7 +1326,10 @@ if (currentGoal){
   const done = currentGoal.check({
     savings, passiveIncome, monthExpenses
   });
-  document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
+  const goalStatusEl = document.getElementById('goalStatus');
+if (goalStatusEl) {goalStatusEl.textContent = done ? '✔ выполнена' : 'в процессе';}   
+  
+//  document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
   updateGoalProgress(currentGoal, {
   savings,
   investments,
