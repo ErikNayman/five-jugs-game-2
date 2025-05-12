@@ -1141,11 +1141,13 @@ savings = currentDiff.startBonus$;      // может быть +, 0 или от�
 document.getElementById('savings').innerText =
         `$${Math.round(savings)}`;
 
-  function specReturnPct(){
-  if (currentDiff === difficulties.easy)  return (Math.random() < 0.55 ? 1 : -1) * 0.02;
-  if (currentDiff === difficulties.hard)  return (Math.random() < 0.55 ? 1 : -1) * 0.10;
-  /* normal */
-  return (Math.random() < 0.55 ? 1 : -1) * 0.05;
+function specReturnPct(){
+  const r = Math.random();
+  switch (currentDiffKey){
+    case 'easy':   return (r < 0.60 ? +0.03 : -0.01);
+    case 'normal': return (r < 0.55 ? +0.06 : -0.03);
+    case 'hard':   return (r < 0.52 ? +0.08 : -0.08);
+  }
 }
 
   /* ХОД */
