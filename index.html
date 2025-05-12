@@ -393,10 +393,6 @@
     <p>Свободные деньги: <span id="free">$0</span></p>
     <p>Сбережения: <span id="savings">$0</span></p>
     <p>Инвестиции: <span id="investments">$0</span></p>
-    <p class="text-sm text-center">
-  🏢 <small id="bizStat">$0</small>
-</p>
-
   <p class="text-sm text-gray-600">
   <span id="goalPercentMini">0</span>% &nbsp;|&nbsp;
   осталось <span id="goalLeftMini">–</span>
@@ -597,8 +593,6 @@
   let turn = 0, maxTurns = 0;
   let savings = 0, investments = 0;
   let specBalance = 0; let startSpec = 0;
-  let businessBalance = 0;
-  let businessTier = 0;
   let health = 100, happiness = 100;
   let startSavings = 0, startInvestments = 0;
   const scores = [];
@@ -905,11 +899,11 @@ function showTutorial(){
     const savePlan =+document.getElementById('save').value;
     const investPlan=+document.getElementById('invest').value;
     const specPlan = +document.getElementById('spec').value;
-    const businessPlan  = +document.getElementById('business').value;
-    const freelancePlan = +document.getElementById('freelance').value;
     const healthSp =+document.getElementById('healthSpend').value;
     const edu      =+document.getElementById('edu').value;
     const extra    = document.getElementById('extra').value;
+    const businessPlan  = +document.getElementById('business').value;
+    const freelancePlan = +document.getElementById('freelance').value;
 
     let income = BASE_INCOME + salaryBonus;           // 1000 $
     if (extra === 'да') income += 200;  // подработка
@@ -1138,9 +1132,6 @@ specBalance = 0;
 startSpec   = 0;
 health = 100;
 happiness = 100;  
-businessBalance = 0;
-businessTier    = 0;
-
 /* ===== применяем бонус/штраф выбранной сложности ===== */
 savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
   updateIncomeExpenses(); updateBars(); updateTrophyCounter();
@@ -1150,36 +1141,11 @@ savings = currentDiff.startBonus$;      // может быть +, 0 или от�
 document.getElementById('savings').innerText =
         `$${Math.round(savings)}`;
 
-function specReturnPct(){
-  const r = Math.random();
-  switch (currentDiffKey){
-    case 'easy':   return (r < 0.60 ? +0.03 : -0.01);
-    case 'normal': return (r < 0.55 ? +0.06 : -0.03);
-    case 'hard':   return (r < 0.52 ? +0.08 : -0.08);
-  }
-}
-
-  function calcBusinessTier(){
-  if (businessBalance >= 5000) return 3;
-  if (businessBalance >= 3000) return 2;
-  if (businessBalance >= 1000) return 1;
-  return 0;
-}
-
-  function businessReturnPct(){
-  const tier = businessTier;
-  if (tier === 0) return 0;
-
-  const roll = Math.random();
-  const pos  =  currentDiffKey === 'easy'   ? [0.01, 0.02, 0.03][tier-1] :
-                currentDiffKey === 'hard'   ? [0.02, 0.04, 0.05][tier-1] :
-                                               [0.015,0.03, 0.04][tier-1];
-
-  const neg  =  pos * (currentDiffKey === 'hard' ? 1.0 : 0.5);   // симметрия/асимметрия
-  const pPos =  currentDiffKey === 'easy' ? 0.6 :
-                currentDiffKey === 'hard' ? 0.52 : 0.55;
-
-  return roll < pPos ?  pos : -neg;
+  function specReturnPct(){
+  if (currentDiff === difficulties.easy)  return (Math.random() < 0.55 ? 1 : -1) * 0.02;
+  if (currentDiff === difficulties.hard)  return (Math.random() < 0.55 ? 1 : -1) * 0.10;
+  /* normal */
+  return (Math.random() < 0.55 ? 1 : -1) * 0.05;
 }
 
   /* ХОД */
@@ -1244,19 +1210,6 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
   evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
 }
 
-    /* ===== БИЗНЕС ===== */
-if (businessPlan !== 0 || businessBalance !== 0){
-  businessBalance += businessPlan;            // взнос или вывод
-  businessTier = calcBusinessTier();          // пересчитали уровень
-
-  if (businessTier > 0){
-     const profitPct = businessReturnPct();
-     const profit    = businessBalance * profitPct;
-     businessBalance += profit;
-     income          += profit;               // идёт в активный доход
-  }
-}
-
 /* здоровье / счастье */
 if (!evt.startsWith('болезнь')) {
 
@@ -1307,8 +1260,7 @@ if (bonusFlag){
     document.getElementById('savings').innerText     = `$${Math.round(savings)}`;
     document.getElementById('investments').innerText = `$${Math.round(investments)}`;
     document.getElementById('glassSpec').style.height = (Math.min(Math.abs(specBalance), income*2)/income/2*100)+'%';
-    document.getElementById('bizStat').textContent = `$${Math.round(businessBalance)}`;
-
+    
     updateIncomeExpenses(); updateBars(); pushHistory(evt,free);
 
     /* баллы */
@@ -1326,10 +1278,7 @@ if (currentGoal){
   const done = currentGoal.check({
     savings, passiveIncome, monthExpenses
   });
-  const goalStatusEl = document.getElementById('goalStatus');
-if (goalStatusEl) {goalStatusEl.textContent = done ? '✔ выполнена' : 'в процессе';}   
-  
-//  document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
+  document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
   updateGoalProgress(currentGoal, {
   savings,
   investments,
@@ -1363,8 +1312,6 @@ function finish(reason){
   /* сбрасываем здоровье/счастье и их бары */
   health = 100;
   happiness = 100;
-  businessBalance = 0;
-  businessTier    = 0;
   updateBars();
   
   /* 2) ───── обнуляем график Баллов ───── */
