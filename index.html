@@ -1197,7 +1197,10 @@ function businessReturnPct(){
 
     let income = BASE_INCOME + salaryBonus;; if(extra==='да') income+=200;
     const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu+businessPlan;
-
+    
+/* ===== событие с учётом сложности ===== */
+let evt = 'ничего', penalty = 0, crisis = 0;
+    
     /* ─── фриланс ─────────────────────────────── */
 if (freelancePlan > 0){
   income += freelancePlan * FREEL_INCOME_K;          // дополнительный доход
@@ -1205,9 +1208,6 @@ if (freelancePlan > 0){
   happiness      -= happyLoss;                       // усталость
   evt += ` | фриланс +$${freelancePlan.toFixed(0)} (-${happyLoss} счастья)`;
 }
-
-/* ===== событие с учётом сложности ===== */
-let evt = 'ничего', penalty = 0, crisis = 0;
 
     const raise   = edu * 0.10;               // +10 % от вложенного
 if (raise > 0){
