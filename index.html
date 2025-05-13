@@ -935,7 +935,15 @@ document.getElementById('incomeDisplay').innerText =
       `$${activeIncome.toFixed(0)}  +  $${passiveIncome.toFixed(0)}`;
     document.getElementById('expensesDisplay').innerText = `$${spend}`;
     updateGlasses(activeIncome,passiveIncome,survival,comfort,savePlan,investPlan,specPlan);
-  }
+    // обновляем индикатор цели «на лету», когда двигаем слайдеры
+if (currentGoal){
+  updateGoalProgress(currentGoal, {
+    savings,
+    investments,
+    passiveIncome : passive,               // ← переменная passive выше в функции
+    monthExpenses : survival + comfort
+  });
+}
 
 function rulesBroken(income){
   const pct  = v => v / income * 100;       // переводим $ в %
@@ -1148,6 +1156,18 @@ businessTier    = 0;
 savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
   updateIncomeExpenses(); updateBars(); updateTrophyCounter();
 };
+  
+// --- пересчитываем прогресс цели после того,
+//     как savings/investments уже обнулены и применён бонус сложности ---
+if (currentGoal){
+  updateGoalProgress(currentGoal, {
+    savings,
+    investments,
+    passiveIncome : (investments * 0.05 + savings * 0.03) / 12,
+    monthExpenses : +document.getElementById('survival').value +
+                    +document.getElementById('comfort').value
+  });
+}
 
   /* отобразить стартовые сбережения (могут быть < 0) */
 document.getElementById('savings').innerText =
