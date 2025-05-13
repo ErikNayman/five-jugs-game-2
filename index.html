@@ -1092,6 +1092,9 @@ savings       = currentDiff.startBonus$;   // бонус / штраф к ста�
 
   startSavings = +document.getElementById('save').value + savings;
   startInvestments = +document.getElementById('invest').value;
+   
+   const passiveIncome = (startInvestments * 0.05 + startSavings * 0.03) / 12;
+   
    if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
    // назначаем цель, соответствующую роли
 currentGoal = goals[cfg.goalKey];
@@ -1101,9 +1104,9 @@ document.getElementById('goalStatus').textContent = 'в процессе';
 updateGoalProgress(currentGoal, {
   savings        : startSavings,
   investments    : startInvestments,
-  passiveIncome  : 0,
-  monthExpenses  : +document.getElementById('survival').value
-  + +document.getElementById('comfort').value
+  passiveIncome : passiveIncome,
+  monthExpenses  : (+document.getElementById('survival').value
+  + +document.getElementById('comfort').value)
 });
 
 document.getElementById('goalName').textContent = currentGoal.text;
@@ -1239,7 +1242,6 @@ if (raise > 0){
     health = Math.max(0, health - currentDiff.sicknessHP);
     evt = `болезнь – ${currentDiff.sicknessHP} здоровья`;
   }
-//}
 
     toast(`📣 <strong>${evt}</strong>`, true);
     const free = income - spend + penalty;
@@ -1330,8 +1332,7 @@ happiness = Math.round(Math.max(0, Math.min(100, happiness)));
     let score=Math.floor(savings/1000)+Math.floor(investments/1000)*2;
     if(health>70)    score+=20;
     if(happiness>70) score+=20;
-    const passive=(investments*0.05+savings*0.03)/12;
-    if(passive>=1000) score+=30;
+    if (passiveIncome >= 1000) score += 30;
     updateChart(score);
 
     /* ------------ проверка достижения цели ------------ */
