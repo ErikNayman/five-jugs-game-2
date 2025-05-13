@@ -1156,7 +1156,6 @@ businessTier    = 0;
 /* ===== применяем бонус/штраф выбранной сложности ===== */
 savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
   updateIncomeExpenses(); updateBars(); updateTrophyCounter();
-};
   
 // --- пересчитываем прогресс цели после того,
 //     как savings/investments уже обнулены и применён бонус сложности ---
@@ -1169,6 +1168,7 @@ if (currentGoal){
                     +document.getElementById('comfort').value
   });
 }
+  };
 
   /* отобразить стартовые сбережения (могут быть < 0) */
 document.getElementById('savings').innerText =
