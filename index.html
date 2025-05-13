@@ -624,7 +624,8 @@ const goals = {
   const HAPPY_K    = 12;     // максимум −12 ед. счастья за ход
   const HAPPY_BONUS_THRESHOLD = 400; // ≥400 $ даёт небольшой плюс
   const FREEL_INCOME_K   = 1.0;   // $1 дохода на $1 бегунка
-  const FREEL_HAPPY_STEP = 200;   // –1 счастья за каждые $200 фриланса
+  const FREEL_HAPPY_STEP = 100;   // –1 счастья за каждые $200 фриланса
+  const FREEL_HEALTH_STEP  = 100;   // –1 HP    за каждые $300
   
   const achievements = [
   { id:'save100',   text:'Первые $100 сбережений',        check:g=>g.savings >= 100           },
@@ -1204,9 +1205,13 @@ let evt = 'ничего', penalty = 0, crisis = 0;
     /* ─── фриланс ─────────────────────────────── */
 if (freelancePlan > 0){
   income += freelancePlan * FREEL_INCOME_K;          // дополнительный доход
-  const happyLoss = Math.floor(freelancePlan / FREEL_HAPPY_STEP);
-  happiness      -= happyLoss;                       // усталость
-  evt += ` | фриланс +$${freelancePlan.toFixed(0)} (-${happyLoss} счастья)`;
+const happyLoss  = Math.ceil(freelancePlan / FREEL_HAPPY_STEP);
+const healthLoss = Math.ceil(freelancePlan / FREEL_HEALTH_STEP);
+  const diffMul = currentDiffKey === 'easy' ? 0.8
+                 : currentDiffKey === 'hard' ? 1.2 : 1;
+  happiness -= Math.ceil(happyLoss  * diffMul);
+  health    -= Math.ceil(healthLoss * diffMul);
+evt += ` | фриланс +$${freelancePlan.toFixed(0)} (–${happyLoss}😃, –${healthLoss}❤️)`;
 }
 
     const raise   = edu * 0.10;               // +10 % от вложенного
