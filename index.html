@@ -589,10 +589,11 @@
     startBonus$     : -200     // начинаем «в минусе» (долг)
   }
 };
-  
+
   let turn = 0, maxTurns = 0;
   let savings = 0, investments = 0;
   let specBalance = 0; let startSpec = 0;
+  let businessBalance = 0; let businessTier = 0;
   let health = 100, happiness = 100;
   let startSavings = 0, startInvestments = 0;
   const scores = [];
@@ -842,7 +843,6 @@ buildJar('investSlider',   'investFill',   'investVal',   'invest',   0,   2000)
 buildJar('healthSpendSlider','healthFill', 'healthVal',   'healthSpend',0, 2000);
 buildJar('eduSlider',      'eduFill',      'eduVal',      'edu',      0,   2000);
 buildJar('specSlider','specFill','specVal','spec',0,2000);
-
 buildJar('businessSlider', 'businessFill', 'businessVal', 'business',  0, 2000);
 buildJar('freelanceSlider','freelanceFill','freelanceVal','freelance', 0, 2000);
 
@@ -1131,7 +1131,9 @@ investments = 0;
 specBalance = 0;
 startSpec   = 0;
 health = 100;
-happiness = 100;  
+happiness = 100;
+businessBalance = 0;
+businessTier    = 0;
 /* ===== применяем бонус/штраф выбранной сложности ===== */
 savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
   updateIncomeExpenses(); updateBars(); updateTrophyCounter();
@@ -1148,6 +1150,38 @@ function specReturnPct(){
     case 'normal': return (r < 0.55 ? +0.06 : -0.03);
     case 'hard':   return (r < 0.52 ? +0.08 : -0.08);
   }
+}
+
+  /* ===== Бизнес: определить уровень по балансу ===== */
+function calcBusinessTier(){
+  if (businessBalance >= 5000) return 3;   // полный бизнес
+  if (businessBalance >= 3000) return 2;   // малый бизнес
+  if (businessBalance >= 1000) return 1;   // микро-стартап
+  return 0;
+}
+
+/* ===== Доходность бизнеса (зависит от diff & tier) ===== */
+function businessReturnPct(){
+  const tier = businessTier;           // 0–3
+  if (tier === 0) return 0;            // бизнеса нет
+
+  const roll = Math.random();
+
+  /* базовый +% по уровням (easy / normal / hard) */
+  const pos =  currentDiffKey === 'easy'
+               ? [0.01, 0.02, 0.03][tier-1]
+               : currentDiffKey === 'hard'
+                 ? [0.02, 0.04, 0.05][tier-1]
+                 : [0.015,0.03,0.04][tier-1];
+
+  /* отрицательное плечо — половина (easy/normal) или полное (hard) */
+  const neg = pos * (currentDiffKey === 'hard' ? 1 : 0.5);
+
+  /* вероятность плюса */
+  const pPos = currentDiffKey === 'easy' ? 0.60
+              : currentDiffKey === 'hard' ? 0.52 : 0.55;
+
+  return roll < pPos ?  pos : -neg;
 }
 
   /* ХОД */
@@ -1212,6 +1246,20 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
   evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
 }
 
+/* ─── бизнес ─────────────────────────────────── */
+if (businessPlan !== 0 || businessBalance !== 0){
+  businessBalance += businessPlan;           // взнос/вывод из бегунка
+  businessTier     = calcBusinessTier();     // пересчитать уровень
+
+  if (businessTier > 0){
+    const bizPct  = businessReturnPct();
+    const bizProf = businessBalance * bizPct;
+    businessBalance += bizProf;
+    income          += bizProf;              // идёт в активный доход
+    evt += ` | бизнес ${bizProf >= 0 ? '+' : '–'}$${Math.abs(bizProf).toFixed(0)}`;
+  }
+}
+    
 /* здоровье / счастье */
 if (!evt.startsWith('болезнь')) {
 
