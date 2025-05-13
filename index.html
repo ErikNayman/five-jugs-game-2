@@ -623,6 +623,8 @@ const goals = {
   const COMF_BONUS      = 400;  // >=400   → +2 счастья за ход
   const HAPPY_K    = 12;     // максимум −12 ед. счастья за ход
   const HAPPY_BONUS_THRESHOLD = 400; // ≥400 $ даёт небольшой плюс
+  const FREEL_INCOME_K   = 1.0;   // $1 дохода на $1 бегунка
+  const FREEL_HAPPY_STEP = 200;   // –1 счастья за каждые $200 фриланса
   
   const achievements = [
   { id:'save100',   text:'Первые $100 сбережений',        check:g=>g.savings >= 100           },
@@ -913,7 +915,9 @@ const passive = (investments * 0.05 + savings * 0.03) / 12;
 income += passive;
     
     const spend = survival + comfort + savePlan + investPlan + specPlan
-            + healthSp + edu + businessPlan + freelancePlan;
+            + healthSp + edu + businessPlan;
+    income += freelancePlan * FREEL_INCOME_K;
+    
 /* ----- автодолив свободного остатка в Сбережения ----- */
 if (document.getElementById('autoAdjust').checked) {
   const rest = income - spend;
@@ -1192,7 +1196,15 @@ function businessReturnPct(){
     const freelancePlan = +document.getElementById('freelance').value;
 
     let income = BASE_INCOME + salaryBonus;; if(extra==='да') income+=200;
-    const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu+businessPlan+freelancePlan;
+    const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu+businessPlan;
+
+    /* ─── фриланс ─────────────────────────────── */
+if (freelancePlan > 0){
+  income += freelancePlan * FREEL_INCOME_K;          // дополнительный доход
+  const happyLoss = Math.floor(freelancePlan / FREEL_HAPPY_STEP);
+  happiness      -= happyLoss;                       // усталость
+  evt += ` | фриланс +$${freelancePlan.toFixed(0)} (-${happyLoss} счастья)`;
+}
 
 /* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
