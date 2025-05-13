@@ -1294,10 +1294,10 @@ health    = Math.round(Math.max(0, Math.min(100, health)));
 happiness = Math.round(Math.max(0, Math.min(100, happiness)));
 
     /* бонус или штраф по итогам правил */
-if (bonusFlag){
-  const bad = rulesBroken(income);
-  happiness = Math.max(0, Math.min(100, happiness + (bad ? -5 : +5)));
-}
+//if (bonusFlag){
+//  const bad = rulesBroken(income);
+//  happiness = Math.max(0, Math.min(100, happiness + (bad ? -5 : +5)));
+//}
     /* интерфейс */
     document.getElementById('turn').innerText=turn;
     document.getElementById('event').innerText=evt;
