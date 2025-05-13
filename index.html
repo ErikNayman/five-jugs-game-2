@@ -1151,9 +1151,9 @@ function specReturnPct(){
     case 'normal': return (r < 0.55 ? +0.06 : -0.03);
     case 'hard':   return (r < 0.52 ? +0.08 : -0.08);
   }
-}
+  }
 
-/* === дохо/убыток от бизнеса ================================ */
+/* === доход/убыток от бизнеса ================================ */
 /* Определяем уровень – влияет и на доходность, и на риск */
 function calcBusinessTier(){
   if (businessBalance >= 5000) return 3;   // крупный
@@ -1188,8 +1188,11 @@ function businessReturnPct(){
     const healthSp  =+document.getElementById('healthSpend').value;
     const edu       =+document.getElementById('edu').value;
     const extra     = document.getElementById('extra').value;
+    const businessPlan  = +document.getElementById('business').value;
+    const freelancePlan = +document.getElementById('freelance').value;
+
     let income = BASE_INCOME + salaryBonus;; if(extra==='да') income+=200;
-    const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu;
+    const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu+businessPlan+freelancePlan;
 
 /* ===== событие с учётом сложности ===== */
 let evt = 'ничего', penalty = 0, crisis = 0;
@@ -1237,8 +1240,7 @@ if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
 
   evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
 }
-    }
-
+    
 /* ─── бизнес ─────────────────────────────────── */
 if (businessPlan !== 0 || businessBalance !== 0) {
   businessBalance += businessPlan;           // взнос/вывод из бегунка
