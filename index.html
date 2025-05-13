@@ -1199,8 +1199,9 @@ function businessReturnPct(){
     const extra     = document.getElementById('extra').value;
     const businessPlan  = +document.getElementById('business').value;
     const freelancePlan = +document.getElementById('freelance').value;
+    const passiveIncome = (investments * 0.05 + savings * 0.03) / 12;
 
-    let income = BASE_INCOME + salaryBonus;; if(extra==='да') income+=200;
+    let income = BASE_INCOME + salaryBonus; if(extra==='да') income+=200;income += passiveIncome;
     const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu+businessPlan;
     
 /* ===== событие с учётом сложности ===== */
@@ -1338,7 +1339,6 @@ happiness = Math.round(Math.max(0, Math.min(100, happiness)));
     /* ------------ проверка достижения цели ------------ */
 if (currentGoal){
   const monthExpenses = survival + comfort;
-  const passiveIncome = (investments*0.05 + savings*0.03) / 12;
   const done = currentGoal.check({
     savings, passiveIncome, monthExpenses
   });
