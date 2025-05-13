@@ -1247,7 +1247,7 @@ if (raise > 0){
   toast(`🎓 Зарплата выросла на $${raise.toFixed(0)} благодаря обучению`, true);
 }
   
-//if (Math.random() < currentDiff.eventProb) {
+if (Math.random() < currentDiff.eventProb) {
   /* «бросаем кубик» второй раз, чтобы выбрать тип события */
   const w = currentDiff.eventWeights;
   const dice = Math.random();
@@ -1263,6 +1263,7 @@ if (raise > 0){
   } else {                                     // болезнь
     health = Math.max(0, health - currentDiff.sicknessHP);
     evt = `болезнь – ${currentDiff.sicknessHP} здоровья`;
+  }
   }
 
     toast(`📣 <strong>${evt}</strong>`, true);
@@ -1361,7 +1362,7 @@ happiness = Math.round(Math.max(0, Math.min(100, happiness)));
 if (currentGoal){
   const monthExpenses = survival + comfort;
   const done = currentGoal.check({
-    savings, passiveIncome, monthExpenses
+    savings,  investments, passiveIncome, monthExpenses
   });
   document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
   updateGoalProgress(currentGoal, {
