@@ -1400,70 +1400,38 @@ function finish(reason){
   /* 2. красивый баннер вместо alert */
   toast(
     `🎉 <strong>${reason}</strong><br>Баллы: ${scores[scores.length-1]}`,
-    true          // «яркий» жёлтый фон
+    true
   );
 
   /* 3. через 3 с. скрываем поле игры и полностью сбрасываем состояние */
   setTimeout(()=>{
-
-    /* вернуть на стартовый экран */
-    gameScreen .classList.add   ('hidden');
+    // ——— всё, что было в «старом» блоке, уже находится здесь ———
+    gameScreen.classList.add('hidden');
     startScreen.classList.remove('hidden');
 
-    /* обнулить переменные */
     health = happiness = 100;
     specBalance = startSpec = 0;
     businessBalance = businessTier = 0;
     updateBars();
 
-    /* очистить мини-график Баллов */
     chart.data.labels.length = 0;
     chart.data.datasets[0].data.length = 0;
     chart.update();
     document.getElementById('scoreBig').textContent = 0;
     scores.length = 0;
 
-    /* сброс прогресса цели */
     document.getElementById('goalStatus').textContent = '–';
     document.getElementById('goalBar').style.width    = '0%';
     document.getElementById('goalPercent').textContent = 0;
-    document.getElementById('goalLeft').textContent     = '–';
-
+    document.getElementById('goalLeft').textContent   = '–';
   }, 3000);
-}
+}   // ← функция закончилась, дальше кода ДЛЯ СБРОСА нет
 
-  
-  /* показываем старт-экран */
-  gameScreen.classList.add('hidden');
-  startScreen.classList.remove('hidden');
-  /* сбрасываем здоровье/счастье и их бары */
-  health = 100;
-  happiness = 100;
-  specBalance     = 0;
-  startSpec       = 0;
-  businessBalance = 0;
-  businessTier    = 0;
-  updateBars();
-  
-  /* 2) ───── обнуляем график Баллов ───── */
-  chart.data.labels.length = 0;                 // очищаем подписи оси X
-  chart.data.datasets[0].data.length = 0;       // очищаем сами значения
-  chart.update();                               // перерисовываем пустой график
-  document.getElementById('scoreBig').textContent = 0;   // крупная цифра → 0
-  scores.length = 0;                            // если нужно, обнуляем массив scores
-
-  /* (необязательно) обнулить статус цели */
-  document.getElementById('goalStatus').textContent = '–';
-  
-  /* обнуляем прогресс-бар цели */
-document.getElementById('goalBar').style.width   = '0%';
-document.getElementById('goalPercent').textContent = 0;
-document.getElementById('goalLeft').textContent    = '–';
-}
-  
-  /* первичная инициализация */
-  updateIncomeExpenses(); updateBars();
+/* первичная инициализация */
+updateIncomeExpenses();
+updateBars();
 });
+
 
 /* переключаем отображение блоков на старт-экране */
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
