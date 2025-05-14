@@ -1395,7 +1395,15 @@ if (currentGoal){
 
 function finish(reason){
   updatePersonalBests(scores[scores.length-1] || 0, turn, currentDiffKey);
-  alert(reason + '\nБаллы: ' + scores[scores.length-1]);
+  toast(
+🎉 <strong>${reason}</strong><br>Баллы: ${scores[scores.length-1]}, true         // «яркий» жёлтый фон
+);
+/* дадим игроку 3 с сек. прочитать сообщение прежде чем спрятать игровое поле */
+setTimeout(()=>{
+gameScreen .classList.add   ('hidden');
+startScreen.classList.remove('hidden');
+}, 3000);
+  
   /* показываем старт-экран */
   gameScreen.classList.add('hidden');
   startScreen.classList.remove('hidden');
