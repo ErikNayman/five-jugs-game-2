@@ -1359,6 +1359,11 @@ happiness = Math.round(Math.max(0, Math.min(100, happiness)));
     if (passiveIncome >= 1000) score += 30;
     updateChart(score);
 
+/* === сначала проверяем и сохраняем ачивки === */
+updateAchievements({
+  savings, investments, health, specBalance, startSpec
+});
+
     /* ------------ проверка достижения цели ------------ */
 if (currentGoal){
   const monthExpenses = survival + comfort;
@@ -1378,9 +1383,7 @@ if (currentGoal){
   }
 }
 
-updateAchievements({
-  savings, investments, health, specBalance, startSpec
-});
+
 
     /* финиш? */
     if(health<=0||happiness<=0||turn>=maxTurns){
