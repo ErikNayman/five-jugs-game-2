@@ -1063,7 +1063,9 @@ window.startGame = n => {
   document.getElementById('start-screen').classList.add('hidden');
   document.getElementById('game-screen').classList.remove('hidden');
     /* ---------- СБРОС ДОСТИЖЕНИЙ перед новой игрой ---------- */
-renderAchTable();      // просто покажем уже сохранённые достижения
+achState = {};
+saveAch(achState);
+renderAchTable();
 updateTrophyCounter();
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked')?.value ?? 'role';
