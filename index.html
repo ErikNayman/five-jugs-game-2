@@ -1394,15 +1394,44 @@ if (currentGoal){
   };
 
 function finish(reason){
+  /* 1. сохраняем личные рекорды */
   updatePersonalBests(scores[scores.length-1] || 0, turn, currentDiffKey);
+
+  /* 2. красивый баннер вместо alert */
   toast(
-🎉 <strong>${reason}</strong><br>Баллы: ${scores[scores.length-1]}, true         // «яркий» жёлтый фон
-);
-/* дадим игроку 3 с сек. прочитать сообщение прежде чем спрятать игровое поле */
-setTimeout(()=>{
-gameScreen .classList.add   ('hidden');
-startScreen.classList.remove('hidden');
-}, 3000);
+    `🎉 <strong>${reason}</strong><br>Баллы: ${scores[scores.length-1]}`,
+    true          // «яркий» жёлтый фон
+  );
+
+  /* 3. через 3 с. скрываем поле игры и полностью сбрасываем состояние */
+  setTimeout(()=>{
+
+    /* вернуть на стартовый экран */
+    gameScreen .classList.add   ('hidden');
+    startScreen.classList.remove('hidden');
+
+    /* обнулить переменные */
+    health = happiness = 100;
+    specBalance = startSpec = 0;
+    businessBalance = businessTier = 0;
+    updateBars();
+
+    /* очистить мини-график Баллов */
+    chart.data.labels.length = 0;
+    chart.data.datasets[0].data.length = 0;
+    chart.update();
+    document.getElementById('scoreBig').textContent = 0;
+    scores.length = 0;
+
+    /* сброс прогресса цели */
+    document.getElementById('goalStatus').textContent = '–';
+    document.getElementById('goalBar').style.width    = '0%';
+    document.getElementById('goalPercent').textContent = 0;
+    document.getElementById('goalLeft').textContent     = '–';
+
+  }, 3000);
+}
+
   
   /* показываем старт-экран */
   gameScreen.classList.add('hidden');
