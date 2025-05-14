@@ -99,18 +99,10 @@
 
     <!-- длительность -->
     <p class="font-semibold">Длительность игры:</p>
-
-<div class="flex gap-4">
-  <button onclick="startGame(24)"
-          class="flex-1 bg-green-600 text-white py-2 rounded">
-    24 мес (ходов)
-  </button>
-
-  <button onclick="startGame(60)"
-          class="flex-1 bg-blue-600 text-white py-2 rounded">
-    60 мес (ходов)
-  </button>
-</div>
+    <div class="flex gap-4">
+      <button onclick="startGame(24)" class="flex-1 bg-green-600 text-white py-2 rounded">24 мес (ходов)</button>
+      <button onclick="startGame(60)" class="flex-1 bg-blue-600  text-white py-2 rounded">60 мес (ходов)</button>
+    </div>
 
     <!-- режимы -->
     <p class="font-semibold mt-4 mb-1">Выбрать роль</p>
@@ -724,6 +716,7 @@ const gameScreen  = document.getElementById('game-screen');
     }).join('');
   }
   renderAchTable();   // первичная отрисовка
+  updateTrophyCounter();
 
 /* === счётчик на кнопке "🏆" ============================= */
 function updateTrophyCounter(){
@@ -1070,10 +1063,8 @@ window.startGame = n => {
   document.getElementById('start-screen').classList.add('hidden');
   document.getElementById('game-screen').classList.remove('hidden');
     /* ---------- СБРОС ДОСТИЖЕНИЙ перед новой игрой ---------- */
-  achState = {};                // очищаем объект
-  saveAch(achState);            // пишем пустой объект в localStorage
-  renderAchTable();             // обновляем таблицу модалки
-  updateTrophyCounter();        // и счётчик на кнопке 🏆
+renderAchTable();      // просто покажем уже сохранённые достижения
+updateTrophyCounter();
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked')?.value ?? 'role';
   let   role = null;
@@ -1367,11 +1358,6 @@ happiness = Math.round(Math.max(0, Math.min(100, happiness)));
     if (passiveIncome >= 1000) score += 30;
     updateChart(score);
 
-/* === сначала проверяем и сохраняем ачивки === */
-updateAchievements({
-  savings, investments, health, specBalance, startSpec
-});
-
     /* ------------ проверка достижения цели ------------ */
 if (currentGoal){
   const monthExpenses = survival + comfort;
@@ -1392,7 +1378,6 @@ if (currentGoal){
 }
 
 
-
     /* финиш? */
     if(health<=0||happiness<=0||turn>=maxTurns){
       const reason=health<=0?'Ты потерял здоровье.' :
@@ -1402,44 +1387,39 @@ if (currentGoal){
   };
 
 function finish(reason){
-  /* 1. сохраняем личные рекорды */
   updatePersonalBests(scores[scores.length-1] || 0, turn, currentDiffKey);
+  alert(reason + '\nБаллы: ' + scores[scores.length-1]);
+  /* показываем старт-экран */
+  gameScreen.classList.add('hidden');
+  startScreen.classList.remove('hidden');
+  /* сбрасываем здоровье/счастье и их бары */
+  health = 100;
+  happiness = 100;
+  specBalance     = 0;
+  startSpec       = 0;
+  businessBalance = 0;
+  businessTier    = 0;
+  updateBars();
+  
+  /* 2) ───── обнуляем график Баллов ───── */
+  chart.data.labels.length = 0;                 // очищаем подписи оси X
+  chart.data.datasets[0].data.length = 0;       // очищаем сами значения
+  chart.update();                               // перерисовываем пустой график
+  document.getElementById('scoreBig').textContent = 0;   // крупная цифра → 0
+  scores.length = 0;                            // если нужно, обнуляем массив scores
 
-  /* 2. красивый баннер вместо alert */
-  toast(
-    `🎉 <strong>${reason}</strong><br>Баллы: ${scores[scores.length-1]}`,
-    true
-  );
-
-  /* 3. через 3 с. скрываем поле игры и полностью сбрасываем состояние */
-  setTimeout(()=>{
-    // ——— всё, что было в «старом» блоке, уже находится здесь ———
-    gameScreen.classList.add('hidden');
-    startScreen.classList.remove('hidden');
-
-    health = happiness = 100;
-    specBalance = startSpec = 0;
-    businessBalance = businessTier = 0;
-    updateBars();
-
-    chart.data.labels.length = 0;
-    chart.data.datasets[0].data.length = 0;
-    chart.update();
-    document.getElementById('scoreBig').textContent = 0;
-    scores.length = 0;
-
-    document.getElementById('goalStatus').textContent = '–';
-    document.getElementById('goalBar').style.width    = '0%';
-    document.getElementById('goalPercent').textContent = 0;
-    document.getElementById('goalLeft').textContent   = '–';
-  }, 3000);
-}   // ← функция закончилась, дальше кода ДЛЯ СБРОСА нет
-
-/* первичная инициализация */
-updateIncomeExpenses();
-updateBars();
+  /* (необязательно) обнулить статус цели */
+  document.getElementById('goalStatus').textContent = '–';
+  
+  /* обнуляем прогресс-бар цели */
+document.getElementById('goalBar').style.width   = '0%';
+document.getElementById('goalPercent').textContent = 0;
+document.getElementById('goalLeft').textContent    = '–';
+}
+  
+  /* первичная инициализация */
+  updateIncomeExpenses(); updateBars();
 });
-
 
 /* переключаем отображение блоков на старт-экране */
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
