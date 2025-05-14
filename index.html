@@ -716,7 +716,6 @@ const gameScreen  = document.getElementById('game-screen');
     }).join('');
   }
   renderAchTable();   // первичная отрисовка
-  updateTrophyCounter();
 
 /* === счётчик на кнопке "🏆" ============================= */
 function updateTrophyCounter(){
@@ -1063,10 +1062,10 @@ window.startGame = n => {
   document.getElementById('start-screen').classList.add('hidden');
   document.getElementById('game-screen').classList.remove('hidden');
     /* ---------- СБРОС ДОСТИЖЕНИЙ перед новой игрой ---------- */
-achState = {};
-saveAch(achState);
-renderAchTable();
-updateTrophyCounter();
+  achState = {};                // очищаем объект
+  saveAch(achState);            // пишем пустой объект в localStorage
+  renderAchTable();             // обновляем таблицу модалки
+  updateTrophyCounter();        // и счётчик на кнопке 🏆
   /* ---------------- пресеты ---------------- */
   const mode = document.querySelector('input[name="mode"]:checked')?.value ?? 'role';
   let   role = null;
@@ -1360,11 +1359,11 @@ happiness = Math.round(Math.max(0, Math.min(100, happiness)));
     if (passiveIncome >= 1000) score += 30;
     updateChart(score);
 
-    /* === сначала проверяем и сохраняем ачивки === */
+/* === сначала проверяем и сохраняем ачивки === */
 updateAchievements({
   savings, investments, health, specBalance, startSpec
 });
-    
+
     /* ------------ проверка достижения цели ------------ */
 if (currentGoal){
   const monthExpenses = survival + comfort;
@@ -1383,6 +1382,7 @@ if (currentGoal){
     return;               // чтобы больше не вести расчёты после finish()
   }
 }
+
 
 
     /* финиш? */
