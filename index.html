@@ -11,7 +11,7 @@
   <!-- noUiSlider -->
   <link  href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js"></script>
-
+  
   <style>
   /* ========== Кувшины-ползунки ========== */
   .jar-wrap {width:120px; display:flex; flex-direction:column; align-items:center;}
@@ -757,17 +757,31 @@ if (unlocked === 0){
              plugins:{legend:{display:false}, tooltip:{enabled:false}}}
   });
 
-  /* кувшин-ползунок */
-function buildJar(sliderId, fillId, valId, hiddenId, minVal, maxVal){
+/* ========== НОВОЕ: подсказки по каждому кувшину ========== */
+const jarHints = {
+  save      : '↗ Подушка безопасности — повышает уверенность и счастье',
+  invest    : '↗ Увеличивает пассивный доход (5 % годовых)',
+  edu       : '↗ Каждые $100 → +$10 к зарплате навсегда',
+  survival  : '↗ Базовые нужды. < $500 — здоровье и счастье падают',
+  comfort   : '↗ Комфорт. > 50 % дохода — счастье ↓',
+  healthSpend:'↗ Прямо лечит здоровье',
+  spec      : '↗ Высокий риск/доход — волатильность счета',
+  business  : '↗ Вклады в бизнес — генерируют активный доход',
+  freelance : '↗ Доп. доход, но счастье и здоровье снижаются'
+};
 
+/* ========== Модифицированный buildJar ========== */
+function buildJar(sliderId, fillId, valId, hiddenId, minVal, maxVal){
   const slider = document.getElementById(sliderId);
   const fill   = document.getElementById(fillId);
   const valEl  = document.getElementById(valId);
   const hidden = document.getElementById(hiddenId);
 
+  let previousVal = +hidden.value;            // запоминаем предыдущую величину
+
   noUiSlider.create(slider,{
-    start      : +hidden.value, orientation: 'vertical',
-    direction  : 'rtl',
+    start      : previousVal,
+    orientation: 'vertical', direction: 'rtl',
     step       : 10, connect: [true,false],
     range      : { min: minVal,  max: maxVal }
   });
@@ -777,9 +791,18 @@ function buildJar(sliderId, fillId, valId, hiddenId, minVal, maxVal){
     fill.style.height = (num / maxVal * 100) + '%';
     valEl.textContent = num;
     hidden.value      = num;
+
+    // 👉 если значение выросло хотя бы на шаг — показать подсказку
+    if (num > previousVal){
+      const jarKey = hiddenId;               // id скрытого инпута совпадает с ключом jarHints
+      if (jarHints[jarKey]) toast('💡 ' + jarHints[jarKey]);
+    }
+    previousVal = num;                       // обновляем предыдущее значение
+
     updateIncomeExpenses();
   });
 }
+
 
       /* --- пресеты ролей (проценты от БАЗОВОГО дохода 1000 $) --- */
 const rolePresets = {
