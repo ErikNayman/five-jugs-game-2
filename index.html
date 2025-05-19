@@ -1075,6 +1075,28 @@ function toast(html, fresh = false){
   setTimeout(()=>div.remove(), 4000);
 }
   
+/* ===== подсказки после хода ===== */
+function showTurnHints(ctx){
+  const hints = [];
+  const monthExpenses = ctx.survival + ctx.comfort;
+  if (ctx.free < 0) {
+    hints.push('Расходы превышают доходы. Попробуйте сократить траты или увеличить доход');
+  }
+  if (ctx.savings < monthExpenses * 3) {
+    hints.push('Накопите подушку безопасности минимум на 3 месяца расходов');
+  }
+  if (ctx.health < 70) {
+    hints.push('Здоровье снижается — выделите больше средств на кувшин «Здоровье»');
+  }
+  if (ctx.happiness < 70) {
+    hints.push('Счастье падает. Увеличьте комфорт или уменьшите подработку');
+  }
+  if (ctx.savings > 500 && ctx.investments < ctx.savings * 0.3) {
+    hints.push('Часть накоплений можно направить в «Инвестиции» для пассивного дохода');
+  }
+  if (hints.length) toast('💡 ' + hints[0]);
+}
+  
   /* старт */
 window.startGame = n => {
   maxTurns = n;
@@ -1404,8 +1426,18 @@ if (currentGoal){
   }
 }
 
+ showTurnHints({
+      survival,
+      comfort,
+      savings,
+      investments,
+      health,
+      happiness,
+      free
+    });
 
-
+    
+    
     /* финиш? */
     if(health<=0||happiness<=0||turn>=maxTurns){
       const reason=health<=0?'Ты потерял здоровье.' :
