@@ -1269,6 +1269,10 @@ function businessReturnPct(){
 
   /* ХОД */
   window.runTurn = ()=>{
+    if (health <= 0 || happiness <= 0) {
+      finish(health <= 0 ? 'Ты потерял здоровье.' : 'Ты потерял счастье.', true);
+      return;
+    }
     turn++;
 
     const survival  =+document.getElementById('survival').value;
