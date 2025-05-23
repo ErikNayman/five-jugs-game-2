@@ -83,6 +83,16 @@
     <button id="tutNext" class="bg-blue-600 text-white px-4 py-2 rounded">Дальше</button>
   </div>
 </div>
+
+<!-- блок GAME OVER -->
+<div id="gameOver" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
+  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
+    <h3 class="text-2xl font-bold">GAME OVER</h3>
+    <p id="gameOverReason"></p>
+    <p>Баллы: <span id="gameOverScore">0</span></p>
+    <button id="gameOverBtn" class="bg-blue-600 text-white px-4 py-2 rounded">ОК</button>
+  </div>
+</div>
   
 <div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
   
@@ -675,7 +685,14 @@ const goalBlock   = document.getElementById('goalBlock');
 const goalHeader  = document.getElementById('goalHeader');
 const startScreen = document.getElementById('start-screen');
 const gameScreen  = document.getElementById('game-screen');
-
+const gameOverDlg   = document.getElementById('gameOver');
+const gameOverReason = document.getElementById('gameOverReason');
+const gameOverScore  = document.getElementById('gameOverScore');
+document.getElementById('gameOverBtn').onclick = () => {
+  gameOverDlg.classList.add('hidden');
+  resetGame();
+};
+  
   /* ====== кнопка «🏆» и модалка достижений ====== */
   document.getElementById('openAch').onclick =
     () => document.getElementById('achModal').classList.remove('hidden');
@@ -1436,20 +1453,30 @@ if (currentGoal){
       free
     });
 
-    
+
     
     /* финиш? */
     if(health<=0||happiness<=0||turn>=maxTurns){
-      const reason=health<=0?'Ты потерял здоровье.' :
-                   happiness<=0?'Ты потерял счастье.' : 'Ходы закончились.';
-      finish(reason);
+         const reason = health<=0 ? 'Ты потерял здоровье.' :
+                     happiness<=0 ? 'Ты потерял счастье.' : 'Ходы закончились.';
+      finish(reason, health<=0 || happiness<=0);
     }
   };
 
-function finish(reason){
+function finish(reason, gameOver = false){
   updatePersonalBests(scores[scores.length-1] || 0, turn, currentDiffKey);
-  alert(reason + '\nБаллы: ' + scores[scores.length-1]);
-  /* показываем старт-экран */
+ const finalScore = scores[scores.length-1] || 0;
+  if (gameOver){
+    gameOverReason.textContent = reason;
+    gameOverScore.textContent  = finalScore;
+    gameOverDlg.classList.remove('hidden');
+    return;
+  }
+  alert(reason + '\nБаллы: ' + finalScore);
+  resetGame();
+}
+
+function resetGame(){
   gameScreen.classList.add('hidden');
   startScreen.classList.remove('hidden');
   /* сбрасываем здоровье/счастье и их бары */
@@ -1472,9 +1499,9 @@ function finish(reason){
   document.getElementById('goalStatus').textContent = '–';
   
   /* обнуляем прогресс-бар цели */
-document.getElementById('goalBar').style.width   = '0%';
-document.getElementById('goalPercent').textContent = 0;
-document.getElementById('goalLeft').textContent    = '–';
+  document.getElementById('goalBar').style.width   = '0%';
+  document.getElementById('goalPercent').textContent = 0;
+  document.getElementById('goalLeft').textContent    = '–';
 }
   
   /* первичная инициализация */
