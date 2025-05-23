@@ -413,19 +413,7 @@
   </div>
 </div> <!-- ← закрывается <div id="game-screen"> -->
 
-<!-- Завершение игры (ноль здоровья/счастья) -->
-<div id="gameOver"
-     class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-  <div class="bg-white rounded shadow p-6 text-center space-y-4">
-    <h2 class="text-2xl font-bold">GAME OVER</h2>
-    <p id="gameOverReason" class="text-lg"></p>
-    <button id="gameOverClose" class="bg-blue-600 text-white px-4 py-2 rounded">
-      На главный экран
-    </button>
-  </div>
-</div>
-
-    <button id="openAch"
+<button id="openAch"
         class="fixed top-4 right-4 z-30 bg-yellow-500 text-white
                w-12 h-12 rounded-full shadow-md">
   🏆
@@ -705,18 +693,12 @@ const gameScreen  = document.getElementById('game-screen');
 };
 
   document.getElementById('resetBest').onclick = ()=>{
-    if(confirm('Сбросить все личные рекорды?')){
-      localStorage.removeItem('fiveJars_bestScore');
-      localStorage.removeItem('fiveJars_bestTurns');
-      toast('Рекорды обнулены');
-    }
-  };
-
-  document.getElementById('gameOverClose').onclick = () => {
-    document.getElementById('gameOver').classList.add('hidden');
-    startScreen.classList.remove('hidden');
-    finishCleanup();
-  };
+  if(confirm('Сбросить все личные рекорды?')){
+    localStorage.removeItem('fiveJars_bestScore');
+    localStorage.removeItem('fiveJars_bestTurns');
+    toast('Рекорды обнулены');
+  }
+};
   
   function renderAchTable(){
     const tb = document.getElementById('achTable');
@@ -1466,20 +1448,7 @@ if (currentGoal){
 
 function finish(reason){
   updatePersonalBests(scores[scores.length-1] || 0, turn, currentDiffKey);
-  const lost = reason.includes('потерял здоровье') ||
-               reason.includes('потерял счастье');
-  if(lost){
-    const over = document.getElementById('gameOver');
-    document.getElementById('gameOverReason').textContent = reason;
-    over.classList.remove('hidden');
-    return;
-  }
   alert(reason + '\nБаллы: ' + scores[scores.length-1]);
-  finishCleanup();
-}
-  
-function finishCleanup(){
-  
   /* показываем старт-экран */
   gameScreen.classList.add('hidden');
   startScreen.classList.remove('hidden');
@@ -1503,9 +1472,9 @@ function finishCleanup(){
   document.getElementById('goalStatus').textContent = '–';
   
   /* обнуляем прогресс-бар цели */
-  document.getElementById('goalBar').style.width   = '0%';
-  document.getElementById('goalPercent').textContent = 0;
-  document.getElementById('goalLeft').textContent    = '–';
+document.getElementById('goalBar').style.width   = '0%';
+document.getElementById('goalPercent').textContent = 0;
+document.getElementById('goalLeft').textContent    = '–';
 }
   
   /* первичная инициализация */
