@@ -81,7 +81,7 @@
     <h3 id="tutTitle" class="text-xl font-bold"></h3>
     <p  id="tutText"></p>
     <button id="tutNext" class="bg-blue-600 text-white px-4 py-2 rounded">Дальше</button>
-  </div>
+</div>
 </div>
 
 <!-- блок GAME OVER -->
@@ -94,7 +94,32 @@
   </div>
 </div>
   
-<div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
+<!-- выбор цели после интро -->
+<div id="goalSelect" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
+  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
+    <h3 class="text-xl font-bold mb-2">Выбери цель</h3>
+    <div class="flex justify-around">
+      <button class="goal-option" data-key="buffer">🏦 Подушка</button>
+      <button class="goal-option" data-key="passive">📈 Пассив</button>
+      <button class="goal-option" data-key="double">💹 Удвоить</button>
+    </div>
+  </div>
+</div>
+
+<!-- стратегии достижения цели -->
+<div id="strategyHint" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
+  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
+    <p class="text-sm">Чтобы быстрее достигнуть цель, выбери стратегию:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="selectStrategy('reduceSurvival')" class="bg-blue-500 text-white px-2 py-1 rounded">Меньше выживание</button>
+      <button onclick="selectStrategy('reduceComfort')" class="bg-blue-500 text-white px-2 py-1 rounded">Меньше комфорт</button>
+      <button onclick="selectStrategy('extraJob')" class="bg-blue-500 text-white px-2 py-1 rounded">Подработка</button>
+      <button onclick="selectStrategy('education')" class="bg-blue-500 text-white px-2 py-1 rounded">Обучение</button>
+    </div>
+  </div>
+</div>
+    
+    <div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
   
     <p class="text-center max-w-lg mb-6 text-gray-800 leading-snug">
   В игровом формате ты прокачаешь свои навыки достижения <span class="font-semibold">денежных целей</span>
@@ -176,7 +201,7 @@
 </h2>
   
 <div class="flex justify-center mt-4">   <!-- центрируем -->
-  <button onclick="runTurn()"
+  <button id="turnBtn" onclick="runTurn()"
           class="w-12 h-12 rounded-full bg-blue-600/90 hover:bg-blue-600
                  text-white flex items-center justify-center shadow-md"
           title="Сделать ход">
@@ -1165,22 +1190,8 @@ savings       = currentDiff.startBonus$;   // бонус / штраф к ста�
    
    const passiveIncome = (startInvestments * 0.05 + startSavings * 0.03) / 12;
    
-   if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
-   // назначаем цель, соответствующую роли
-currentGoal = goals[cfg.goalKey];
-   
-document.getElementById('goalName').textContent   = currentGoal.text;
-document.getElementById('goalStatus').textContent = 'в процессе';
-updateGoalProgress(currentGoal, {
-  savings        : startSavings,
-  investments    : startInvestments,
-  passiveIncome : passiveIncome,
-  monthExpenses  : (+document.getElementById('survival').value
-  + +document.getElementById('comfort').value)
-});
-
-document.getElementById('goalName').textContent = currentGoal.text;
-document.getElementById('goalStatus').textContent = 'в процессе';
+    if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
+    currentGoal = null;  // цель выберем после вводного хода
 } else {
   activeRules = []; bonusFlag = false;
 }
@@ -1220,20 +1231,82 @@ savings = currentDiff.startBonus$;      // может быть +, 0 или от�
   
 // --- пересчитываем прогресс цели после того,
 //     как savings/investments уже обнулены и применён бонус сложности ---
-if (currentGoal){
-  updateGoalProgress(currentGoal, {
-    savings,
-    investments,
-    passiveIncome : (investments * 0.05 + savings * 0.03) / 12,
-    monthExpenses : +document.getElementById('survival').value +
-                    +document.getElementById('comfort').value
-  });
-}
-  };
+  if (currentGoal){
+    updateGoalProgress(currentGoal, {
+      savings,
+      investments,
+      passiveIncome : (investments * 0.05 + savings * 0.03) / 12,
+      monthExpenses : +document.getElementById('survival').value +
+                      +document.getElementById('comfort').value
+    });
+  }
+  document.getElementById('turnBtn').disabled = true;
+  runIntroTurn();
+};
 
   /* отобразить стартовые сбережения (могут быть < 0) */
 document.getElementById('savings').innerText =
         `$${Math.round(savings)}`;
+
+function runIntroTurn(){
+  setSlider('survival', 500);
+  setSlider('comfort', 500);
+  updateIncomeExpenses(); updateBars();
+  toast('💵 Вы получили $1000 → $500 выживание + $500 комфорт', true);
+  runTurn();
+  showGoalModal();
+}
+
+function showGoalModal(){
+  document.getElementById('goalSelect').classList.remove('hidden');
+}
+
+document.querySelectorAll('.goal-option').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const key = btn.dataset.key;
+    currentGoal = goals[key];
+    document.getElementById('goalName').textContent   = currentGoal.text;
+    document.getElementById('goalStatus').textContent = 'в процессе';
+    updateGoalProgress(currentGoal, {
+      savings,
+      investments,
+      passiveIncome : (investments * 0.05 + savings * 0.03) / 12,
+      monthExpenses : +document.getElementById('survival').value +
+                      +document.getElementById('comfort').value
+    });
+    document.getElementById('goalSelect').classList.add('hidden');
+    document.getElementById('turnBtn').disabled = false;
+    showStrategyHint();
+  });
+});
+
+function showStrategyHint(){
+  document.getElementById('strategyHint').classList.remove('hidden');
+}
+
+function selectStrategy(name){
+  const surv = +document.getElementById('survival').value;
+  const comf = +document.getElementById('comfort').value;
+  switch(name){
+    case 'reduceSurvival':
+      setSlider('survival', Math.max(0, surv - 100));
+      toast('Траты на выживание уменьшены', true);
+      break;
+    case 'reduceComfort':
+      setSlider('comfort', Math.max(0, comf - 100));
+      toast('Траты на комфорт уменьшены', true);
+      break;
+    case 'extraJob':
+      document.getElementById('extra').value = 'да';
+      toast('Взята подработка — доход выше, счастье и здоровье ниже', true);
+      break;
+    case 'education':
+      setSlider('edu', 100);
+      toast('Инвестиции в обучение увеличат зарплату', true);
+      break;
+  }
+  document.getElementById('strategyHint').classList.add('hidden');
+}
 
 function specReturnPct(){
   const r = Math.random();
