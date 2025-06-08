@@ -1288,7 +1288,7 @@ function showStrategyHint(){
   document.getElementById('strategyHint').classList.remove('hidden');
 }
 
-function selectStrategy(name){
+  window.selectStrategy = name => {
   const surv = +document.getElementById('survival').value;
   const comf = +document.getElementById('comfort').value;
   switch(name){
@@ -1310,7 +1310,7 @@ function selectStrategy(name){
       break;
   }
   document.getElementById('strategyHint').classList.add('hidden');
-}
+};
 
 function specReturnPct(){
   const r = Math.random();
