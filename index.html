@@ -1208,12 +1208,16 @@ if (mode === 'goal') {
   });
 }
 
-/* --- заголовок цели / роли --- */
-if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-  goalHeader.textContent = 'Прогресс цели ' + currentGoal.text;
-} else {                               // свободный план – цели нет
-  goalHeader.textContent = 'Песочница — нет выбранной цели';
-}
+  /* --- заголовок цели / роли --- */
+  const goalNameEl   = document.getElementById('goalName');
+  const goalStatusEl = document.getElementById('goalStatus');
+  if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
+    if (goalNameEl)   goalNameEl.textContent   = currentGoal.text;
+    if (goalStatusEl) goalStatusEl.textContent = 'в процессе';
+  } else {                               // свободный план – цели нет
+    if (goalNameEl)   goalNameEl.textContent   = 'нет выбранной цели';
+    if (goalStatusEl) goalStatusEl.textContent = '–';
+  }
 
   /* обнуляем состояние игры */
 turn = 0;
