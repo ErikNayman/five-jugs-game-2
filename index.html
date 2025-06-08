@@ -101,7 +101,7 @@
     <div class="flex justify-around">
       <button class="goal-option" data-key="buffer">🏦 Подушка</button>
       <button class="goal-option" data-key="passive">📈 Пассив</button>
-      <button class="goal-option" data-key="double">💹 Удвоить</button>
+      <button class="goal-option" data-key="double">💹 $10 000</button>
     </div>
   </div>
 </div>
@@ -125,7 +125,7 @@
   В игровом формате ты прокачаешь свои навыки достижения <span class="font-semibold">денежных целей</span>
   - «Подушка безопасности» (<span class="font-semibold">Сберегатель</span>), 
     «$1 000 пассивного дохода» <span class="font-semibold">Инвестор</span>) 
-   "Удвоить капитал" (<span class="font-semibold">Спекулянт</span>) + поддержания <span class="font-semibold">Здоровья</span>, 
+   "капитал $10 000" (<span class="font-semibold">Спекулянт</span>) + поддержания <span class="font-semibold">Здоровья</span>,
     <span class="font-semibold">Счастья</span>.
   </p>
   <h1 class="text-5xl font-bold mb-6"><span class="mr-2">💰</span>5 Кувшинов</h1>
@@ -185,7 +185,7 @@
 
         <!-- длительность -->
     <div class="flex gap-4">
-      <button onclick="startGame(24)" class="flex-1 bg-green-600 text-white py-2 rounded">НАЧАТЬ ИГРУ</button>
+      <button onclick="startGame(1000)" class="flex-1 bg-green-600 text-white py-2 rounded">НАЧАТЬ ИГРУ</button>
     </div>
     
   </div>
@@ -643,8 +643,8 @@ const goals = {
   buffer : { key:'buffer',  text:'Подушка на 3 месяца',   check:g=>g.savings>=g.monthExpenses*3 },
   passive: { key:'passive', text:'Пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
   tenk   : { key:'tenk',    text:'Накопить $10 000',        check:g=>g.savings>=10000 },
-  double : { key:'double', text :'Удвоить капитал',    // сравниваем текущие накопления с тем, что было на старте игры
-    check: g => (g.savings + g.investments) >= (startSavings + startInvestments) * 2
+  double : { key:'double', text :'Капитал $10 000',    // общий капитал >= $10 000
+    check: g => (g.savings + g.investments) >= 10000
   }
 };
 
@@ -1056,12 +1056,9 @@ function rulesBroken(income){
     leftTxt = (10000 - ctx.savings > 0) ? `$${(10000-ctx.savings).toFixed(0)}` : '0';
   }
 else if (goal.key === 'double'){
-  const startCap = startSavings + startInvestments;   // что было в начале
-  const nowCap   = ctx.savings + ctx.investments;     // что есть сейчас
-  pct     = Math.min(100, nowCap / (startCap*2) * 100);
-  leftTxt = (startCap*2 - nowCap > 0)
-              ? `$${(startCap*2 - nowCap).toFixed(0)}`
-              : '0';
+  const cap = ctx.savings + ctx.investments;
+  pct = Math.min(100, cap / 10000 * 100);
+  leftTxt = (10000 - cap > 0) ? `$${(10000 - cap).toFixed(0)}` : '0';
  }
     
   /* визуально */
