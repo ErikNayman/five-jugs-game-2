@@ -864,7 +864,7 @@ Spec : {
 /* === Подсказка цели для выбранной роли ==================== */
 function updateRoleGoalHint(){
   const hintEl = document.getElementById('roleGoalHint');
-  if (!hintEl) return;  const role = document.querySelector('input[name="role"]:checked')?.value;
+  if (!hintEl) return;
   const role = document.querySelector('input[name="role"]:checked')?.value;
   if (!role) { hintEl.textContent = ''; return; }
 
