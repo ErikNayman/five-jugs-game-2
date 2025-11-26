@@ -1,1615 +1,864 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>5 Кувшинов</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовый Поток: 5 Кувшинов</title>
 
-  <!-- Tailwind & Chart.js -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- noUiSlider -->
-  <link  href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js"></script>
-  
-  <style>
-  /* ========== Кувшины-ползунки ========== */
-  .jar-wrap {width:120px; display:flex; flex-direction:column; align-items:center;}
-  .jar      {width:80px;  height:160px; border:4px solid #555; border-radius:8px 8px 32px 32px;
-             position:relative; background:#fff; overflow:hidden;}
-  .liquid   {position:absolute; bottom:0; left:0; width:100%; height:0;
-             background:linear-gradient(#4ade80,#16a34a); transition:height .25s;}
-  .slider-v {height:160px; margin-top:12px;}
-  input.hidden-field{display:none;}
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  /* подпись под кувшином, фикс. высота 60 px */
-  .jar-caption{display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
-               height:60px; font-size:15px; font-weight:600; line-height:1.1; text-align:center;}
+    <!-- noUiSlider -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js"></script>
 
-  /* ========== Верхние стаканы ========== */
-  .glass-wrap {width:100px; display:flex; flex-direction:column; align-items:center;}
-  .glass{width:70px; height:140px; border:4px solid #555; border-radius:8px 8px 28px 28px;
-         position:relative; background:#fff; overflow:hidden;}
-  .liquid-glass{position:absolute; bottom:0; left:0; width:100%; height:0; transition:height .25s;}
+    <!-- Chosen Palette: Warm Neutral & Financial Zen -->
+    <!-- Colors: 
+         Background: Stone-50 (#fafaf9)
+         Surface: White (#ffffff)
+         Primary Action: Emerald-600 (#059669) - Growth/Money
+         Secondary Action: Amber-500 (#f59e0b) - Warning/Comfort
+         Alert: Rose-500 (#f43f5e) - Danger/Health Loss
+         Text: Stone-800 (#292524)
+    -->
 
-  /* отрицательные сбережения */
-  .neg-liquid{background:#e11d48 !important;}
-  .neg-text  {color:#e11d48 !important;}
+    <!-- Application Structure Plan: 
+         1. Hero/Onboarding: A clear, task-oriented entry point where the user selects a Role (Strategy). This sets the context and goals immediately.
+         2. Main Game Dashboard (The "Cockpit"): 
+            - Top Bar: Critical Vital Signs (Health, Happiness, Wealth, Turn). Always visible.
+            - Left/Center Column: The "Jars" (Sliders). This is the primary interaction zone. Grouped logically (Needs vs. Growth vs. Risk) rather than a flat list to reduce cognitive load.
+            - Right Column: Visualization & Feedback. Real-time feedback loop. Contains the "Cash Flow" pipes (dynamic CSS heights) and the History Log.
+         3. Interaction Flow: Adjust Sliders -> See Projected Impact -> Commit Turn -> Experience Random Event -> Review Result.
+         4. Rationale: The original flat list was overwhelming. Grouping creates a "hierarchy of needs" approach. The visuals use CSS "liquid" metaphors to make the concept of "filling jars" intuitive without heavy graphics.
+    -->
 
-  /* ========== Вертикальные полосы (Health / Happy) ========== */
-  .vbar      {width:26px; height:140px; background:#d1d5db; border-radius:13px;
-              position:relative; overflow:hidden;}
-  .vbar-fill {position:absolute; bottom:0; left:0; width:100%; height:0; transition:height .25s;}
-  .vbar-text {position:absolute; top:4px; left:0; width:100%; text-align:center;
-              font-size:14px; font-weight:700; pointer-events:none; line-height:1;}
+    <!-- Visualization & Content Choices:
+         1. Jars as CSS Elements: Using CSS gradients and absolute positioning to simulate liquid levels. Justification: Lightweight, responsive, and directly ties to the "Jar" metaphor.
+         2. Chart.js Line Chart: Tracks Net Worth over time. Goal: Show long-term impact of decisions (Change).
+         3. Dynamic Text Blocks: "Advisor" panel updates based on state (e.g., low health warning). Goal: Inform/Guide.
+         4. Confirming NO SVG/Mermaid: Icons are Unicode characters. Graphics are CSS/Canvas.
+    -->
 
-  /* ========== Мини-график Баллов ========== */
-  .mini-chart-box{width:100px; height:140px; position:relative; display:flex;
-                  align-items:center; justify-content:center;}
-  #scoreChart{width:100px !important; height:100px !important;}
-  #scoreBig  {position:absolute; top:0; left:0; width:100%; text-align:center;
-              font-size:18px; font-weight:700; pointer-events:none;}
-  </style>
-  <style>
-    
-  #toastBox{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-          z-index:9000;font-size:14px;font-weight:600;color:#fff;}
-  .toast{background:#3b82f6;padding:8px 14px;margin-top:8px;border-radius:6px;
-       opacity:0;animation:fade 4s forwards;}
-  @keyframes fade{0%{opacity:0}10%{opacity:1}90%{opacity:1}100%{opacity:0}}
-  </style>
-  <style>
-</style>
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
-<style>
-  .jar{display:none}
-  .slider-v{margin-top:0}
-</style>
-  
+    <style>
+        /* Custom Styles for "Jars" and Sliders */
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* The Jar Container */
+        .jar-container {
+            position: relative;
+            width: 60px;
+            height: 140px;
+            background: #e7e5e4; /* stone-200 */
+            border-radius: 0 0 16px 16px;
+            border-left: 2px solid rgba(255,255,255,0.8);
+            border-right: 2px solid rgba(255,255,255,0.8);
+            border-bottom: 4px solid rgba(255,255,255,0.8);
+            overflow: hidden;
+            margin: 0 auto;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0.9;
+        }
+
+        .liquid-basic { background: linear-gradient(to top, #f59e0b, #fbbf24); } /* Amber */
+        .liquid-growth { background: linear-gradient(to top, #059669, #34d399); } /* Emerald */
+        .liquid-risk  { background: linear-gradient(to top, #7c3aed, #a78bfa); } /* Violet */
+        .liquid-danger { background: linear-gradient(to top, #e11d48, #fb7185); } /* Rose */
+
+        /* Customizing noUiSlider to look minimal */
+        .noUi-target {
+            background: #d6d3d1;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .noUi-connect {
+            background: #78716c;
+        }
+        .noUi-handle {
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            cursor: grab;
+            background: #fff;
+        }
+        .noUi-handle:before, .noUi-handle:after { display: none; }
+        .noUi-vertical .noUi-handle {
+            width: 20px;
+            height: 20px;
+            right: -5px;
+            top: -10px;
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 250px;
+            margin: 0 auto;
+        }
+
+        /* Animations */
+        @keyframes pulse-soft {
+            0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(5, 150, 105, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+        .btn-pulse { animation: pulse-soft 2s infinite; }
+
+        /* Toast Animation */
+        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-  <body class="bg-gray-100">
-  <div id="toastBox"></div>
+<body class="bg-stone-50 text-stone-800 antialiased min-h-screen flex flex-col">
 
-<!-- ═══════════ СТАРТ ═══════════ -->
-  <!-- мини-туториал (скрыт по умолчанию) -->
-<div id="tutorial" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
-  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
-    <h3 id="tutTitle" class="text-xl font-bold"></h3>
-    <p  id="tutText"></p>
-    <button id="tutNext" class="bg-blue-600 text-white px-4 py-2 rounded">Дальше</button>
-</div>
-</div>
+    <!-- 1. INTRO / ONBOARDING SCREEN -->
+    <div id="screen-intro" class="flex-grow flex flex-col items-center justify-center p-4 transition-opacity duration-500">
+        <div class="max-w-4xl w-full text-center space-y-6">
+            <div class="mb-4">
+                <span class="text-6xl">🏺</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-900 tracking-tight">5 Кувшинов</h1>
+            <p class="text-xl text-stone-600 max-w-2xl mx-auto">
+                Финансовый симулятор. Управляй потоками, балансируй между комфортом и будущим, 
+                достигай целей и не теряй вкус к жизни.
+            </p>
 
-<!-- блок GAME OVER -->
-<div id="gameOver" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
-  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
-    <h3 class="text-2xl font-bold">GAME OVER</h3>
-    <p id="gameOverReason"></p>
-    <p>Баллы: <span id="gameOverScore">0</span></p>
-    <button id="gameOverBtn" class="bg-blue-600 text-white px-4 py-2 rounded">ОК</button>
-  </div>
-</div>
-  
-<!-- выбор цели после интро -->
-<div id="goalSelect" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
-  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
-    <h3 class="text-xl font-bold mb-2">Выбери цель</h3>
-    <div class="flex justify-around">
-      <button class="goal-option" data-key="buffer">🏦 Подушка</button>
-      <button class="goal-option" data-key="passive">📈 Пассив</button>
-      <button class="goal-option" data-key="double">💹 $10 000</button>
-    </div>
-  </div>
-</div>
+            <!-- Role Selection Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
+                
+                <!-- Role: Saver -->
+                <div class="glass-panel p-6 rounded-xl hover:ring-2 hover:ring-emerald-500 cursor-pointer transition-all transform hover:-translate-y-1" onclick="selectRole('Saver')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">🛡️</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded">Легко</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Сберегатель</h3>
+                    <p class="text-sm text-stone-600 mb-4">
+                        <strong>Цель:</strong> Подушка безопасности (3 мес. расходов).
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1">
+                        <li>✅ Бонус к счастью за накопления</li>
+                        <li>❌ Страх риска (нет спекуляций)</li>
+                    </ul>
+                </div>
 
-<!-- стратегии достижения цели -->
-<div id="strategyHint" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden" style="z-index:1000">
-  <div class="bg-white rounded shadow max-w-md w-11/12 p-6 text-center space-y-4">
-    <p class="text-sm">Чтобы быстрее достигнуть цель, выбери стратегию:</p>
-    <div class="grid grid-cols-2 gap-2">
-      <button onclick="selectStrategy('reduceSurvival')" class="bg-blue-500 text-white px-2 py-1 rounded">Меньше выживание</button>
-      <button onclick="selectStrategy('reduceComfort')" class="bg-blue-500 text-white px-2 py-1 rounded">Меньше комфорт</button>
-      <button onclick="selectStrategy('extraJob')" class="bg-blue-500 text-white px-2 py-1 rounded">Подработка</button>
-      <button onclick="selectStrategy('education')" class="bg-blue-500 text-white px-2 py-1 rounded">Обучение</button>
-    </div>
-  </div>
-</div>
-    
-    <div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
-  
-    <p class="text-center max-w-lg mb-6 text-gray-800 leading-snug">
-  В игровом формате ты прокачаешь свои навыки достижения <span class="font-semibold">денежных целей</span>
-  - «Подушка безопасности» (<span class="font-semibold">Сберегатель</span>), 
-    «$1 000 пассивного дохода» <span class="font-semibold">Инвестор</span>) 
-   "капитал $10 000" (<span class="font-semibold">Спекулянт</span>) + поддержания <span class="font-semibold">Здоровья</span>,
-    <span class="font-semibold">Счастья</span>.
-  </p>
-  <h1 class="text-5xl font-bold mb-6"><span class="mr-2">💰</span>5 Кувшинов</h1>
+                <!-- Role: Investor -->
+                <div class="glass-panel p-6 rounded-xl hover:ring-2 hover:ring-blue-500 cursor-pointer transition-all transform hover:-translate-y-1" onclick="selectRole('Investor')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">📈</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">Норма</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Инвестор</h3>
+                    <p class="text-sm text-stone-600 mb-4">
+                        <strong>Цель:</strong> Пассивный доход $1000/мес.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1">
+                        <li>✅ Стартовый капитал +$1000</li>
+                        <li>⚠️ Нужно инвестировать >15% дохода</li>
+                    </ul>
+                </div>
 
-  <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-left">
+                <!-- Role: Speculator -->
+                <div class="glass-panel p-6 rounded-xl hover:ring-2 hover:ring-purple-500 cursor-pointer transition-all transform hover:-translate-y-1" onclick="selectRole('Spec')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">🚀</span>
+                        <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded">Сложно</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Спекулянт</h3>
+                    <p class="text-sm text-stone-600 mb-4">
+                        <strong>Цель:</strong> Капитал $10,000 (быстро).
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1">
+                        <li>✅ Высокий риск / Высокая награда</li>
+                        <li>⚠️ Волатильность рынка повышена</li>
+                    </ul>
+                </div>
+            </div>
 
-    <!-- ─── СЛОЖНОСТЬ ─── -->
-<p class="font-semibold mt-4 mb-1">💡 Сложность</p>
-<div class="flex items-center gap-4 flex-wrap ml-6">
-  <label class="flex items-center gap-1">
-    <input type="radio" name="diff" value="easy"
-           class="accent-green-600" checked>
-    Лёгкий
-  </label>
-  <label class="flex items-center gap-1">
-    <input type="radio" name="diff" value="normal"
-           class="accent-yellow-500">
-    Средний
-  </label>
-  <label class="flex items-center gap-1">
-    <input type="radio" name="diff" value="hard"
-           class="accent-red-600">
-    Сложный
-  </label>
-</div>
-
-    <!-- автодолив -->
-    <label class="flex items-center space-x-2 mt-4">
-      <input id="autoAdjust" type="checkbox" class="h-4 w-4 text-blue-600 rounded">
-      <span class="text-sm">Автоматически добавлять остаток в Сбережения</span>
-    </label>
-
-    <!-- 🆕 Блок «Режим игры» -->
-
-<label class="block">
-  <input type="radio" name="mode" value="role" checked>
-  <span class="ml-1">🎯 Ролевая игра (Saver / Investor / Spec)</span>
-</label>
-
-<label class="block">
-  <input type="radio" name="mode" value="custom">
-  <span class="ml-1">🛠 Своя схема</span>
-</label>
-
-        <!-- длительность -->
-    <div class="flex gap-4">
-      <button onclick="startGame(1000)" class="flex-1 bg-green-600 text-white py-2 rounded">НАЧАТЬ ИГРУ</button>
-    </div>
-    
-  </div>
-</div>
-
-<!-- ═══════════ ИГРА ═══════════ -->
-<div id="game-screen" class="hidden p-6 space-y-6 max-w-7xl mx-auto">
-
-<h2 id="goalHeader"
-    class="text-2xl font-bold text-center mt-4">
-  Прогресс цели <span id="goalName"></span>
-  — <span id="goalStatus" class="text-base font-semibold">–</span>
-</h2>
-  
-<div class="flex justify-center mt-4">   <!-- центрируем -->
-  <button id="turnBtn" onclick="runTurn()"
-          class="w-12 h-12 rounded-full bg-blue-600/90 hover:bg-blue-600
-                 text-white flex items-center justify-center shadow-md"
-          title="Сделать ход">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-         width="20" height="20" fill="currentColor">
-      <path d="M8 5v14l11-7z"/>
-    </svg>
-  </button>
-</div>
-
-<div class="w-full max-w-lg mx-auto">
-  <div class="w-full h-4 bg-gray-300 rounded-full overflow-hidden mt-2">
-    <div id="goalBar"
-         class="h-full bg-green-500 w-0 transition-all duration-300"></div>
-  </div>
-  <p class="text-center text-sm mt-1">
-    <span id="goalPercent">0</span>% | осталось
-    <span id="goalLeft">–</span>
-  </p>
-</div>
-  
-<!-- ═══ Верхний dashboard (3 логических блока) ═══ -->
-<div class="flex flex-col lg:flex-row gap-6 mb-8 justify-center">
-
-  <!-- ── ① 5 стаканов денежных потоков ── -->
-  <div class="p-4 bg-white/70 rounded-lg shadow flex flex-wrap gap-6 justify-center">
-<!-- Доходы -->
-<div class="glass-wrap">
-  <div class="glass">
-      <!-- активный доход (дно) -->
-      <div id="glassIncomeActive"  class="liquid-glass" style="background:#82A8AB"></div>
-      <!-- пассивный доход (над активным) -->
-      <div id="glassIncomePassive" class="liquid-glass" style="background:#4ade80"></div>
-  </div>
-  <p class="mt-1 font-semibold text-center text-sm">Доходы</p>
-</div>
-
-    <!-- Расходы -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassExpenses" class="liquid-glass" style="background:#A77F4B"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Расходы</p>
+            <!-- Difficulty & Settings -->
+            <div class="mt-8 flex justify-center gap-6 text-sm">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="intro-auto-save" class="rounded text-emerald-600 focus:ring-emerald-500" checked>
+                    <span>Авто-долив остатка в Сбережения</span>
+                </label>
+            </div>
+        </div>
     </div>
 
-    <!-- Сбережения -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassSavings" class="liquid-glass" style="background:#728565"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Сбережения</p>
+    <!-- 2. GAME DASHBOARD (Hidden initially) -->
+    <div id="screen-game" class="hidden flex-col min-h-screen">
+        
+        <!-- Top Stats Bar -->
+        <header class="bg-white border-b border-stone-200 sticky top-0 z-20 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    
+                    <!-- Left: Brand & Turn -->
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold text-lg tracking-tight">5 Кувшинов</span>
+                        <div class="bg-stone-100 px-3 py-1 rounded-full text-sm font-mono border border-stone-200">
+                            Ход: <span id="ui-turn" class="font-bold text-stone-900">1</span>
+                        </div>
+                        <div class="text-xs text-stone-500 hidden md:block" id="ui-goal-hint">Цель: ...</div>
+                    </div>
+
+                    <!-- Center: Vitals (Health & Happiness) -->
+                    <div class="flex gap-6 w-full md:w-auto justify-center">
+                        <!-- Health -->
+                        <div class="flex items-center gap-2" title="Здоровье">
+                            <span class="text-xl">❤️</span>
+                            <div class="w-24 h-3 bg-stone-200 rounded-full overflow-hidden">
+                                <div id="bar-health" class="h-full bg-rose-500 transition-all duration-500" style="width: 100%"></div>
+                            </div>
+                            <span id="txt-health" class="text-xs font-bold w-8">100%</span>
+                        </div>
+                        <!-- Happiness -->
+                        <div class="flex items-center gap-2" title="Счастье">
+                            <span class="text-xl">😃</span>
+                            <div class="w-24 h-3 bg-stone-200 rounded-full overflow-hidden">
+                                <div id="bar-happy" class="h-full bg-amber-400 transition-all duration-500" style="width: 100%"></div>
+                            </div>
+                            <span id="txt-happy" class="text-xs font-bold w-8">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Wealth Summary -->
+                    <div class="flex items-center gap-4 text-right">
+                        <div>
+                            <div class="text-xs text-stone-500 uppercase tracking-wider">Капитал</div>
+                            <div id="ui-total-wealth" class="font-bold text-emerald-700 text-lg">$0</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-stone-500 uppercase tracking-wider">Пассив</div>
+                            <div id="ui-passive-income" class="font-bold text-blue-600 text-sm">+$0/мес</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar towards Goal -->
+                <div class="mt-2 w-full h-1 bg-stone-100 rounded-full overflow-hidden">
+                    <div id="bar-goal" class="h-full bg-emerald-500 transition-all duration-1000" style="width: 0%"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="flex-grow max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- COLUMN 1: CONTROLS (The Jars) - Spans 8 cols -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Section Intro -->
+                <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-lg flex items-start gap-3">
+                    <span class="text-2xl">🧠</span>
+                    <div>
+                        <h4 class="font-bold text-emerald-900">Центр Принятия Решений</h4>
+                        <p class="text-sm text-emerald-800">
+                            Распределите ваш ежемесячный бюджет. Двигайте ползунки, чтобы сбалансировать «Выживание» (обязательные траты) и «Рост». Следите за свободным остатком!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Budget Summary Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="glass-panel p-4 rounded-lg text-center">
+                        <div class="text-sm text-stone-500">Доходы (Актив + Пассив)</div>
+                        <div id="ui-income-total" class="text-xl font-bold text-emerald-600">$1000</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-lg text-center">
+                        <div class="text-sm text-stone-500">Расходы (План)</div>
+                        <div id="ui-expenses-total" class="text-xl font-bold text-rose-600">$0</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-lg text-center border-l-4" id="ui-free-money-card">
+                        <div class="text-sm text-stone-500">Свободный остаток</div>
+                        <div id="ui-free-money" class="text-xl font-bold text-stone-800">$0</div>
+                    </div>
+                </div>
+
+                <!-- JAR GROUPS -->
+                
+                <!-- Group 1: Basics (Survival & Comfort) -->
+                <div class="glass-panel rounded-xl p-5 mb-4">
+                    <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 border-b pb-2">Базовые Потребности</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+                        <!-- Jar: Survival -->
+                        <div class="text-center relative group">
+                            <div class="jar-container">
+                                <div id="fill-survival" class="liquid liquid-basic"></div>
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 text-xs font-bold text-stone-700">
+                                Мин $500
+                            </div>
+                            <div id="slider-survival" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Выживание</div>
+                            <div class="text-xs text-stone-500" id="val-survival">$500</div>
+                        </div>
+
+                        <!-- Jar: Comfort -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-comfort" class="liquid liquid-basic"></div>
+                            </div>
+                            <div id="slider-comfort" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Комфорт</div>
+                            <div class="text-xs text-stone-500" id="val-comfort">$500</div>
+                        </div>
+
+                        <!-- Jar: Health Spend -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-healthSpend" class="liquid liquid-danger"></div>
+                            </div>
+                            <div id="slider-healthSpend" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Здоровье</div>
+                            <div class="text-xs text-stone-500" id="val-healthSpend">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 2: Growth (Save, Invest, Edu) -->
+                <div class="glass-panel rounded-xl p-5 mb-4 border-t-4 border-emerald-500">
+                    <h3 class="text-sm font-bold text-emerald-600 uppercase tracking-widest mb-4 border-b pb-2">Зона Роста</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+                        <!-- Jar: Savings -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-save" class="liquid liquid-growth"></div>
+                            </div>
+                            <div id="slider-save" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Сбережения</div>
+                            <div class="text-xs text-stone-500" id="val-save">$0</div>
+                        </div>
+
+                        <!-- Jar: Invest -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-invest" class="liquid liquid-growth"></div>
+                            </div>
+                            <div id="slider-invest" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Инвестиции</div>
+                            <div class="text-xs text-stone-500" id="val-invest">$0</div>
+                        </div>
+
+                        <!-- Jar: Education -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-edu" class="liquid liquid-growth"></div>
+                            </div>
+                            <div id="slider-edu" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Обучение</div>
+                            <div class="text-xs text-stone-500" id="val-edu">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 3: Risky Business -->
+                <div class="glass-panel rounded-xl p-5 mb-4">
+                    <h3 class="text-sm font-bold text-purple-500 uppercase tracking-widest mb-4 border-b pb-2">Риск и Бизнес</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+                        <!-- Jar: Speculation -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-spec" class="liquid liquid-risk"></div>
+                            </div>
+                            <div id="slider-spec" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Спекуляции</div>
+                            <div class="text-xs text-stone-500" id="val-spec">$0</div>
+                        </div>
+
+                        <!-- Jar: Business -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-business" class="liquid liquid-risk"></div>
+                            </div>
+                            <div id="slider-business" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Бизнес</div>
+                            <div class="text-xs text-stone-500" id="val-business">$0</div>
+                        </div>
+
+                        <!-- Jar: Freelance -->
+                        <div class="text-center relative">
+                            <div class="jar-container">
+                                <div id="fill-freelance" class="liquid liquid-risk" style="background:linear-gradient(to top, #64748b, #94a3b8)"></div>
+                            </div>
+                            <div id="slider-freelance" class="h-32 absolute top-[4px] right-[-10px] opacity-70 hover:opacity-100 transition-opacity"></div>
+                            <div class="mt-2 font-bold text-sm">Фриланс</div>
+                            <div class="text-xs text-stone-500" id="val-freelance">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTON -->
+                <div class="flex justify-center mt-8 pb-12">
+                    <button id="btn-next-turn" onclick="game.nextTurn()" 
+                        class="btn-pulse bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xl py-4 px-12 rounded-full shadow-lg transform transition-transform active:scale-95 flex items-center gap-2">
+                        <span>Сделать Ход (Месяц)</span>
+                        <span class="text-2xl">▶</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: ANALYTICS (Right Side) - Spans 4 cols -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- Chart Section -->
+                <div class="glass-panel p-4 rounded-xl">
+                    <h4 class="font-bold text-sm text-stone-500 mb-2 uppercase">Динамика Капитала</h4>
+                    <div class="chart-wrapper">
+                        <canvas id="wealthChart"></canvas>
+                    </div>
+                    <div class="mt-2 text-xs text-stone-400 text-center">Сбережения + Инвестиции</div>
+                </div>
+
+                <!-- Event Log / Notifications -->
+                <div class="glass-panel p-4 rounded-xl h-64 flex flex-col">
+                    <h4 class="font-bold text-sm text-stone-500 mb-2 uppercase">Журнал Событий</h4>
+                    <div id="event-log" class="flex-grow overflow-y-auto space-y-2 text-sm pr-1 custom-scrollbar">
+                        <div class="text-stone-400 italic text-center mt-10">События появятся здесь...</div>
+                    </div>
+                </div>
+
+                <!-- Accumulators (Total values) -->
+                <div class="glass-panel p-4 rounded-xl space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="text-stone-600">🏦 Сбережения</span>
+                        <span id="stat-savings" class="font-bold text-emerald-600">$0</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="text-stone-600">📈 Инвестиции</span>
+                        <span id="stat-invest" class="font-bold text-emerald-600">$0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-stone-600">🎢 Спекуляции</span>
+                        <span id="stat-spec" class="font-bold text-purple-600">$0</span>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Инвестиции -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassInvest" class="liquid-glass" style="background:#3B4550"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Инвестиции</p>
+    <!-- Modals -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center m-4">
+            <div class="text-6xl mb-4" id="modal-icon">🏆</div>
+            <h2 class="text-2xl font-bold mb-2" id="modal-title">Title</h2>
+            <p class="text-stone-600 mb-6" id="modal-text">Message content goes here.</p>
+            <button onclick="document.getElementById('modal-overlay').classList.add('hidden'); if(game.isGameOver) location.reload();" 
+                class="bg-stone-800 text-white px-6 py-2 rounded-lg hover:bg-stone-700 transition-colors">
+                Продолжить
+            </button>
+        </div>
     </div>
 
-    <!-- Спекуляции (пустой) -->
-    <div class="glass-wrap">
-      <div class="glass"><div id="glassSpec" class="liquid-glass" style="background:#BF8200"></div></div>
-      <p class="mt-1 font-semibold text-center text-sm">Спекуляции</p>
-    </div>
-  </div>
-
- <!-- ── ② Здоровье + Счастье + Баллы ── -->
-<div class="p-4 bg-white/70 rounded-lg shadow flex gap-6 justify-center items-end mx-auto">
-
-  <!-- Здоровье -->
-  <div class="glass-wrap">
-    <div class="vbar">
-      <div id="vHealthFill" class="vbar-fill" style="background:#22c55e"></div>
-      <span id="vHealthTxt" class="vbar-text">100%</span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Здоровье</p>
-  </div>
-
-  <!-- Счастье -->
-  <div class="glass-wrap">
-    <div class="vbar">
-      <div id="vHappyFill" class="vbar-fill" style="background:#facc15"></div>
-      <span id="vHappyTxt" class="vbar-text">100%</span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Счастье</p>
-  </div>
-
-  <!-- Баллы -->
-  <div class="glass-wrap">
-    <div class="mini-chart-box">
-      <canvas id="scoreChart"></canvas>
-      <span id="scoreBig">0</span>
-    </div>
-    <p class="mt-1 font-semibold text-center text-sm">Баллы</p>
-  </div>
-</div>
-
-</div> <!-- конец flex-обёртки dashboard -->
-
- <!-- Доходы / Расходы / Подработка -->
-<div class="p-4 bg-white/70 rounded-lg shadow inline-block">
-  <div class="grid grid-cols-3 gap-6">      <!-- ❶ одна сетка -->
-    <!-- Доходы -->
-    <div>
-      <label class="block font-semibold mb-1">Доходы + Пассивные доходы</label>
-      <p id="incomeDisplay"
-         class="w-40 border p-2 rounded bg-gray-50">$0</p>
-    </div>
-
-    <!-- Расходы -->
-    <div>
-      <label class="block font-semibold mb-1">Расходы</label>
-      <p id="expensesDisplay"
-         class="w-40 border p-2 rounded bg-gray-50">$0</p>
-    </div>
-
-    <!-- Подработка -->
-    <div>
-      <label for="extra" class="block font-semibold mb-1">Подработка</label>
-      <select id="extra"
-              class="w-40 border p-2 rounded">
-        <option value="нет">Нет</option>
-        <option value="да">Да</option>
-      </select>
-    </div>
-  </div>                                     <!-- /grid -->
-</div>                                       <!-- /card -->
-
-<!-- Шесть кувшинов-ползунков -->
-  <!-- ═════ Банки: 3 группы + 9 бегунков в одну линию ═════ -->
-<div class="grid gap-6 mb-8
-            lg:grid-cols-9               <!-- на широком экране 9 равных ячеек -->
-            sm:grid-cols-3">             <!-- на мобильных по 3 -->
-
-<!-- ─────── Заголовки (строка 1) ─────── -->
-  <div class="col-span-3 text-center text-lg font-semibold">
-    Здесь ты можешь увеличить свои доходы
-  </div>
-  <div class="col-span-3 text-center text-lg font-semibold">
-    Здесь ты устанавливаешь свои расходы
-  </div>
-  <div class="col-span-3 text-center text-lg font-semibold">
-    Здесь ты можешь как много заработать, так и потерять
-  </div>
-
-  <!-- ─────── Банки (строка 2) ─────── -->
-
-  <!-- Сбережения -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="saveFill" class="liquid"></div></div>
-    <div id="saveSlider" class="slider-v"></div>
-    <div class="jar-caption">Сбережения<br><span id="saveLabel">0</span> $</div>
-    <input id="save" type="hidden" class="hidden-field" value="0">
-  </div>
-
-  <!-- Инвестиции -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="investFill" class="liquid"></div></div>
-    <div id="investSlider" class="slider-v"></div>
-    <div class="jar-caption">Инвестиции<br><span id="investVal">0</span> $</div>
-    <input id="invest" type="hidden" class="hidden-field" value="0">
-  </div>
-
-  <!-- Образование -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="eduFill" class="liquid"></div></div>
-    <div id="eduSlider" class="slider-v"></div>
-    <div class="jar-caption">Образование<br><span id="eduVal">0</span> $</div>
-    <input id="edu" type="hidden" class="hidden-field" value="0">
-  </div>
-
-  <!-- Выживание -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="survivalFill" class="liquid"></div></div>
-    <div id="survivalSlider" class="slider-v"></div>
-    <div class="jar-caption">Выживание<br><span id="survivalVal">500</span> $</div>
-    <input id="survival" type="hidden" class="hidden-field" value="500">
-  </div>
-
-  <!-- Комфорт -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="comfortFill" class="liquid"></div></div>
-    <div id="comfortSlider" class="slider-v"></div>
-    <div class="jar-caption">Комфорт<br><span id="comfortVal">500</span> $</div>
-    <input id="comfort" type="hidden" class="hidden-field" value="500">
-  </div>
-
-  <!-- Здоровье -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="healthFill" class="liquid"></div></div>
-    <div id="healthSpendSlider" class="slider-v"></div>
-    <div class="jar-caption">Здоровье<br><span id="healthVal">0</span> $</div>
-    <input id="healthSpend" type="hidden" class="hidden-field" value="0">
-  </div>
-
-  <!-- Спекуляции -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="specFill" class="liquid"></div></div>
-    <div id="specSlider" class="slider-v"></div>
-    <div class="jar-caption">Спекуляции<br><span id="specVal">0</span> $</div>
-    <input id="spec" type="hidden" class="hidden-field" value="0">
-  </div>
-
-  <!-- Бизнес -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="businessFill" class="liquid"></div></div>
-    <div id="businessSlider" class="slider-v"></div>
-    <div class="jar-caption">Бизнес<br><span id="businessVal">0</span> $</div>
-    <input id="business" type="hidden" class="hidden-field" value="0">
-  </div>
-
-  <!-- Фриланс -->
-  <div class="jar-wrap">
-    <div class="jar"><div id="freelanceFill" class="liquid"></div></div>
-    <div id="freelanceSlider" class="slider-v"></div>
-    <div class="jar-caption">Фриланс<br><span id="freelanceVal">0</span> $</div>
-    <input id="freelance" type="hidden" class="hidden-field" value="0">
-  </div>
-
-</div>
-
-  <!-- Краткая статистика -->
-  <div class="text-center space-y-2">
-    <p>Ход: <span id="turn">0</span> / <span id="maxTurns">0</span></p>
-    <p>Событие: <span id="event">-</span></p>
-    <p>Свободные деньги: <span id="free">$0</span></p>
-    <p>Сбережения: <span id="savings">$0</span></p>
-    <p>Инвестиции: <span id="investments">$0</span></p>
-  <p class="text-sm text-gray-600">
-  <span id="goalPercentMini">0</span>% &nbsp;|&nbsp;
-  осталось <span id="goalLeftMini">–</span>
-</p>
-  </div>
-
-  <!-- История -->
-  <div class="mt-8">
-    <h2 class="text-xl font-bold text-center mb-2">📘 История ходов</h2>
-    <table class="w-full text-sm bg-white rounded shadow overflow-hidden">
-      <thead class="bg-gray-200 font-bold">
-        <tr>
-          <th class="p-2">Ход</th><th class="p-2">Событие</th><th class="p-2">Свободные $</th>
-          <th class="p-2">Сбережения</th><th class="p-2">Инвестиции</th>
-          <th class="p-2">Здоровье</th><th class="p-2">Счастье</th>
-        </tr>
-      </thead>
-      <tbody id="historyTable" class="text-center"></tbody>
-    </table>
-  </div>
-</div> <!-- ← закрывается <div id="game-screen"> -->
-
-<button id="openAch"
-        class="fixed top-4 right-4 z-30 bg-yellow-500 text-white
-               w-12 h-12 rounded-full shadow-md">
-  🏆
-  <span id="achCount"
-        class="absolute -top-1 -right-1 bg-red-600 text-xs
-               rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-</button>
-
-<!-- Модалка -->
-<div id="achModal" class="fixed inset-0 bg-black/60 hidden
-            items-center justify-center z-40">
-  <div class="bg-white rounded shadow p-6 w-11/12 max-w-md">
-    <h3 class="text-xl font-bold mb-4">Мои достижения</h3>
-    <table class="w-full text-sm" id="achTable"></table>
-    <button id="resetAch"
-        class="mt-3 text-sm text-red-600 underline">Сбросить достижения
-    </button>
-    <button id="resetBest"
-        class="mt-1 text-sm text-red-600 underline">Сбросить рекорды
-    </button>
-    <button id="closeAch" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
-      Закрыть
-    </button>
-  </div>
-</div>
-
-    <!-- ───────── Кнопка ? и панель FAQ ───────── -->
-<button id="openFaq" class="fixed top-4 right-20 z-30
-        bg-indigo-500 text-white w-12 h-12 rounded-full shadow-md">
-  ?
-</button>
-
-<div id="faqPanel" class="fixed top-0 left-0 h-full w-72 bg-white/95
-     shadow-lg p-6 space-y-4 overflow-y-auto transition-transform
-     -translate-x-full z-40">
-  <h3 class="text-xl font-bold mb-4">Частые вопросы</h3>
-
-  <details open>
-    <summary class="font-semibold cursor-pointer">Как увеличить доход?</summary>
-    <p class="mt-2 text-sm leading-snug">
-      • Добавьте подработку (но счастье снизится).<br>
-      • Увеличивайте инвестиции — это растит пассивный доход.<br>
-      • Инвестируйте в Образование → повышение зарплаты на 10% от инвестиций.
-    </p>
-  </details>
-
-  <details>
-    <summary class="font-semibold cursor-pointer">Зачем нужна подушка?</summary>
-    <p class="mt-2 text-sm leading-snug">
-      Без неё счастье падает. Подушка ≥ 3 месяцев даёт +1 к счастью.
-    </p>
-  </details>
-
-  <details>
-  <summary class="font-semibold cursor-pointer">
-    Какие решения приближают или отдаляют от цели?
-  </summary>
-  <div class="mt-2 text-sm leading-snug space-y-1">
-    <p><strong>⏩ Приближают</strong>:<br>
-       • Откладывать ≥ 10 % дохода ↗ «подушка»<br>
-       • Инвестировать ≥ 15 % дохода ↗ пассивный доход<br>
-       • Держать комфорт ≤ 40 % дохода ↗ счастье<br>
-       • Тратить на здоровье/образование ≤ разумных 10 %</p>
-    <p><strong>⏪ Отдаляют</strong>:<br>
-       • Комфорт &gt; 50 % — счастье ↓, «подушка» не растёт<br>
-       • Отсутствие сбережений — штраф к счастью<br>
-       • Подработка без отдыха — счастье –3 ед. за ход<br>
-       • Игнорирование здоровья — прямой урон здоровью</p>
-  </div>
-</details>
-
-<details>
-  <summary class="font-semibold cursor-pointer">
-    Что такое «ход» и как он делается?
-  </summary>
-  <p class="mt-2 text-sm leading-snug">
-    Один ход — это один виртуальный месяц. Нажимая кнопку <kbd>▶</kbd> вы
-    «прокручиваете» месяц вперёд: все запланированные расходы списываются,
-    сбережения/инвестиции растут (или падают), случаются случайные события,<br>
-    а здоровье и счастье пересчитываются.
-  </p>
-</details>
-
-<details>
-  <summary class="font-semibold cursor-pointer">
-    Из чего складываются доходы?
-  </summary>
-  <p class="mt-2 text-sm leading-snug">
-    • <strong>Активный доход</strong> — ваша зарплата (по умолчанию $1 000).<br>
-    &nbsp;&nbsp;• Подработка даёт +$200, но –3 ед. счастья.<br>
-    &nbsp;&nbsp;• Каждый $100, вложенный в «Образование», повышает зарплату
-      на&nbsp;$10 (10 %).<br>
-    • <strong>Пассивный доход</strong> — 5 % годовых от инвестиций +
-      3 % годовых от сбережений, делённые на 12.
-  </p>
-</details>
-
-<details>
-  <summary class="font-semibold cursor-pointer">
-    Что считается расходами?
-  </summary>
-  <p class="mt-2 text-sm leading-snug">
-    Вы контролируете семь «кувшинов»-категорий:<br>
-    • Выживание&nbsp;(еда, жильё) • Комфорт • Сбережения • Инвестиции<br>
-    • Спекуляции • Здоровье • Образование<br>
-    Сумма всех кувшинов = месячные расходы. Если включён
-    «Автодолив», свободный остаток автоматически докидывается в «Сбережения».
-  </p>
-</details>
-
-<details>
-  <summary class="font-semibold cursor-pointer">
-    Почему «Инвестиции» и «Спекуляции» выглядят как трата?
-  </summary>
-  <p class="mt-2 text-sm leading-snug">
-    На графике это действительно расход&nbsp;— вы выводите деньги
-    «из кошелька».<br>
-    • <strong>Инвестиции</strong> → пополняют портфель, который даёт
-      +5 % годовых пассивного дохода.<br>
-    • <strong>Спекуляции</strong> → отдельный счёт с высокой волатильностью
-      (-1 %…+3 % в&nbsp;легком режиме, -10 %…+10 % в&nbsp;сложном).
-      Прибыль/убыток отображается как событие «спекуляции ±$...».
-  </p>
-</details>
-</div>
-<!-- ───────── конец FAQ ───────── -->
-
-<!-- ═══════════ JS ═══════════ -->
-<script>
-
-  const difficulties = {
-  /* ----------  EASY  -------------------------------------- */
-  easy : {
-    /* управление бегунками */
-    sliderStep      : 100,     // шаг ползунка, $   (крупный – меньше «возни»)
-
-    /* случайные события */
-    eventProb       : 0.25,    // суммарная вероятность, что «что-то» случится
-    eventWeights    : {        // как делится eventProb
-      minorExpense  : 0.50,    // 50 % от eventProb → мелкая трата
-      crisis        : 0.25,    // 25 %            → обвал инвестиций
-      sickness      : 0.25     // 25 %            → болезнь
-    },
-    minorExpense$   : 30,      // размер мелкой траты
-    crisisLossPct   : 0.04,    // -4 % от инвестиций
-    sicknessHP      : 3,       // -3 здоровья
-
-    /* стартовые послабления */
-    startBonus$     : 0      // +$0 к сбережениям в начале
-  },
-
-  /* ----------  NORMAL  ------------------------------------ */
-  normal : {
-    sliderStep      : 10,
-    eventProb       : 0.35,
-    eventWeights    : { minorExpense:0.45, crisis:0.30, sickness:0.25 },
-    minorExpense$   : 50,
-    crisisLossPct   : 0.06,
-    sicknessHP      : 5,
-    startBonus$     : 0
-  },
-
-  /* ----------  HARD  -------------------------------------- */
-  hard : {
-    sliderStep      : 1,
-    eventProb       : 0.45,
-    eventWeights    : { minorExpense:0.40, crisis:0.35, sickness:0.25 },
-    minorExpense$   : 70,
-    crisisLossPct   : 0.08,
-    sicknessHP      : 7,
-    startBonus$     : -200     // начинаем «в минусе» (долг)
-  }
-};
-
-  let turn = 0, maxTurns = 0;
-  let savings = 0, investments = 0;
-  let specBalance = 0; let startSpec = 0;
-let businessBalance = 0;   // текущий капитал бизнеса
-let businessTier    = 0;   // 0 – нет, 1 – малый, 2 – средний, 3 – крупный
-  let health = 100, happiness = 100;
-  let startSavings = 0, startInvestments = 0;
-  const scores = [];
-let activeRules = [];        // правила текущей роли
-let bonusFlag   = false;     // true → ±5 к happiness
-let currentGoal = null;      // объект цели или null
-  /* текущая сложность — заполним в startGame() */
-let currentDiff = difficulties.easy;   // default
-let currentDiffKey  = 'easy';
-document.addEventListener('DOMContentLoaded', ()=>{
-
-const goals = {
-  buffer : { key:'buffer',  text:'Подушка на 3 месяца',   check:g=>g.savings>=g.monthExpenses*3 },
-  passive: { key:'passive', text:'Пассивный доход $1000/мес', check:g=>g.passiveIncome>=1000 },
-  tenk   : { key:'tenk',    text:'Накопить $10 000',        check:g=>g.savings>=10000 },
-  double : { key:'double', text :'Капитал $10 000',    // общий капитал >= $10 000
-    check: g => (g.savings + g.investments) >= 10000
-  }
-};
-
-  const BASE_INCOME = 1000;        // базовая ставка, по ней калибруем стакан
-  let salaryBonus = 0;   // всё, что «накинули» за образование
-  const SURV_SAFE       = 500;  // <$ 500  → убыль здоровья
-  const SURV_BONUS      = 600;  // >=600   → +5 здоровья за ход
-  const COMF_SAFE       = 300;  // <$ 300  → убыль счастья
-  const COMF_BONUS      = 400;  // >=400   → +2 счастья за ход
-  const HAPPY_K    = 12;     // максимум −12 ед. счастья за ход
-  const HAPPY_BONUS_THRESHOLD = 400; // ≥400 $ даёт небольшой плюс
-  const FREEL_INCOME_K   = 1.0;   // $1 дохода на $1 бегунка
-  const FREEL_HAPPY_STEP = 100;   // –1 счастья за каждые $200 фриланса
-  const FREEL_HEALTH_STEP  = 100;   // –1 HP    за каждые $300
-  
-  const achievements = [
-  { id:'save100',   text:'Первые $100 сбережений',        check:g=>g.savings >= 100           },
-  { id:'save1k',    text:'Сбережения $1 000',             check:g=>g.savings >= 1000          },
-  { id:'invest5k',  text:'Инвестиции $5 000',             check:g=>g.investments >= 5000      },
-  { id:'health100', text:'Вернуть здоровье до 100 %',     check:g=>g.health === 100           },
-  { id:'specGuru',  text:'x2 капитал за счёт спекуляций', check:g => g.startSpec > 0 && g.specBalance >= g.startSpec * 2 }
-];
-
-  /* === localStorage helpers for achievements ================= */
-  function loadAch(){
-    return JSON.parse(localStorage.fiveJarsAchievements || '{}');
-  }
-  function saveAch(obj){
-    localStorage.fiveJarsAchievements = JSON.stringify(obj);
-  }
-  /* текущее состояние достижений: {id: timestamp, …}  */
-  let achState = loadAch();
-
-  /* === личные рекорды — отдельно для каждого уровня сложности ============== */
-function loadBest(name){
-  /* хранится JSON-объект вида {"easy":123,"normal":456,"hard":789} */
-  return JSON.parse(localStorage.getItem('fiveJars_'+name) || '{}');
-}
-function getBest(name, diff){
-  const obj = loadBest(name);
-  return obj[diff] ?? 0;
-}
-function saveBest(name, diff, val){
-  const obj = loadBest(name);
-  obj[diff] = val;
-  localStorage.setItem('fiveJars_'+name, JSON.stringify(obj));
-}
-/* вспомогательная обёртка — обновить рекорды текущей сложности */
-function updatePersonalBests(score, turns, diff){
-  if (score > getBest('bestScore', diff))  saveBest('bestScore', diff, score);
-  if (turns > getBest('bestTurns', diff))  saveBest('bestTurns', diff, turns);
-}
-
-const tutSlides = [          // мини-туториал для Saver
-  ['Шаг 1/3','Откладывайте ≥ 10 % дохода — формируйте «подушку».'],
-  ['Шаг 2/3','Подушка на 3 мес → инвестируйте ≥ 15 %.'],
-  ['Шаг 3/3','Базовые траты ≤ 50 % дохода.']
-];
-
-  /* ссылки на элементы старт-экрана */
-const roleBlock   = document.getElementById('roleBlock');
-const goalBlock   = document.getElementById('goalBlock');
-const goalHeader  = document.getElementById('goalHeader');
-const startScreen = document.getElementById('start-screen');
-const gameScreen  = document.getElementById('game-screen');
-const gameOverDlg   = document.getElementById('gameOver');
-const gameOverReason = document.getElementById('gameOverReason');
-const gameOverScore  = document.getElementById('gameOverScore');
-document.getElementById('gameOverBtn').onclick = () => {
-  gameOverDlg.classList.add('hidden');
-  resetGame();
-};
-  
-  /* ====== кнопка «🏆» и модалка достижений ====== */
-  document.getElementById('openAch').onclick =
-    () => document.getElementById('achModal').classList.remove('hidden');
-
-  document.getElementById('closeAch').onclick =
-    () => document.getElementById('achModal').classList.add('hidden');
-
-  document.getElementById('resetAch').onclick = ()=>{
-  if(confirm('Сбросить все достижения?')){
-    achState = {};
-    saveAch(achState);
-    renderAchTable();
-    updateTrophyCounter();
-  }
-};
-
-  document.getElementById('resetBest').onclick = ()=>{
-  if(confirm('Сбросить все личные рекорды?')){
-    localStorage.removeItem('fiveJars_bestScore');
-    localStorage.removeItem('fiveJars_bestTurns');
-    toast('Рекорды обнулены');
-  }
-};
-  
-  function renderAchTable(){
-    const tb = document.getElementById('achTable');
-    tb.innerHTML = achievements.map(a=>{
-      const ok = !!achState[a.id];
-      return `<tr>
-        <td class="p-1 pr-3">${ok ? '✅' : '⬜️'}</td>
-        <td class="p-1">${a.text}</td>
-        <td class="p-1 text-xs text-gray-500">
-             ${ok ? new Date(achState[a.id]).toLocaleDateString() : '—'}
-        </td>
-      </tr>`;
-    }).join('');
-  }
-  renderAchTable();   // первичная отрисовка
-
-/* === счётчик на кнопке "🏆" ============================= */
-function updateTrophyCounter(){
-  const unlocked = Object.keys(achState).length;   // сколько открыто
-  const total    = achievements.length;
-
-  const badge = document.getElementById('achCount');
-  badge.textContent = unlocked;            // пишем число
-
-  // --- вариант «показывать всегда» ---
-badge.classList.remove('hidden');        // без toggle
-
-if (unlocked === 0){
-  badge.classList.add   ('bg-gray-400');
-  badge.classList.remove('bg-red-600','bg-green-600');
-}else if (unlocked === total){
-  badge.classList.add   ('bg-green-600');
-  badge.classList.remove('bg-gray-400','bg-red-600');
-}else{
-  badge.classList.add   ('bg-red-600');
-  badge.classList.remove('bg-gray-400','bg-green-600');
-}
-
-  // (необязательно) можно перекрашивать при 100 %
-  if (unlocked === total) {
-    badge.classList.add ('bg-green-600');
-    badge.classList.remove('bg-red-600');
-  } else {
-    badge.classList.add ('bg-red-600');
-    badge.classList.remove('bg-green-600');
-  }
-}
-  
-  /* === мини-график Баллов === */
-  const chart = new Chart(document.getElementById('scoreChart').getContext('2d'),{
-    type:'line',
-    data:{labels:[],datasets:[{data:[], borderColor:'#3b82f6', borderWidth:1,
-                               tension:0.3, fill:false, pointRadius:0}]},
-    options:{responsive:false, animation:false,
-             scales:{x:{display:false}, y:{display:false}},
-             plugins:{legend:{display:false}, tooltip:{enabled:false}}}
-  });
-
-/* ========== НОВОЕ: подсказки по каждому кувшину ========== */
-const jarHints = {
-  save      : '↗ Подушка безопасности — повышает уверенность и счастье',
-  invest    : '↗ Увеличивает пассивный доход (5 % годовых)',
-  edu       : '↗ Каждые $100 → +$10 к зарплате навсегда',
-  survival  : '↗ Базовые нужды. < $500 — здоровье и счастье падают',
-  comfort   : '↗ Комфорт. > 50 % дохода — счастье ↓',
-  healthSpend:'↗ Прямо лечит здоровье',
-  spec      : '↗ Высокий риск/доход — волатильность счета',
-  business  : '↗ Вклады в бизнес — генерируют активный доход',
-  freelance : '↗ Доп. доход, но счастье и здоровье снижаются'
-};
-
-/* ========== Модифицированный buildJar ========== */
-function buildJar(sliderId, fillId, valId, hiddenId, minVal, maxVal){
-  const slider = document.getElementById(sliderId);
-  const fill   = document.getElementById(fillId);
-  const valEl  = document.getElementById(valId);
-  const hidden = document.getElementById(hiddenId);
-
-  let previousVal = +hidden.value;            // запоминаем предыдущую величину
-
-  noUiSlider.create(slider,{
-    start      : previousVal,
-    orientation: 'vertical', direction: 'rtl',
-    step       : 10, connect: [true,false],
-    range      : { min: minVal,  max: maxVal }
-  });
-
-  slider.noUiSlider.on('update', v=>{
-    const num = Math.round(v[0]);
-    fill.style.height = (num / maxVal * 100) + '%';
-    valEl.textContent = num;
-    hidden.value      = num;
-
-    // 👉 если значение выросло хотя бы на шаг — показать подсказку
-    if (num > previousVal){
-      const jarKey = hiddenId;               // id скрытого инпута совпадает с ключом jarHints
-      if (jarHints[jarKey]) toast('💡 ' + jarHints[jarKey]);
-    }
-    previousVal = num;                       // обновляем предыдущее значение
-
-    updateIncomeExpenses();
-  });
-}
-
-
-      /* --- пресеты ролей (проценты от БАЗОВОГО дохода 1000 $) --- */
-const rolePresets = {
-  /* min / max — проценты от дохода; buf — минимальная «подушка» в месяцах */
-  Saver : {
-    plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:0},
-    rules : [
-      {type:'min', jar:'save',   value:10},
-      {type:'comfortMax', max:50},
-    ],
-    bonus:+5, // успех → +5 happiness, провал → –5
-    goalKey : 'buffer'
-  },
-  Investor : {
-    plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:0},
-    rules : [
-      {type:'min', jar:'invest', value:15},
-      {type:'comfortMax', max:55},
-    ],
-    bonus:+5,
-    goalKey : 'passive'
-  },
-Spec : {
-  plan  : {survival:50, comfort:50, save:0, invest:0, healthSpend:0, edu:0, spec:0},
-  rules : [
-    { type:'min', jar:'spec', value:10 },
-    { type:'comfortMax', max:55 }
-  ],
-  bonus:false,
-  goalKey:'double'
-}
-};
-
-/* === Подсказка цели для выбранной роли ==================== */
-function updateRoleGoalHint(){
-  const hintEl = document.getElementById('roleGoalHint');
-  if (!hintEl) return;
-  const role = document.querySelector('input[name="role"]:checked')?.value;
-  if (!role) { hintEl.textContent = ''; return; }
-
-  const goalKey = rolePresets[role].goalKey;     // buffer / passive / double …
-  const text    = goals[goalKey].text;
-  hintEl.textContent = 'Цель: ' + text;
-}
-
-/* реагируем на переключение роли */
-document.querySelectorAll('input[name="role"]').forEach(r=>{
-  r.addEventListener('change', updateRoleGoalHint);
-});
-
-/* вызвать один раз при загрузке страницы */
-updateRoleGoalHint();
-
-
-/* удобная функция: двигаем слайдер по id на новое значение */
-function setSlider(id, value){
-  document.getElementById(id + 'Slider').noUiSlider.set(value);
-};
-
-  /* шесть кувшинов */
-
-buildJar('survivalSlider', 'survivalFill', 'survivalVal', 'survival', 100, 500);
-buildJar('comfortSlider',  'comfortFill',  'comfortVal',  'comfort',  0,   2000);
-buildJar('saveSlider',     'saveFill',     'saveLabel',   'save',     0,   2000);
-buildJar('investSlider',   'investFill',   'investVal',   'invest',   0,   2000);
-buildJar('healthSpendSlider','healthFill', 'healthVal',   'healthSpend',0, 2000);
-buildJar('eduSlider',      'eduFill',      'eduVal',      'edu',      0,   2000);
-buildJar('specSlider','specFill','specVal','spec',0,2000);
-buildJar('businessSlider', 'businessFill', 'businessVal', 'business',  0, 2000);
-buildJar('freelanceSlider','freelanceFill','freelanceVal','freelance', 0, 2000);
-
-
-  /* обновление верхних стаканов */
-function updateGlasses(activeIncome,passiveIncome, survival, comfort, savePlan, investPlan, specPlan){
-  const full = (BASE_INCOME + salaryBonus) * 2 || 1;               // масштаб для всех стаканов
-  const setH = (id,v)=>{                       // helper-функция
-    document.getElementById(id).style.height =
-        (Math.min(Math.abs(v), full) / full * 100) + '%';
-  };
-  const incomeTotal = activeIncome + passiveIncome;
-  setH('glassIncomeActive',  activeIncome);
-  setH('glassIncomePassive', passiveIncome);
-  setH('glassExpenses', survival + comfort);
-
-  /* сбережения: может быть отрицательным */
-  const gS = document.getElementById('glassSavings');
-  const lS = document.getElementById('saveLabel');
-  if (savePlan >= 0){ gS.classList.remove('neg-liquid'); lS.classList.remove('neg-text'); }
-  else              { gS.classList.add   ('neg-liquid'); lS.classList.add   ('neg-text'); }
-  setH('glassSavings', savePlan);
-
-  setH('glassInvest',  Math.max(0, investPlan));   // только инвестиции
-  setH('glassSpec',    Math.max(0, specPlan));     // только спекуляции ✓
-}
-
-function showTutorial(){
-  let i=0; const dlg=document.getElementById('tutorial');
-  const title=document.getElementById('tutTitle'),
-        text =document.getElementById('tutText'),
-        btn  =document.getElementById('tutNext');
-  const render=()=>{title.textContent=tutSlides[i][0]; text.textContent=tutSlides[i][1];
-                    btn.textContent=i===2?'Понял!':'Дальше';};
-  render(); dlg.classList.remove('hidden');
-  btn.onclick=()=>{i<2 ? (i++,render()) : (dlg.classList.add('hidden'),localStorage.saverTut=1);}
-}
-
-  /* вертикальные полосы здоровья/счастья */
-  function updateBars(){
-    const h=Math.max(0,Math.min(100,health));
-    const p=Math.max(0,Math.min(100,happiness));
-
-    document.getElementById('vHealthFill').style.height = h+'%';
-    document.getElementById('vHappyFill' ).style.height = p+'%';
-    document.getElementById('vHealthTxt').textContent   = h+'%';
-    document.getElementById('vHappyTxt' ).textContent   = p+'%';
-  }
-
-  /* пересчёт доход/расход */
-  function updateIncomeExpenses(){
-    const survival =+document.getElementById('survival').value;
-    const comfort  =+document.getElementById('comfort').value;
-    const savePlan =+document.getElementById('save').value;
-    const investPlan=+document.getElementById('invest').value;
-    const specPlan = +document.getElementById('spec').value;
-    const healthSp =+document.getElementById('healthSpend').value;
-    const edu      =+document.getElementById('edu').value;
-    const extra    = document.getElementById('extra').value;
-    const businessPlan  = +document.getElementById('business').value;
-    const freelancePlan = +document.getElementById('freelance').value;
-
-    let income = BASE_INCOME + salaryBonus;           // 1000 $
-    if (extra === 'да') income += 200;  // подработка
-
-const passive = (investments * 0.05 + savings * 0.03) / 12;
-income += passive;
-    
-    const spend = survival + comfort + savePlan + investPlan + specPlan
-            + healthSp + edu + businessPlan;
-    income += freelancePlan * FREEL_INCOME_K;
-    
-/* ----- автодолив свободного остатка в Сбережения ----- */
-if (document.getElementById('autoAdjust').checked) {
-  const rest = income - spend;
-  if (rest > 0) {
-    setSlider('save', savePlan + rest);      // двигаем только слайдер «Сбережения»
-    return;                                  // выходим: updateIncomeExpenses вызовется снова
-  }
-}
-
-    const passiveIncome = passive;
-    const activeIncome  = income - passiveIncome;
-    
-document.getElementById('incomeDisplay').innerText =
-      `$${activeIncome.toFixed(0)}  +  $${passiveIncome.toFixed(0)}`;
-    document.getElementById('expensesDisplay').innerText = `$${spend}`;
-    updateGlasses(activeIncome,passiveIncome,survival,comfort,savePlan,investPlan,specPlan);
-    // обновляем индикатор цели «на лету», когда двигаем слайдеры
-if (currentGoal){
-  updateGoalProgress(currentGoal, {
-    savings,
-    investments,
-    passiveIncome : passive,               // ← переменная passive выше в функции
-    monthExpenses : survival + comfort
-  });
-}
-    }
-
-function rulesBroken(income){
-  const pct  = v => v / income * 100;       // переводим $ в %
-
-  /* текущие величины из скрытых полей-«банок» */
-  const surv = +survival.value,
-        comf = +comfort.value,
-        sv   = +save.value,
-        iv   = +invest.value,
-        sp   = +spec.value;
-
-  return activeRules.some(r => {
-    /* --- правило «минимум Х % в банку Y» --- */
-    if (r.type === 'min'){
-      if (r.jar === 'save')   return pct(sv) < r.value;
-      if (r.jar === 'invest') return pct(iv) < r.value;
-      if (r.jar === 'spec')   return pct(sp) < r.value;
-    }
-
-        /* --- правило «комфорт ≤ max %» --- */
-    if (r.type === 'comfortMax')
-      return pct(comf) > r.max;
-
-    /* --- правило «подушка ≥ N месяцев» --- */
-    if (r.type === 'buf')
-      return surv > 0 && savings / surv < r.months;
-  });
-}
-
-  function updateGoalProgress(goal, ctx){
-  /* ctx: {savings, investments, passiveIncome, monthExpenses} */
-  let pct = 0, leftTxt = '';
-
-  if (goal.key === 'buffer'){
-    const need = ctx.monthExpenses * 3;
-    pct = Math.min(100, ctx.savings / need * 100);
-    leftTxt = (need - ctx.savings > 0) ? `$${(need-ctx.savings).toFixed(0)}` : '0';
-  }
-  else if (goal.key === 'passive'){
-    pct = Math.min(100, ctx.passiveIncome / 1000 * 100);
-    leftTxt = (1000 - ctx.passiveIncome > 0) ? `$${(1000-ctx.passiveIncome).toFixed(0)}` : '0';
-  }
-  else if (goal.key === 'tenk'){
-    pct = Math.min(100, ctx.savings / 10000 * 100);
-    leftTxt = (10000 - ctx.savings > 0) ? `$${(10000-ctx.savings).toFixed(0)}` : '0';
-  }
-else if (goal.key === 'double'){
-  const cap = ctx.savings + ctx.investments;
-  pct = Math.min(100, cap / 10000 * 100);
-  leftTxt = (10000 - cap > 0) ? `$${(10000 - cap).toFixed(0)}` : '0';
- }
-    
-  /* визуально */
-  document.getElementById('goalBar').style.width = pct + '%';
-  document.getElementById('goalPercent').textContent = Math.floor(pct);
-  document.getElementById('goalLeft').textContent    = leftTxt;
-    const miniPct  = document.getElementById('goalPercentMini'),
-      miniLeft = document.getElementById('goalLeftMini');
-if (miniPct)  miniPct.textContent  = Math.floor(pct);
-if (miniLeft) miniLeft.textContent = leftTxt;
-}
-
-  /* таблица-история */
-  function pushHistory(evt,free){
-    const row=document.createElement('tr');
-    row.innerHTML=`
-      <td class="p-2">${turn}</td><td class="p-2">${evt}</td>
-      <td class="p-2">$${Math.round(free)}</td>
-      <td class="p-2">$${Math.round(savings)}</td>
-      <td class="p-2">$${Math.round(investments)}</td>
-      <td class="p-2">${health}%</td><td class="p-2">${happiness}%</td>`;
-    document.getElementById('historyTable').appendChild(row);
-  }
-
-  /* мини-график */
-  function updateChart(score){
-    scores.push(score);
-    chart.data.labels.push(turn);
-    chart.data.datasets[0].data.push(score);
-    chart.update();
-    document.getElementById('scoreBig').textContent = score;
-  }
-
-  /* ===== достижения игрока ===== */
-function updateAchievements(ctx){
-  achievements.forEach(a=>{
-    if(!achState[a.id] && a.check(ctx)){
-       achState[a.id] = Date.now();     // помечаем как открыт
-       saveAch(achState);               // пишем в localStorage
-       toast('🏆&nbsp;Достижение: ' + a.text, true);   // <-- второй аргумент
-       renderAchTable();
-       updateTrophyCounter();
-    }
-  });
-}
-  /* ===== всплывающее уведомление ===== */
-function toast(html, fresh = false){
-  const div = document.createElement('div');
-  div.className = 'toast';
-  div.innerHTML = html;
-  if (fresh) div.style.background = '#fbbf24';   // ярко-жёлтый
-  document.getElementById('toastBox').append(div);
-  setTimeout(()=>div.remove(), 4000);
-}
-  
-/* ===== подсказки после хода ===== */
-function showTurnHints(ctx){
-  const hints = [];
-  const monthExpenses = ctx.survival + ctx.comfort;
-  if (ctx.free < 0) {
-    hints.push('Расходы превышают доходы. Попробуйте сократить траты или увеличить доход');
-  }
-  if (ctx.savings < monthExpenses * 3) {
-    hints.push('Накопите подушку безопасности минимум на 3 месяца расходов');
-  }
-  if (ctx.health < 70) {
-    hints.push('Здоровье снижается — выделите больше средств на кувшин «Здоровье»');
-  }
-  if (ctx.happiness < 70) {
-    hints.push('Счастье падает. Увеличьте комфорт или уменьшите подработку');
-  }
-  if (ctx.savings > 500 && ctx.investments < ctx.savings * 0.3) {
-    hints.push('Часть накоплений можно направить в «Инвестиции» для пассивного дохода');
-  }
-  if (hints.length) toast('💡 ' + hints[0]);
-}
-  
-  /* старт */
-window.startGame = n => {
-  maxTurns = n;
-  document.getElementById('maxTurns').innerText = n;
-  /* скрываем старт, показываем игру */
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('game-screen').classList.remove('hidden');
-    /* ---------- СБРОС ДОСТИЖЕНИЙ перед новой игрой ---------- */
-  achState = {};                // очищаем объект
-  saveAch(achState);            // пишем пустой объект в localStorage
-  renderAchTable();             // обновляем таблицу модалки
-  updateTrophyCounter();        // и счётчик на кнопке 🏆
-  /* ---------------- пресеты ---------------- */
-  const mode = document.querySelector('input[name="mode"]:checked')?.value ?? 'role';
-  let   role = null;
-  /* ----------- Сложность ----------- */
-const diffKey = document.querySelector('input[name="diff"]:checked')?.value || 'normal';
-currentDiff   = difficulties[diffKey];
-currentDiffKey = diffKey;   // сохраняем, чтобы использовать вне startGame
-
-['survival','comfort','save','invest','healthSpend','edu','spec', 'business','freelance'].forEach(id=>{
-  document.getElementById(id + 'Slider')
-          .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
-});
-  
-savings       = currentDiff.startBonus$;   // бонус / штраф к стартовым $
-  
- if (mode === 'role') {
-  const roleInput = document.querySelector('input[name="role"]:checked');
-  role = roleInput ? roleInput.value : 'Saver';
-  const cfg  = rolePresets[role];
-  activeRules = cfg.rules;             // ← запоминаем правила
-  bonusFlag   = !!cfg.bonus;           // true/false
-  const base  = 1000;
-  Object.entries(cfg.plan).forEach(([field,pc])=>{
-    setSlider(field, Math.round(base*pc/100/10)*10);
-  });
-  /* ======== ✨ ДОБАВЛЯЕМ БОНУС ИНВЕСТОРУ ✨ ======== */
-  if (role === 'Investor') {
-    savings += 1000;                   // стартовый бонус
-  }
-   /* шаг слайдеров зависит от сложности */
-['survival','comfort','save','invest','healthSpend','edu','spec'].forEach(id=>{
-  document.getElementById(id+'Slider')
-          .noUiSlider.updateOptions({ step: currentDiff.sliderStep });
-});
-
-  startSavings = +document.getElementById('save').value + savings;
-  startInvestments = +document.getElementById('invest').value;
-   
-   const passiveIncome = (startInvestments * 0.05 + startSavings * 0.03) / 12;
-   
-    if(role==='Saver' && !localStorage.saverTut) setTimeout(showTutorial,300);
-    currentGoal = null;  // цель выберем после вводного хода
-} else {
-  activeRules = []; bonusFlag = false;
-}
-
-  /* ---------------- цель ---------------- */
-if (mode === 'goal') {
-  const goalKey     = document.querySelector('input[name="goal"]:checked').value;
-  currentGoal       = goals[goalKey];
-
-  document.getElementById('goalName').textContent   = currentGoal.text;
-  document.getElementById('goalStatus').textContent = 'в процессе';
-  updateGoalProgress(currentGoal, {
-    savings: 0, investments: 0, passiveIncome: 0, monthExpenses: 1
-  });
-}
-
-  /* --- заголовок цели / роли --- */
-  const goalNameEl   = document.getElementById('goalName');
-  const goalStatusEl = document.getElementById('goalStatus');
-  if (currentGoal) {                     // цель (для режима goal ИЛИ role) есть
-    if (goalNameEl)   goalNameEl.textContent   = currentGoal.text;
-    if (goalStatusEl) goalStatusEl.textContent = 'в процессе';
-  } else {                               // свободный план – цели нет
-    if (goalNameEl)   goalNameEl.textContent   = 'нет выбранной цели';
-    if (goalStatusEl) goalStatusEl.textContent = '–';
-  }
-
-  /* обнуляем состояние игры */
-turn = 0;
-savings = currentDiff.startBonus$ + (role === 'Investor' ? 1000 : 0);
-investments = 0;
-specBalance = 0;
-startSpec   = 0;
-health = 100;
-happiness = 100;
-businessBalance = 0;
-businessTier    = 0;
-/* ===== применяем бонус/штраф выбранной сложности ===== */
-savings = currentDiff.startBonus$;      // может быть +, 0 или отрицательным
-  updateIncomeExpenses(); updateBars(); updateTrophyCounter();
-  
-// --- пересчитываем прогресс цели после того,
-//     как savings/investments уже обнулены и применён бонус сложности ---
-  if (currentGoal){
-    updateGoalProgress(currentGoal, {
-      savings,
-      investments,
-      passiveIncome : (investments * 0.05 + savings * 0.03) / 12,
-      monthExpenses : +document.getElementById('survival').value +
-                      +document.getElementById('comfort').value
-    });
-  }
-  document.getElementById('turnBtn').disabled = true;
-  runIntroTurn();
-};
-
-  /* отобразить стартовые сбережения (могут быть < 0) */
-document.getElementById('savings').innerText =
-        `$${Math.round(savings)}`;
-
-function runIntroTurn(){
-  setSlider('survival', 500);
-  setSlider('comfort', 500);
-  updateIncomeExpenses(); updateBars();
-  toast('💵 Вы получили $1000 → $500 выживание + $500 комфорт', true);
-  runTurn();
-  showGoalModal();
-}
-
-function showGoalModal(){
-  document.getElementById('goalSelect').classList.remove('hidden');
-}
-
-document.querySelectorAll('.goal-option').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const key = btn.dataset.key;
-    currentGoal = goals[key];
-    document.getElementById('goalName').textContent   = currentGoal.text;
-    document.getElementById('goalStatus').textContent = 'в процессе';
-    updateGoalProgress(currentGoal, {
-      savings,
-      investments,
-      passiveIncome : (investments * 0.05 + savings * 0.03) / 12,
-      monthExpenses : +document.getElementById('survival').value +
-                      +document.getElementById('comfort').value
-    });
-    document.getElementById('goalSelect').classList.add('hidden');
-    document.getElementById('turnBtn').disabled = false;
-    showStrategyHint();
-  });
-});
-
-function showStrategyHint(){
-  document.getElementById('strategyHint').classList.remove('hidden');
-}
-
-  window.selectStrategy = name => {
-  const surv = +document.getElementById('survival').value;
-  const comf = +document.getElementById('comfort').value;
-  switch(name){
-    case 'reduceSurvival':
-      setSlider('survival', Math.max(0, surv - 100));
-      toast('Траты на выживание уменьшены', true);
-      break;
-    case 'reduceComfort':
-      setSlider('comfort', Math.max(0, comf - 100));
-      toast('Траты на комфорт уменьшены', true);
-      break;
-    case 'extraJob':
-      document.getElementById('extra').value = 'да';
-      toast('Взята подработка — доход выше, счастье и здоровье ниже', true);
-      break;
-    case 'education':
-      setSlider('edu', 100);
-      toast('Инвестиции в обучение увеличат зарплату', true);
-      break;
-  }
-  document.getElementById('strategyHint').classList.add('hidden');
-};
-
-function specReturnPct(){
-  const r = Math.random();
-  switch (currentDiffKey){
-    case 'easy':   return (r < 0.60 ? +0.03 : -0.01);
-    case 'normal': return (r < 0.55 ? +0.06 : -0.03);
-    case 'hard':   return (r < 0.52 ? +0.08 : -0.08);
-  }
-  }
-
-/* === доход/убыток от бизнеса ================================ */
-/* Определяем уровень – влияет и на доходность, и на риск */
-function calcBusinessTier(){
-  if (businessBalance >= 5000) return 3;   // крупный
-  if (businessBalance >= 3000) return 2;   // средний
-  if (businessBalance >= 1000) return 1;   // малый
-  return 0;
-}
-
-/* Случайная доходность по уровням и сложности */
-function businessReturnPct(){
-  const r = Math.random();
-  switch (currentDiffKey){
-    case 'easy':
-      return (r < 0.70 ? +0.04 : -0.02);          // +4 % | –2 %
-    case 'normal':
-      return (r < 0.60 ? +0.07 : -0.04);          // +7 % | –4 %
-    case 'hard':
-      return (r < 0.50 ? +0.10 : -0.08);          // +10 % | –8 %
-  }
-}
-
-
-  /* ХОД */
-  window.runTurn = ()=>{
-    if (health <= 0 || happiness <= 0) {
-      finish(health <= 0 ? 'Ты потерял здоровье.' : 'Ты потерял счастье.', true);
-      return;
-    }
-    turn++;
-
-    const survival  =+document.getElementById('survival').value;
-    const comfort   =+document.getElementById('comfort').value;
-    const savePlan  =+document.getElementById('save').value;
-    const investPlan=+document.getElementById('invest').value;
-    const specPlan   = +document.getElementById('spec').value;
-    const healthSp  =+document.getElementById('healthSpend').value;
-    const edu       =+document.getElementById('edu').value;
-    const extra     = document.getElementById('extra').value;
-    const businessPlan  = +document.getElementById('business').value;
-    const freelancePlan = +document.getElementById('freelance').value;
-    const passiveIncome = (investments * 0.05 + savings * 0.03) / 12;
-
-    let income = BASE_INCOME + salaryBonus; if(extra==='да') income+=200;income += passiveIncome;
-    const spend=survival+comfort+savePlan+investPlan+specPlan+healthSp+edu+businessPlan;
-    
-/* ===== событие с учётом сложности ===== */
-let evt = 'ничего', penalty = 0, crisis = 0;
-    
-    /* ─── фриланс ─────────────────────────────── */
-if (freelancePlan > 0){
-  income += freelancePlan * FREEL_INCOME_K;          // дополнительный доход
-const happyLoss  = Math.ceil(freelancePlan / FREEL_HAPPY_STEP);
-const healthLoss = Math.ceil(freelancePlan / FREEL_HEALTH_STEP);
-  const diffMul = currentDiffKey === 'easy' ? 0.8
-                 : currentDiffKey === 'hard' ? 1.2 : 1;
-  happiness -= Math.ceil(happyLoss  * diffMul);
-  health    -= Math.ceil(healthLoss * diffMul);
-evt += ` | фриланс +$${freelancePlan.toFixed(0)} (–${happyLoss}😃, –${healthLoss}❤️)`;
-}
-
-    const raise   = edu * 0.10;               // +10 % от вложенного
-if (raise > 0){
-  salaryBonus += raise;                   // надбавка накапливается
-  evt += ` | повышение зарплаты +$${raise.toFixed(0)}`;
-  toast(`🎓 Зарплата выросла на $${raise.toFixed(0)} благодаря обучению`, true);
-}
-  
-if (Math.random() < currentDiff.eventProb) {
-  /* «бросаем кубик» второй раз, чтобы выбрать тип события */
-  const w = currentDiff.eventWeights;
-  const dice = Math.random();
-
-  if (dice < w.minorExpense) {                 // мелкая трата
-    penalty = -currentDiff.minorExpense$;
-    evt = `мелкая трата – $${currentDiff.minorExpense$}`;
-
-  } else if (dice < w.minorExpense + w.crisis) {   // кризис
-    crisis = investments * currentDiff.crisisLossPct;
-    evt = `кризис – ${Math.round(currentDiff.crisisLossPct * 100)} % инвестиций`;
-
-  } else {                                     // болезнь
-    health = Math.max(0, health - currentDiff.sicknessHP);
-    evt = `болезнь – ${currentDiff.sicknessHP} здоровья`;
-  }
-  }
-
-    toast(`📣 <strong>${evt}</strong>`, true);
-    const free = income - spend + penalty;
-savings   += savePlan + free;
-
-const growth = Math.random() <= 0.7           // 70 % – рост, 30 % – падение
-             ? Math.random() * 0.03           // +0‒3 %
-             : Math.random() * -0.01;         // –0‒1 %
-investments  = (investments + investPlan - crisis) * (1 + growth);
-/* ─── спекуляции ─────────────────────────────── */
-if (specPlan !== 0 || specBalance !== 0) {
-if (startSpec === 0 && specPlan > 0) startSpec = specPlan;
-  specBalance += specPlan;                     // новый взнос / вывод
-  const specPnl = specBalance * specReturnPct(); // доход-убыток за ход
-  specBalance += specPnl;                      // итоговый баланс
-
-  evt += ` | спекуляции ${specPnl >= 0 ? '+' : '–'}$${Math.abs(specPnl).toFixed(0)}`;
-}
-    
-/* ─── бизнес ─────────────────────────────────── */
-if (businessPlan !== 0 || businessBalance !== 0) {
-  businessBalance += businessPlan;           // взнос/вывод из бегунка
-  businessTier     = calcBusinessTier();     // пересчитать уровень
-
-  if (businessTier > 0){
-    const bizPct  = businessReturnPct();
-    const bizProf = businessBalance * bizPct;
-    businessBalance += bizProf;
-    income          += bizProf;              // идёт в активный доход
-    evt += ` | бизнес ${bizProf >= 0 ? '+' : '–'}$${Math.abs(bizProf).toFixed(0)}`;
-  }
-}
-    
-/* здоровье / счастье */
-if (!evt.startsWith('болезнь')) {
-
-  /* ---------- здоровье ---------- */
-  if (survival < SURV_SAFE) {
-    const ratio = (SURV_SAFE - survival) / SURV_SAFE;   // 0…1
-    health    -= ratio * 80;   // –16 HP за $100
-    happiness -= ratio * 25;   // –5  Happy за $100
-} else if (survival >= SURV_BONUS) {
-    health += 5;               // бонус, если тратим ≥ $600
-}
-health += (healthSp / 500) * 50;                         // траты на здоровье
-
-/* ---------- счастье ------------ */
-if (comfort < COMF_SAFE) {
-  const ratio = (COMF_SAFE - comfort) / COMF_SAFE;       // 0 … 1
-  happiness -= Math.pow(ratio, 1.2) * 15;
-} else if (comfort >= COMF_BONUS) {
-  happiness += 2;                                        // бонус
-}
-
-/* штраф за подработку */
-const happyPenalty = currentDiffKey === 'easy' ? 2
-                    : currentDiffKey === 'hard' ? 4 : 3;
-if (extra === 'да') happiness -= happyPenalty;
-if (extra === 'да') health -= 1;
-
-/* ---------- счастье за «подушку» ---------- */
-  const bufferTarget = survival * 3;                    // 3-месячная подушка
-  const bufRatio     = Math.min(savings / bufferTarget, 1);
-  if (bufRatio < 1)  happiness -= (1 - bufRatio) * 2;   // –0 … –2
-  else               happiness += 1;                    // +1 если подушка есть  
-}
-
-/* приведение к 0…100 % */
-health    = Math.round(Math.max(0, Math.min(100, health)));
-happiness = Math.round(Math.max(0, Math.min(100, happiness)));
-
-    /* бонус или штраф по итогам правил */
-//if (bonusFlag){
-//  const bad = rulesBroken(income);
-//  happiness = Math.max(0, Math.min(100, happiness + (bad ? -5 : +5)));
-//}
-    /* интерфейс */
-    document.getElementById('turn').innerText=turn;
-    document.getElementById('event').innerText=evt;
-    document.getElementById('free').innerText        = `$${Math.round(free)}`;
-    document.getElementById('savings').innerText     = `$${Math.round(savings)}`;
-    document.getElementById('investments').innerText = `$${Math.round(investments)}`;
-    document.getElementById('glassSpec').style.height = (Math.min(Math.abs(specBalance), income*2)/income/2*100)+'%';
-    
-    updateIncomeExpenses(); updateBars(); pushHistory(evt,free);
-
-    /* баллы */
-    let score=Math.floor(savings/1000)+Math.floor(investments/1000)*2;
-    if(health>70)    score+=20;
-    if(happiness>70) score+=20;
-    if (passiveIncome >= 1000) score += 30;
-    updateChart(score);
-
-/* === сначала проверяем и сохраняем ачивки === */
-updateAchievements({
-  savings, investments, health, specBalance, startSpec
-});
-
-    /* ------------ проверка достижения цели ------------ */
-if (currentGoal){
-  const monthExpenses = survival + comfort;
-  const done = currentGoal.check({
-    savings,  investments, passiveIncome, monthExpenses
-  });
-  document.getElementById('goalStatus').textContent = done ? '✔ выполнена' : 'в процессе';
-  updateGoalProgress(currentGoal, {
-  savings,
-  investments,
-  passiveIncome,
-  monthExpenses
-});
-  if (done){
-    finish('Поздравляем! Вы достигли цели: ' + currentGoal.text);
-    return;               // чтобы больше не вести расчёты после finish()
-  }
-}
-
- showTurnHints({
-      survival,
-      comfort,
-      savings,
-      investments,
-      health,
-      happiness,
-      free
-    });
-
-
-    
-    /* финиш? */
-    if(health<=0||happiness<=0||turn>=maxTurns){
-         const reason = health<=0 ? 'Ты потерял здоровье.' :
-                     happiness<=0 ? 'Ты потерял счастье.' : 'Ходы закончились.';
-      finish(reason, health<=0 || happiness<=0);
-    }
-  };
-
-function finish(reason, gameOver = false){
-  updatePersonalBests(scores[scores.length-1] || 0, turn, currentDiffKey);
- const finalScore = scores[scores.length-1] || 0;
-  if (gameOver){
-    gameOverReason.textContent = reason;
-    gameOverScore.textContent  = finalScore;
-    gameOverDlg.classList.remove('hidden');
-    return;
-  }
-  alert(reason + '\nБаллы: ' + finalScore);
-  resetGame();
-}
-
-function resetGame(){
-  gameScreen.classList.add('hidden');
-  startScreen.classList.remove('hidden');
-  /* сбрасываем здоровье/счастье и их бары */
-  health = 100;
-  happiness = 100;
-  specBalance     = 0;
-  startSpec       = 0;
-  businessBalance = 0;
-  businessTier    = 0;
-  updateBars();
-  
-  /* 2) ───── обнуляем график Баллов ───── */
-  chart.data.labels.length = 0;                 // очищаем подписи оси X
-  chart.data.datasets[0].data.length = 0;       // очищаем сами значения
-  chart.update();                               // перерисовываем пустой график
-  document.getElementById('scoreBig').textContent = 0;   // крупная цифра → 0
-  scores.length = 0;                            // если нужно, обнуляем массив scores
-
-  /* (необязательно) обнулить статус цели */
-  document.getElementById('goalStatus').textContent = '–';
-  
-  /* обнуляем прогресс-бар цели */
-  document.getElementById('goalBar').style.width   = '0%';
-  document.getElementById('goalPercent').textContent = 0;
-  document.getElementById('goalLeft').textContent    = '–';
-}
-  
-  /* первичная инициализация */
-  updateIncomeExpenses(); updateBars();
-});
-
-/* переключаем отображение блоков на старт-экране */
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener('change', ()=>{
-    goalBlock.classList.toggle('hidden', r.value !== 'goal');
-  });
-});
-
-/* ---------- FAQ-панель ---------- */
-const faqPanel = document.getElementById('faqPanel');
-document.getElementById('openFaq').onclick =
-  () => faqPanel.classList.toggle('-translate-x-full');
-
-/* универсальная вспышка */
-function blink(sel){
-  const el = document.querySelector(sel);
-  if(!el) return;
-  el.classList.add('ring-4','ring-amber-400');
-  setTimeout(()=>el.classList.remove('ring-4','ring-amber-400'), 3000);
-}
-
-/* 0. «Как увеличить доход?» – активный доход */
-const incomeHint      = document.querySelectorAll('#faqPanel summary')[0];
-if (incomeHint) incomeHint.addEventListener('click',
-  () => blink('#glassIncomeActive'));
-
-/* 1. «Из чего складываются доходы?» – оба стакана доходов */
-const incomePartsHint = document.querySelectorAll('#faqPanel summary')[2];
-if (incomePartsHint) incomePartsHint.addEventListener('click', () => {
-  blink('#glassIncomeActive');
-  blink('#glassIncomePassive');
-});
-
-/* 2. «Что считается расходами?» – стакан расходов */
-const expensesHint    = document.querySelectorAll('#faqPanel summary')[3];
-if (expensesHint) expensesHint.addEventListener('click',
-  () => blink('#glassExpenses'));
-
-
-</script>
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <script>
+        // --- GAME CONFIG & DATA ---
+        const CONFIG = {
+            jars: [
+                { id: 'survival', name: 'Выживание', min: 0, max: 2000, color: '#f59e0b' },
+                { id: 'comfort', name: 'Комфорт', min: 0, max: 2000, color: '#f59e0b' },
+                { id: 'save', name: 'Сбережения', min: 0, max: 2000, color: '#059669' },
+                { id: 'invest', name: 'Инвестиции', min: 0, max: 2000, color: '#059669' },
+                { id: 'edu', name: 'Обучение', min: 0, max: 2000, color: '#059669' },
+                { id: 'healthSpend', name: 'Здоровье (Расходы)', min: 0, max: 1000, color: '#f43f5e' },
+                { id: 'spec', name: 'Спекуляции', min: 0, max: 2000, color: '#7c3aed' },
+                { id: 'business', name: 'Бизнес', min: 0, max: 2000, color: '#7c3aed' },
+                { id: 'freelance', name: 'Фриланс (Усилия)', min: 0, max: 2000, color: '#64748b' }
+            ],
+            baseIncome: 1000,
+            thresholds: {
+                survivalSafe: 500,
+                comfortSafe: 300
+            }
+        };
+
+        const ROLES = {
+            Saver: { goalText: 'Подушка (3 мес)', goalCheck: (s) => s.savings >= (s.expenses*3), bonus: 0 },
+            Investor: { goalText: 'Пассив $1000', goalCheck: (s) => s.passive >= 1000, bonus: 1000 },
+            Spec: { goalText: 'Капитал $10k', goalCheck: (s) => (s.savings + s.invest + s.spec) >= 10000, bonus: 0 }
+        };
+
+        // --- CHART SETUP ---
+        let wealthChartInstance = null;
+
+        function initChart() {
+            const ctx = document.getElementById('wealthChart').getContext('2d');
+            wealthChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Капитал',
+                        data: [],
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#e7e5e4' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- GAME LOGIC CLASS ---
+        class Game {
+            constructor() {
+                this.role = null;
+                this.turn = 0;
+                this.state = {
+                    health: 100,
+                    happiness: 100,
+                    savings: 0,
+                    invest: 0,
+                    spec: 0,
+                    business: 0,
+                    salaryBonus: 0
+                };
+                this.inputs = {}; // Holds current slider values
+                this.autoSave = true;
+                this.isGameOver = false;
+
+                // Bind slider inputs
+                CONFIG.jars.forEach(jar => {
+                    this.inputs[jar.id] = 0;
+                });
+            }
+
+            init(roleKey, autoSave) {
+                this.role = roleKey;
+                this.autoSave = autoSave;
+                this.state.savings = ROLES[roleKey].bonus;
+                
+                // Defaults
+                this.inputs.survival = 500;
+                this.inputs.comfort = 500;
+
+                // Update UI to Game Mode
+                document.getElementById('screen-intro').classList.add('hidden');
+                document.getElementById('screen-game').classList.remove('hidden');
+                document.getElementById('screen-game').classList.add('flex');
+                
+                document.getElementById('ui-goal-hint').textContent = `Цель: ${ROLES[roleKey].goalText}`;
+                
+                this.setupSliders();
+                initChart();
+                this.updateUI();
+                this.showToast("Игра началась! Распределите бюджет.", "info");
+            }
+
+            setupSliders() {
+                CONFIG.jars.forEach(jar => {
+                    const slider = document.getElementById(`slider-${jar.id}`);
+                    const startVal = this.inputs[jar.id] || 0;
+                    
+                    noUiSlider.create(slider, {
+                        start: startVal,
+                        connect: [false, true], // Fill from bottom
+                        direction: 'rtl', // Vertical bottom-to-top
+                        orientation: 'vertical',
+                        range: { 'min': jar.min, 'max': jar.max },
+                        step: 10
+                    });
+
+                    // Reactivity
+                    slider.noUiSlider.on('update', (values) => {
+                        const val = parseInt(values[0]);
+                        this.inputs[jar.id] = val;
+                        
+                        // Update Visuals
+                        document.getElementById(`val-${jar.id}`).textContent = `$${val}`;
+                        const fillPercent = (val / jar.max) * 100;
+                        document.getElementById(`fill-${jar.id}`).style.height = `${fillPercent}%`;
+
+                        this.recalcBudget();
+                    });
+                });
+            }
+
+            recalcBudget() {
+                // Calculate Income
+                const passive = (this.state.invest * 0.05 + this.state.savings * 0.03) / 12;
+                // Business Income (Simple logic for UI responsiveness)
+                const bizIncomeEstimate = this.state.business > 1000 ? this.state.business * 0.05 : 0; 
+                const freelanceIncome = this.inputs.freelance; // $1 for $1 effort visual
+                
+                const totalIncome = CONFIG.baseIncome + this.state.salaryBonus + passive + freelanceIncome + bizIncomeEstimate;
+                
+                // Calculate Expense
+                let totalExpense = 0;
+                CONFIG.jars.forEach(jar => {
+                    if(jar.id !== 'freelance') { // Freelance is effort, not expense
+                         totalExpense += this.inputs[jar.id];
+                    }
+                });
+
+                const free = totalIncome - totalExpense;
+
+                // Update UI Numbers
+                document.getElementById('ui-income-total').textContent = `$${Math.round(totalIncome)}`;
+                document.getElementById('ui-expenses-total').textContent = `$${Math.round(totalExpense)}`;
+                document.getElementById('ui-free-money').textContent = `$${Math.round(free)}`;
+                document.getElementById('ui-passive-income').textContent = `+$${Math.round(passive)}/мес`;
+                document.getElementById('ui-total-wealth').textContent = `$${Math.round(this.state.savings + this.state.invest + this.state.spec)}`;
+
+                // Style Free Money
+                const freeCard = document.getElementById('ui-free-money-card');
+                if(free < 0) {
+                    freeCard.classList.add('border-rose-500', 'bg-rose-50');
+                    freeCard.classList.remove('border-emerald-500', 'bg-emerald-50');
+                } else {
+                    freeCard.classList.remove('border-rose-500', 'bg-rose-50');
+                    freeCard.classList.add('border-emerald-500', 'bg-emerald-50');
+                }
+
+                // Auto-save visual cue (if enabled and positive)
+                if(this.autoSave && free > 0) {
+                     // Note: We don't move slider automatically here to avoid loop, 
+                     // but we calculate it in logic.
+                }
+
+                return { totalIncome, totalExpense, free, passive };
+            }
+
+            nextTurn() {
+                if(this.isGameOver) return;
+
+                const budget = this.recalcBudget();
+                
+                // 1. Logic: Health & Happy Impact
+                // Survival check
+                if(this.inputs.survival < CONFIG.thresholds.survivalSafe) {
+                    this.state.health -= 10;
+                    this.state.happiness -= 5;
+                    this.logEvent("📉 Скудное питание: -10 Здоровья");
+                }
+                // Comfort check
+                if(this.inputs.comfort < CONFIG.thresholds.comfortSafe) {
+                    this.state.happiness -= 8;
+                    this.logEvent("📉 Дискомфорт: -8 Счастья");
+                }
+                // Health Spend
+                if(this.inputs.healthSpend > 0) {
+                    this.state.health += (this.inputs.healthSpend / 100) * 2;
+                }
+                // Freelance Burnout
+                if(this.inputs.freelance > 0) {
+                    const burnout = Math.ceil(this.inputs.freelance / 200);
+                    this.state.happiness -= burnout;
+                    this.state.health -= Math.ceil(burnout/2);
+                }
+
+                // 2. Financial Logic
+                let actualFree = budget.free;
+                
+                // Education ROI
+                if(this.inputs.edu > 0) {
+                    const raise = this.inputs.edu * 0.1;
+                    this.state.salaryBonus += raise;
+                    this.logEvent(`🎓 Обучение: Зарплата +$${Math.round(raise)}`);
+                }
+
+                // Speculation (Randomness)
+                if(this.inputs.spec > 0 || this.state.spec > 0) {
+                    this.state.spec += this.inputs.spec;
+                    const luck = Math.random();
+                    let multiplier = 1;
+                    if(luck > 0.6) multiplier = 1.1; // +10%
+                    else if (luck < 0.3) multiplier = 0.9; // -10%
+                    
+                    const oldSpec = this.state.spec;
+                    this.state.spec *= multiplier;
+                    const diff = this.state.spec - oldSpec;
+                    if(Math.abs(diff) > 1) this.logEvent(diff > 0 ? `🚀 Спекуляции: +$${Math.round(diff)}` : `📉 Спекуляции: -$${Math.round(Math.abs(diff))}`);
+                }
+
+                // Business Logic
+                if(this.inputs.business > 0 || this.state.business > 0) {
+                    this.state.business += this.inputs.business;
+                    // Business return is added to income in next recalc, stored in state implicitly
+                }
+
+                // Auto Save Logic
+                if(this.autoSave && actualFree > 0) {
+                    this.state.savings += actualFree;
+                    actualFree = 0;
+                    this.showToast("💰 Остаток отправлен в сбережения", "success");
+                }
+                
+                // Base Growth
+                this.state.savings += (this.inputs.save + actualFree); // Add plan + remaining
+                this.state.invest += this.inputs.invest;
+                
+                // Compound Interest
+                this.state.savings *= 1.0025; // ~3% APY
+                this.state.invest *= 1.0042; // ~5% APY
+
+                // 3. Random Events (Risk)
+                if(Math.random() < 0.15) {
+                    const events = [
+                        { text: "🦷 Стоматолог", cost: 200, type: 'expense' },
+                        { text: "🤕 Простуда", health: -5, type: 'health' },
+                        { text: "🎉 Премия", bonus: 300, type: 'income' }
+                    ];
+                    const evt = events[Math.floor(Math.random()*events.length)];
+                    this.logEvent(`🎲 Событие: ${evt.text}`);
+                    
+                    if(evt.type === 'expense') this.state.savings -= evt.cost;
+                    if(evt.type === 'health') this.state.health += evt.health;
+                    if(evt.type === 'income') this.state.savings += evt.bonus;
+                }
+
+                // Cap stats
+                this.state.health = Math.min(100, Math.max(0, this.state.health));
+                this.state.happiness = Math.min(100, Math.max(0, this.state.happiness));
+
+                // 4. Update Game State
+                this.turn++;
+                this.updateUI();
+                
+                // Check Win/Loss
+                this.checkGameState(budget.passive);
+            }
+
+            checkGameState(passiveIncome) {
+                // Loss
+                if(this.state.health <= 0) this.gameOver("Вы потеряли здоровье. Игра окончена.", "💀");
+                if(this.state.happiness <= 0) this.gameOver("Депрессия поглотила вас. Игра окончена.", "😢");
+
+                // Win Conditions based on Role
+                const currentStats = { 
+                    savings: this.state.savings, 
+                    expenses: (this.inputs.survival + this.inputs.comfort),
+                    passive: passiveIncome,
+                    invest: this.state.invest,
+                    spec: this.state.spec
+                };
+                
+                // Goal Progress Bar Calc
+                let progress = 0;
+                if(this.role === 'Saver') progress = (currentStats.savings / (currentStats.expenses * 3)) * 100;
+                if(this.role === 'Investor') progress = (passiveIncome / 1000) * 100;
+                if(this.role === 'Spec') progress = ((this.state.savings + this.state.invest + this.state.spec) / 10000) * 100;
+
+                document.getElementById('bar-goal').style.width = `${Math.min(100, Math.max(0, progress))}%`;
+
+                if(ROLES[this.role].goalCheck(currentStats)) {
+                    this.gameOver("Поздравляем! Финансовая цель достигнута!", "🏆");
+                }
+            }
+
+            gameOver(msg, icon) {
+                this.isGameOver = true;
+                document.getElementById('modal-title').textContent = this.state.health <=0 || this.state.happiness <=0 ? "Game Over" : "Победа!";
+                document.getElementById('modal-text').textContent = msg;
+                document.getElementById('modal-icon').textContent = icon;
+                document.getElementById('modal-overlay').classList.remove('hidden');
+            }
+
+            updateUI() {
+                // Vitals
+                document.getElementById('bar-health').style.width = `${this.state.health}%`;
+                document.getElementById('txt-health').textContent = `${Math.round(this.state.health)}%`;
+                document.getElementById('bar-happy').style.width = `${this.state.happiness}%`;
+                document.getElementById('txt-happy').textContent = `${Math.round(this.state.happiness)}%`;
+                document.getElementById('ui-turn').textContent = this.turn;
+
+                // Accumulators
+                document.getElementById('stat-savings').textContent = `$${Math.round(this.state.savings)}`;
+                document.getElementById('stat-invest').textContent = `$${Math.round(this.state.invest)}`;
+                document.getElementById('stat-spec').textContent = `$${Math.round(this.state.spec)}`;
+
+                // Chart Update
+                const totalWealth = this.state.savings + this.state.invest + this.state.spec;
+                wealthChartInstance.data.labels.push(this.turn);
+                wealthChartInstance.data.datasets[0].data.push(totalWealth);
+                wealthChartInstance.update();
+
+                // Recalc budget once more to ensure Free money is accurate after events
+                this.recalcBudget();
+            }
+
+            logEvent(msg) {
+                const log = document.getElementById('event-log');
+                const div = document.createElement('div');
+                div.className = "p-2 bg-stone-50 rounded border-l-2 border-stone-300 text-xs animate-pulse";
+                div.innerHTML = `<span class="font-bold mr-1">[Ход ${this.turn}]</span> ${msg}`;
+                log.prepend(div);
+                
+                // Cleanup old logs
+                if(log.children.length > 20) log.lastChild.remove();
+            }
+
+            showToast(msg, type='info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                let colorClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-stone-800');
+                
+                toast.className = `${colorClass} text-white px-4 py-3 rounded shadow-lg text-sm font-bold toast-enter flex items-center gap-2`;
+                toast.innerHTML = msg;
+                
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }
+
+        // --- INIT ---
+        const game = new Game();
+
+        window.selectRole = (role) => {
+            const auto = document.getElementById('intro-auto-save').checked;
+            game.init(role, auto);
+        };
+
+        // Prevent layout shift on mobile input
+        window.addEventListener('resize', () => {
+            if(wealthChartInstance) wealthChartInstance.resize();
+        });
+
+    </script>
 </body>
 </html>
+```
