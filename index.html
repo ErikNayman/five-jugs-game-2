@@ -1,843 +1,506 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Путь к Финансовой Свободе</title>
-
+    <title>Метод 6 Кувшинов - Интерактивная Система</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- noUiSlider -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chosen Palette: Warm Neutral & Progression -->
-    <!-- Colors: 
-         Background: Stone-50 (#fafaf9)
-         Surface: White (#ffffff)
-         Phase 1 (Safety): Emerald-600 (#059669)
-         Phase 2 (Growth): Indigo-600 (#4f46e5)
-         Alert: Rose-500 (#f43f5e)
-         Text: Stone-800 (#292524)
-    -->
-
-    <!-- Application Structure Plan: 
-         1. Progression System (The "Clicker" Mechanic): 
-            - The game is split into two distinct phases to reduce cognitive load.
-            - Phase 1: "The Saver". Only basic jars (Needs, Comfort, Savings) are active. Goal: Build a safety cushion.
-            - Phase 2: "The Investor". Unlocks purely after hitting the Phase 1 goal. Adds Risk/Investment jars.
-         2. Layout: 
-            - Top: Global HUD (Health, Happiness, Money, Phase Indicator).
-            - Left: The "Machine" (Sliders). visually separated into "Active" and "Locked" zones.
-            - Right: The "Feedback" (Chart & Logs). Shows the impact of decisions.
-         3. Rationale: Incremental unlocking (like in idle games) ensures the player understands the value of savings before being tempted by speculation.
-    -->
-
-    <!-- Visualization & Content Choices:
-         1. Locked Sections: Used CSS blurring and padlock icons to visually represent unavailable strategies. This creates a clear "Goal" for the user (unlocking the game).
-         2. Liquid Jars: Retained the CSS liquid metaphor as it perfectly visualizes "filling up" accounts.
-         3. Dynamic Chart: The chart scales and tracks net worth, visualizing the exponential curve once Phase 2 hits.
-         4. Confirming NO SVG/Mermaid: Icons are Unicode characters. Graphics are CSS/Canvas.
-    -->
-
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAF9; /* Warm neutral background (stone-50) */
+            color: #1C1917; /* stone-900 */
+        }
         
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(231, 229, 228, 1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        /* Custom Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            width: 100%; 
+            background: transparent; 
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid currentColor;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #E5E7EB;
+            border-radius: 2px;
         }
 
-        /* Jar Visuals */
-        .jar-container {
+        .chart-container {
             position: relative;
-            width: 50px;
-            height: 120px;
-            background: #e7e5e4;
-            border-radius: 0 0 12px 12px;
-            border-left: 2px solid rgba(255,255,255,0.8);
-            border-right: 2px solid rgba(255,255,255,0.8);
-            border-bottom: 4px solid rgba(255,255,255,0.8);
-            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
             margin: 0 auto;
         }
 
-        .liquid {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0%;
-            transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            opacity: 0.9;
+        .jar-card {
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .liquid-basic { background: linear-gradient(to top, #f59e0b, #fbbf24); } 
-        .liquid-safe { background: linear-gradient(to top, #059669, #34d399); } 
-        .liquid-risk  { background: linear-gradient(to top, #4f46e5, #818cf8); } 
-
-        /* Slider Customization */
-        .noUi-target { background: #d6d3d1; border: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
-        .noUi-connect { background: #78716c; }
-        .noUi-handle {
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            cursor: grab;
-            background: #fff;
-            width: 18px !important;
-            height: 18px !important;
-            right: -9px !important;
-        }
-        .noUi-handle:before, .noUi-handle:after { display: none; }
-
-        /* Locked State Styles */
-        .locked-section {
-            filter: grayscale(100%);
-            opacity: 0.6;
-            pointer-events: none;
-            position: relative;
-        }
-        .locked-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,0.4);
-            z-index: 10;
-            backdrop-filter: blur(1px);
-            text-align: center;
-        }
-
-        /* Chart Container */
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            max-height: 220px;
-        }
-
-        /* Animations */
-        @keyframes unlock-pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
-            50% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
-        }
-        .animate-unlock { animation: unlock-pulse 1.5s ease-out infinite; }
         
-        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
+        .jar-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Animation for results */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-stone-100 text-stone-800 antialiased min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
-    <!-- INTRO SCREEN -->
-    <div id="screen-intro" class="flex-grow flex flex-col items-center justify-center p-4">
-        <div class="max-w-2xl w-full text-center space-y-8 bg-white p-10 rounded-2xl shadow-xl">
-            <div class="text-6xl mb-4">🌱 ➡️ 🌳</div>
-            <h1 class="text-4xl md:text-5xl font-bold text-stone-900 tracking-tight">Путь к Финансовой Свободе</h1>
+    <!-- Chosen Palette: Warm Neutral Background (#FAFAF9) with Functional Semantic Colors for Jars (Blue, Green, Purple, Yellow, Orange, Pink) -->
+    
+    <!-- Application Structure Plan: 
+         1. Header: Simple branding.
+         2. Control Bar (Top): High-priority actions (Income Input, Live Month Button) to minimize scrolling.
+         3. Status Dashboard: Visual feedback on total allocation (Progress bar + Chart).
+         4. Jars Grid: The core interactive element. Sliders combined with cards for direct manipulation.
+         5. Analysis Section: Generated content based on user interaction (The "Report" aspect).
+    -->
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <div class="space-y-4 text-lg text-stone-600">
-                <p>Финансовый успех не приходит сразу. Это путешествие из двух этапов.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                    <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
-                        <div class="font-bold text-emerald-800 text-xl mb-2">Этап 1: Сберегатель</div>
-                        <p class="text-sm">Научись контролировать расходы и создай подушку безопасности.</p>
-                    </div>
-                    <div class="p-4 bg-stone-100 rounded-lg border border-stone-200 opacity-70">
-                        <div class="font-bold text-stone-600 text-xl mb-2">Этап 2: Инвестор</div>
-                        <p class="text-sm">Заставь деньги работать. Доступно после накопления капитала.</p>
-                    </div>
+            <!-- Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-stone-800 tracking-tight">Метод 6 Кувшинов</h1>
+                    <p class="text-xs text-stone-500">Система управления бюджетом</p>
                 </div>
             </div>
 
-            <button onclick="game.startGame()" class="mt-8 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xl py-4 px-12 rounded-full shadow-lg transform transition-transform active:scale-95">
-                Начать Путь
-            </button>
+            <!-- Top Controls (Requested: Button moved here) -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                <!-- Income Input -->
+                <div class="relative w-full sm:w-auto">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-stone-400">₽</span>
+                    </div>
+                    <input type="number" id="totalIncome" value="50000" class="block w-full sm:w-48 pl-8 pr-3 py-2 border border-stone-300 rounded-lg leading-5 bg-stone-50 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition shadow-inner font-mono font-medium" placeholder="Доход">
+                    <label class="absolute -top-2 left-2 bg-white px-1 text-xs text-stone-500">Ваш доход</label>
+                </div>
+
+                <!-- Action Button -->
+                <button id="liveMonthBtn" class="w-full sm:w-auto bg-stone-900 hover:bg-stone-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2 transform active:scale-95">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Прожить месяц</span>
+                </button>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <!-- GAME DASHBOARD -->
-    <div id="screen-game" class="hidden flex-col min-h-screen">
-        
-        <!-- Header / HUD -->
-        <header class="bg-white border-b border-stone-200 sticky top-0 z-30 shadow-sm">
-            <div class="max-w-6xl mx-auto px-4 py-3">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <!-- Identity & Phase -->
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl" id="ui-phase-icon">🌱</span>
-                        <div>
-                            <div class="text-xs text-stone-400 uppercase font-bold tracking-wider">Текущий Статус</div>
-                            <div id="ui-role-name" class="font-bold text-stone-800 leading-none">Новичок-Сберегатель</div>
-                        </div>
-                        <div class="ml-4 bg-stone-100 px-3 py-1 rounded text-sm font-mono text-stone-500">
-                            Месяц: <span id="ui-turn" class="font-bold text-stone-900">1</span>
-                        </div>
-                    </div>
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-6xl mx-auto px-4 py-8 space-y-8">
 
-                    <!-- Goal Progress -->
-                    <div class="flex-grow max-w-md w-full">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-stone-500" id="ui-goal-label">Цель: Накопить $3,000</span>
-                            <span class="font-bold text-emerald-600" id="ui-goal-percent">0%</span>
-                        </div>
-                        <div class="w-full h-2 bg-stone-200 rounded-full overflow-hidden">
-                            <div id="bar-goal" class="h-full bg-emerald-500 transition-all duration-700" style="width: 0%"></div>
-                        </div>
-                    </div>
+        <!-- Introduction Text -->
+        <section class="max-w-3xl mx-auto text-center">
+            <h2 class="text-2xl font-bold text-stone-800 mb-2">Распределите свой бюджет</h2>
+            <p class="text-stone-600 leading-relaxed">
+                Система «6 кувшинов» помогает сбалансировать финансовую жизнь. Используйте бегунки внутри карточек, чтобы настроить распределение под свою ситуацию. Ваша цель — распределить ровно 100%.
+            </p>
+        </section>
 
-                    <!-- Vitals -->
-                    <div class="flex gap-4">
-                        <div class="text-center" title="Здоровье">
-                            <div class="text-lg">❤️</div>
-                            <div id="ui-health" class="text-xs font-bold text-rose-600">100%</div>
-                        </div>
-                        <div class="text-center" title="Счастье">
-                            <div class="text-lg">😃</div>
-                            <div id="ui-happy" class="text-xs font-bold text-amber-500">100%</div>
-                        </div>
+        <!-- Allocation Dashboard (Chart & Status) -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <!-- Left: Jars Grid (The interactive core) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Allocation Status Bar -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-sm font-medium text-stone-500">Всего распределено:</span>
+                        <span id="totalPercentDisplay" class="text-2xl font-bold text-stone-800">100%</span>
                     </div>
+                    <div class="w-full bg-stone-100 rounded-full h-4 overflow-hidden">
+                        <div id="progressBar" class="bg-green-500 h-4 rounded-full transition-all duration-300" style="width: 100%"></div>
+                    </div>
+                    <p id="allocationMessage" class="text-xs mt-2 text-right text-green-600 font-medium">Бюджет сбалансирован идеально</p>
+                </div>
+
+                <!-- Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="jarsGrid">
+                    <!-- Jars will be injected here by JS -->
                 </div>
             </div>
-        </header>
 
-        <main class="flex-grow max-w-6xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <!-- LEFT COLUMN: CONTROLS -->
-            <div class="lg:col-span-8 space-y-6">
-                
-                <!-- Financial Summary -->
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="glass-panel p-3 rounded-lg text-center">
-                        <div class="text-xs text-stone-500">Доход</div>
-                        <div id="ui-income" class="text-lg font-bold text-emerald-700">$1000</div>
-                    </div>
-                    <div class="glass-panel p-3 rounded-lg text-center">
-                        <div class="text-xs text-stone-500">Расход</div>
-                        <div id="ui-expense" class="text-lg font-bold text-rose-700">$0</div>
-                    </div>
-                    <div class="glass-panel p-3 rounded-lg text-center bg-stone-50" id="card-free">
-                        <div class="text-xs text-stone-500">Остаток</div>
-                        <div id="ui-free" class="text-lg font-bold text-stone-800">$0</div>
-                    </div>
-                </div>
-
-                <!-- PHASE 1: FOUNDATION (Always Active) -->
-                <div class="glass-panel rounded-xl p-5 border-t-4 border-emerald-500">
-                    <div class="flex justify-between items-center mb-4 border-b border-stone-100 pb-2">
-                        <h3 class="font-bold text-stone-700">1. База и Безопасность</h3>
-                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">Доступно</span>
+            <!-- Right: Visualization (Chart) -->
+            <div class="lg:col-span-1 sticky top-24">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-stone-800 mb-4 border-b border-stone-100 pb-2">Визуализация</h3>
+                    <div class="chart-container">
+                        <canvas id="allocationChart"></canvas>
                     </div>
                     
-                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                        <!-- Jar: Survival -->
-                        <div class="text-center relative">
-                            <div class="jar-container">
-                                <div id="fill-survival" class="liquid liquid-basic"></div>
-                            </div>
-                            <div id="slider-survival" class="h-28 absolute top-[4px] right-[-8px] opacity-60 hover:opacity-100"></div>
-                            <div class="mt-2 text-xs font-bold">Нужды</div>
-                            <div class="text-[10px] text-stone-500" id="val-survival">$0</div>
+                    <!-- Quick Stats -->
+                    <div class="mt-6 space-y-3">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-stone-500">Свободные деньги (ФС+РНТ)</span>
+                            <span id="savingsTotal" class="font-bold text-stone-800">0 ₽</span>
                         </div>
-
-                        <!-- Jar: Comfort -->
-                        <div class="text-center relative">
-                            <div class="jar-container">
-                                <div id="fill-comfort" class="liquid liquid-basic"></div>
-                            </div>
-                            <div id="slider-comfort" class="h-28 absolute top-[4px] right-[-8px] opacity-60 hover:opacity-100"></div>
-                            <div class="mt-2 text-xs font-bold">Комфорт</div>
-                            <div class="text-[10px] text-stone-500" id="val-comfort">$0</div>
-                        </div>
-
-                        <!-- Jar: Savings (The Goal) -->
-                        <div class="text-center relative">
-                            <div class="jar-container border-emerald-200 bg-emerald-50">
-                                <div id="fill-savings" class="liquid liquid-safe"></div>
-                            </div>
-                            <!-- No slider for savings, it captures overflow -->
-                            <div class="mt-2 text-xs font-bold text-emerald-700">Копилка</div>
-                            <div class="text-[10px] text-emerald-600 font-bold" id="val-savings">$0</div>
-                            <div class="text-[9px] text-stone-400 mt-1">Авто-наполнение</div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-stone-500">На жизнь (НЗ)</span>
+                            <span id="needsTotal" class="font-bold text-stone-800">0 ₽</span>
                         </div>
                     </div>
-                    <p class="text-xs text-stone-500 mt-4 italic">Совет: Обеспечьте нужды и комфорт. Всё, что останется, автоматически пойдет в Копилку.</p>
                 </div>
+            </div>
 
-                <!-- PHASE 2: GROWTH (Locked Initially) -->
-                <div id="phase-2-panel" class="glass-panel rounded-xl p-5 border-t-4 border-indigo-500 locked-section transition-all duration-700">
+        </section>
+
+        <!-- Analysis / Report Section (Hidden initially) -->
+        <section id="reportSection" class="hidden max-w-4xl mx-auto mt-12 mb-12 fade-in">
+            <div class="bg-white rounded-2xl shadow-lg border border-indigo-100 overflow-hidden">
+                <div class="bg-stone-900 text-white p-6">
+                    <h2 class="text-2xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice"></i> Отчет за месяц
+                    </h2>
+                    <p class="text-stone-400 text-sm mt-1">Анализ вашей финансовой стратегии</p>
+                </div>
+                <div class="p-6 md:p-8 space-y-6">
+                    <!-- Dynamic Feedback -->
+                    <div id="reportContent" class="prose prose-stone max-w-none">
+                        <!-- Content injected via JS -->
+                    </div>
                     
-                    <!-- Lock Overlay -->
-                    <div id="lock-overlay" class="locked-overlay rounded-lg">
-                        <div class="bg-white p-4 rounded-full shadow-lg mb-2">
-                            <span class="text-2xl">🔒</span>
-                        </div>
-                        <div class="font-bold text-stone-700">Зона Инвестиций</div>
-                        <div class="text-xs text-stone-500 mt-1">Накопите $3,000 в Копилке,<br>чтобы открыть этот уровень</div>
-                    </div>
-
-                    <div class="flex justify-between items-center mb-4 border-b border-stone-100 pb-2">
-                        <h3 class="font-bold text-indigo-700">2. Рост Капитала</h3>
-                        <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">Инвестор</span>
-                    </div>
-
-                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                        <!-- Jar: Conservative Invest -->
-                        <div class="text-center relative">
-                            <div class="jar-container">
-                                <div id="fill-invest" class="liquid liquid-risk"></div>
-                            </div>
-                            <div id="slider-invest" class="h-28 absolute top-[4px] right-[-8px] opacity-60 hover:opacity-100"></div>
-                            <div class="mt-2 text-xs font-bold">Акции</div>
-                            <div class="text-[10px] text-stone-500" id="val-invest">$0</div>
-                        </div>
-
-                        <!-- Jar: Speculation -->
-                        <div class="text-center relative">
-                            <div class="jar-container">
-                                <div id="fill-spec" class="liquid liquid-risk" style="filter: hue-rotate(45deg);"></div>
-                            </div>
-                            <div id="slider-spec" class="h-28 absolute top-[4px] right-[-8px] opacity-60 hover:opacity-100"></div>
-                            <div class="mt-2 text-xs font-bold text-purple-700">Крипта</div>
-                            <div class="text-[10px] text-stone-500" id="val-spec">$0</div>
-                        </div>
-
-                         <!-- Jar: Education -->
-                         <div class="text-center relative">
-                            <div class="jar-container">
-                                <div id="fill-edu" class="liquid liquid-safe" style="filter: saturate(0.5);"></div>
-                            </div>
-                            <div id="slider-edu" class="h-28 absolute top-[4px] right-[-8px] opacity-60 hover:opacity-100"></div>
-                            <div class="mt-2 text-xs font-bold">Навыки</div>
-                            <div class="text-[10px] text-stone-500" id="val-edu">$0</div>
-                        </div>
+                    <!-- Action Items -->
+                    <div class="bg-stone-50 p-5 rounded-lg border-l-4 border-indigo-500">
+                        <h4 class="font-bold text-stone-800 mb-2">Рекомендация системы:</h4>
+                        <p id="reportRecommendation" class="text-stone-600 text-sm"></p>
                     </div>
                 </div>
-
-                <!-- Next Turn Button -->
-                <div class="flex justify-center pt-4 pb-12">
-                    <button onclick="game.nextTurn()" class="group relative bg-stone-900 text-white font-bold text-lg py-4 px-16 rounded-2xl shadow-xl hover:shadow-2xl hover:translate-y-[-2px] transition-all active:translate-y-[1px]">
-                        <span class="flex items-center gap-3">
-                            Прожить Месяц
-                            <span class="bg-stone-700 rounded-full w-6 h-6 flex items-center justify-center text-xs group-hover:bg-emerald-500 transition-colors">▶</span>
-                        </span>
-                        <div class="absolute -bottom-6 left-0 w-full text-center text-xs text-stone-400 font-normal opacity-0 group-hover:opacity-100 transition-opacity">
-                            Произойдут события и начисления %
-                        </div>
-                    </button>
-                </div>
-
             </div>
+        </section>
 
-            <!-- RIGHT COLUMN: FEEDBACK -->
-            <div class="lg:col-span-4 space-y-6">
-                
-                <!-- Wealth Chart -->
-                <div class="glass-panel p-4 rounded-xl">
-                    <h4 class="font-bold text-xs text-stone-400 uppercase mb-2">Динамика Капитала</h4>
-                    <div class="chart-wrapper">
-                        <canvas id="wealthChart"></canvas>
-                    </div>
-                    <div class="flex justify-center gap-4 mt-2 text-[10px] text-stone-500">
-                        <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-emerald-500"></div>Сбережения</div>
-                        <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-indigo-500"></div>Активы</div>
-                    </div>
-                </div>
+    </main>
 
-                <!-- Stats Grid -->
-                <div class="glass-panel p-4 rounded-xl space-y-3 text-sm">
-                    <div class="flex justify-between border-b border-stone-100 pb-1">
-                        <span class="text-stone-500">🏦 Сбережения</span>
-                        <span id="stat-savings" class="font-mono font-bold text-emerald-600">$0</span>
-                    </div>
-                    <div class="flex justify-between border-b border-stone-100 pb-1 opacity-50 transition-opacity" id="row-assets">
-                        <span class="text-stone-500">📈 Активы</span>
-                        <span id="stat-assets" class="font-mono font-bold text-indigo-600">$0</span>
-                    </div>
-                    <div class="flex justify-between pt-1">
-                        <span class="text-stone-500">💰 Капитал</span>
-                        <span id="stat-total" class="font-mono font-bold text-stone-800">$0</span>
-                    </div>
-                    <div class="mt-2 text-xs text-center text-stone-400">
-                        Пассивный доход: <span id="stat-passive" class="font-bold text-emerald-600">+$0</span>/мес
-                    </div>
-                </div>
-
-                <!-- Event Log -->
-                <div class="glass-panel p-4 rounded-xl h-64 flex flex-col">
-                    <h4 class="font-bold text-xs text-stone-400 uppercase mb-2">Журнал Событий</h4>
-                    <div id="event-log" class="flex-grow overflow-y-auto space-y-2 text-xs pr-1 custom-scrollbar">
-                        <div class="text-stone-400 text-center mt-8 italic">Нажмите "Начать Путь", чтобы запустить симуляцию.</div>
-                    </div>
-                </div>
-
-            </div>
-        </main>
-    </div>
-
-    <!-- Modals / Overlays -->
-    <div id="modal-overlay" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-indigo-500"></div>
-            <div class="text-5xl mb-4" id="modal-icon">🏆</div>
-            <h2 class="text-2xl font-bold mb-2 text-stone-800" id="modal-title">Title</h2>
-            <p class="text-stone-600 mb-6 text-sm leading-relaxed" id="modal-text">Content</p>
-            <button onclick="closeModal()" class="w-full bg-stone-800 text-white py-3 rounded-lg font-bold hover:bg-stone-700 transition-colors">
-                Продолжить
-            </button>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-stone-200 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-stone-400 text-sm">
+            <p>Метод 6 Кувшинов &copy; 2025. Интерактивная версия.</p>
         </div>
-    </div>
+    </footer>
 
-    <!-- Notification Container -->
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <!-- Visualization & Content Choices:
+         1. Charts: Doughnut chart used for 'Whole' visualization to show proportions instantly. No SVG, purely Canvas.
+         2. Interaction: Range inputs embedded in cards allow tactile adjustment.
+         3. Logic: Total percentage validation ensures the user adheres to the "Zero-based budgeting" principle (allocating every ruble).
+    -->
 
     <script>
-        // --- CONFIG & CONSTANTS ---
-        const CONFIG = {
-            baseIncome: 1000,
-            thresholds: {
-                phase2: 3000, // Savings needed to unlock investor mode
-                victory: 2000, // Passive income needed to win OR Total Wealth
-                victoryWealth: 50000,
-                survival: 500,
-                comfort: 300
-            }
+        // --- DATA & STATE ---
+        // Default T. Harv Eker distribution
+        const defaultJars = [
+            { id: 'nec', name: 'Необходимое', sub: 'Жизнь, еда, счета', percent: 55, color: '#3B82F6', icon: 'fa-house' },    // Blue
+            { id: 'fun', name: 'Развлечения', sub: 'Хобби, рестораны, кино', percent: 10, color: '#F59E0B', icon: 'fa-champagne-glasses' }, // Amber
+            { id: 'inv', name: 'Инвестиции', sub: 'Фин. свобода (ФС)', percent: 10, color: '#10B981', icon: 'fa-arrow-trend-up' }, // Green
+            { id: 'edu', name: 'Образование', sub: 'Книги, курсы, рост', percent: 10, color: '#8B5CF6', icon: 'fa-graduation-cap' }, // Purple
+            { id: 'lts', name: 'Резерв', sub: 'Крупные покупки', percent: 10, color: '#6366F1', icon: 'fa-piggy-bank' },     // Indigo
+            { id: 'giv', name: 'Подарки', sub: 'Благотворительность', percent: 5, color: '#EC4899', icon: 'fa-heart' }         // Pink
+        ];
+
+        let state = {
+            income: 50000,
+            jars: JSON.parse(JSON.stringify(defaultJars)) // Deep copy
         };
 
-        // --- GAME STATE & LOGIC ---
-        class Game {
-            constructor() {
-                this.reset();
-            }
+        // --- DOM ELEMENTS ---
+        const els = {
+            incomeInput: document.getElementById('totalIncome'),
+            jarsGrid: document.getElementById('jarsGrid'),
+            progressBar: document.getElementById('progressBar'),
+            totalPercentDisplay: document.getElementById('totalPercentDisplay'),
+            msg: document.getElementById('allocationMessage'),
+            chartCanvas: document.getElementById('allocationChart'),
+            liveBtn: document.getElementById('liveMonthBtn'),
+            reportSection: document.getElementById('reportSection'),
+            reportContent: document.getElementById('reportContent'),
+            reportRec: document.getElementById('reportRecommendation'),
+            savingsTotal: document.getElementById('savingsTotal'),
+            needsTotal: document.getElementById('needsTotal')
+        };
 
-            reset() {
-                this.turn = 1;
-                this.phase = 1; // 1 = Saver, 2 = Investor
-                this.state = {
-                    health: 100,
-                    happiness: 100,
-                    cash: 0,        // Liquid Savings
-                    assets: 0,      // Investments (Stocks/Crypto)
-                    salaryLevel: 0, // Increases via Education
-                    education: 0    // Track spent on edu
-                };
-                this.inputs = {
-                    survival: 500,
-                    comfort: 300,
-                    invest: 0,
-                    spec: 0,
-                    edu: 0
-                };
-                this.history = {
-                    labels: [],
-                    cash: [],
-                    assets: []
-                };
-                this.isGameOver = false;
-            }
+        let chartInstance = null;
 
-            startGame() {
-                document.getElementById('screen-intro').classList.add('hidden');
-                document.getElementById('screen-game').classList.remove('hidden');
-                document.getElementById('screen-game').classList.add('flex');
-                
-                this.initSliders();
-                this.initChart();
-                this.updateUI();
-                this.log("👋 Добро пожаловать! Распределите бюджет на нужды. Остаток пойдет в копилку.", "neutral");
-            }
+        // --- INITIALIZATION ---
+        function init() {
+            renderJars();
+            initChart();
+            updateCalculations();
+            setupListeners();
+        }
 
-            initSliders() {
-                // Helper to create slider
-                const createSlider = (id, max) => {
-                    const el = document.getElementById(`slider-${id}`);
-                    if(!el) return;
-                    
-                    noUiSlider.create(el, {
-                        start: this.inputs[id],
-                        connect: [false, true],
-                        direction: 'rtl',
-                        orientation: 'vertical',
-                        range: { 'min': 0, 'max': max },
-                        step: 10
-                    });
+        // --- CORE LOGIC ---
 
-                    el.noUiSlider.on('update', (values) => {
-                        this.inputs[id] = parseInt(values[0]);
-                        // Visual updates
-                        document.getElementById(`val-${id}`).innerText = `$${this.inputs[id]}`;
-                        const percent = Math.min(100, (this.inputs[id] / max) * 100);
-                        const fillEl = document.getElementById(`fill-${id}`);
-                        if(fillEl) fillEl.style.height = `${percent}%`;
-                        
-                        this.calcPreview();
-                    });
-                };
+        function setupListeners() {
+            // Income Change
+            els.incomeInput.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value) || 0;
+                state.income = val;
+                updateCalculations();
+            });
 
-                createSlider('survival', 1500);
-                createSlider('comfort', 1000);
-                createSlider('invest', 1500);
-                createSlider('spec', 1000);
-                createSlider('edu', 1000);
-            }
+            // Live Button
+            els.liveBtn.addEventListener('click', generateReport);
+        }
 
-            // Calculate numbers without applying them (for UI)
-            calcPreview() {
-                const income = CONFIG.baseIncome + (this.state.salaryLevel * 100); // $100 raise per level
-                
-                // Asset returns (Preview only)
-                const passive = Math.floor(this.state.assets * 0.005); // ~0.5% monthly approx 6% APY
-
-                const totalIncome = income + passive;
-
-                // Expenses
-                let expenses = this.inputs.survival + this.inputs.comfort;
-                if (this.phase === 2) {
-                    expenses += this.inputs.invest + this.inputs.spec + this.inputs.edu;
-                }
-
-                const free = totalIncome - expenses;
-
-                // Update UI Summary
-                document.getElementById('ui-income').innerText = `$${totalIncome}`;
-                document.getElementById('ui-expense').innerText = `$${expenses}`;
-                const freeEl = document.getElementById('ui-free');
-                freeEl.innerText = `$${free}`;
-                
-                // Color code free money
-                const freeCard = document.getElementById('card-free');
-                if (free >= 0) {
-                    freeEl.className = "text-lg font-bold text-emerald-700";
-                    freeCard.className = "glass-panel p-3 rounded-lg text-center bg-emerald-50";
-                } else {
-                    freeEl.className = "text-lg font-bold text-rose-700";
-                    freeCard.className = "glass-panel p-3 rounded-lg text-center bg-rose-50";
-                }
-
-                // Update Savings Jar Preview (It catches the overflow in Phase 1)
-                const savingsFill = document.getElementById('fill-savings');
-                const savingsVal = document.getElementById('val-savings');
-                
-                // In visualization, we just show current savings + projected addition
-                if(savingsVal) savingsVal.innerText = `$${Math.floor(this.state.cash + (free > 0 ? free : 0))}`;
-                
-                return { totalIncome, expenses, free, passive };
-            }
-
-            nextTurn() {
-                if(this.isGameOver) return;
-
-                const budget = this.calcPreview();
-
-                // 1. Vital Signs Logic
-                if (this.inputs.survival < CONFIG.thresholds.survival) {
-                    this.state.health -= 5;
-                    this.log("⚠️ Нехватка на еду ударила по здоровью (-5%)", "bad");
-                } else if(this.state.health < 100) {
-                    this.state.health += 2; // Recover
-                }
-
-                if (this.inputs.comfort < CONFIG.thresholds.comfort) {
-                    this.state.happiness -= 5;
-                    this.log("⚠️ Аскетизм снижает настроение (-5%)", "bad");
-                } else if(this.state.happiness < 100) {
-                    this.state.happiness += 2;
-                }
-
-                // 2. Financial Logic
-                if (budget.free >= 0) {
-                    // Positive flow
-                    this.state.cash += budget.free; 
-                    
-                    // In Phase 2, investments are already deducted from free as expenses,
-                    // so we need to add them to asset pool
-                    if(this.phase === 2) {
-                        this.state.assets += this.inputs.invest;
-                        this.state.assets += this.inputs.spec;
-                        
-                        // Education logic
-                        if(this.inputs.edu > 0) {
-                            this.state.education += this.inputs.edu;
-                            if(this.state.education >= 1000) {
-                                this.state.salaryLevel++;
-                                this.state.education = 0;
-                                this.log("🎓 Вы повысили квалификацию! Доход вырос.", "good");
-                                this.showToast("Зарплата увеличена!", "success");
-                            }
-                        }
-                    }
-                } else {
-                    // Negative flow - eat into savings
-                    this.state.cash += budget.free; // adds negative number
-                    if (this.state.cash < 0) {
-                        this.state.cash = 0;
-                        this.state.happiness -= 10;
-                        this.log("💸 Долги! Пришлось занимать. Счастье падает.", "bad");
-                    }
-                }
-
-                // 3. Market & Interest Logic
-                // Bank Interest (0.3% monthly)
-                this.state.cash = Math.floor(this.state.cash * 1.003);
-
-                if (this.phase === 2 && this.state.assets > 0) {
-                    // Market Volatility
-                    const marketMood = Math.random(); // 0 to 1
-                    let change = 0;
-                    
-                    // Invest Portion (Steady)
-                    // Spec Portion (Volatile) -> simplified into one pool for UI, but let's simulate returns
-                    // Let's assume proportional risk based on inputs
-                    const riskRatio = (this.inputs.spec + 1) / (this.inputs.invest + this.inputs.spec + 1);
-                    
-                    if (marketMood > 0.6) {
-                        // Good month
-                        change = 1.02 + (riskRatio * 0.05); // 2-7% gain
-                        this.log(`📈 Рынок растет. Активы увеличились.`, "neutral");
-                    } else if (marketMood < 0.2) {
-                        // Bad month
-                        change = 0.98 - (riskRatio * 0.10); // 2-12% loss
-                        this.log(`📉 Рынок просел. Потери стоимости.`, "bad");
-                    } else {
-                        change = 1.005; // Flat
-                    }
-                    
-                    this.state.assets = Math.floor(this.state.assets * change);
-                }
-
-                // 4. Random Events
-                this.handleEvents();
-
-                // 5. Progression Checks
-                this.checkPhase();
-                this.checkWinLoss(budget.passive);
-
-                // 6. Update History & UI
-                this.turn++;
-                this.updateHistory();
-                this.updateUI();
-            }
-
-            handleEvents() {
-                if (Math.random() > 0.15) return; // 15% chance
-
-                const events = [
-                    { phase: 1, text: "🦷 Зубная боль. Врач стоил $150.", cash: -150 },
-                    { phase: 1, text: "🎁 Нашли $50 в зимней куртке!", cash: 50 },
-                    { phase: 1, text: "⛈️ Протекла крыша. Ремонт $300.", cash: -300 },
-                    { phase: 2, text: "📉 Коррекция крипторынка.", assetsMult: 0.85 },
-                    { phase: 2, text: "🚀 Акции техно-гиганта взлетели!", assetsMult: 1.15 },
-                    { phase: 2, text: "💼 Фриланс-проект принес $500.", cash: 500 }
-                ];
-
-                // Filter valid events
-                const validEvents = events.filter(e => e.phase <= this.phase);
-                const evt = validEvents[Math.floor(Math.random() * validEvents.length)];
-
-                this.log(`🔔 Событие: ${evt.text}`, evt.cash < 0 || evt.assetsMult < 1 ? "bad" : "good");
-
-                if(evt.cash) this.state.cash += evt.cash;
-                if(evt.assetsMult) this.state.assets = Math.floor(this.state.assets * evt.assetsMult);
-            }
-
-            checkPhase() {
-                if (this.phase === 1 && this.state.cash >= CONFIG.thresholds.phase2) {
-                    this.phase = 2;
-                    this.showModal(
-                        "🔓 Уровень 2 Открыт!", 
-                        "Вы создали надежную подушку безопасности. Теперь вам доступны инструменты Инвестора. <br><br>Новые возможности: Акции, Рисковые активы, Обучение.",
-                        "🚀"
-                    );
-                    
-                    // Unlock Animation UI
-                    const panel = document.getElementById('phase-2-panel');
-                    panel.classList.remove('locked-section');
-                    panel.classList.add('animate-unlock');
-                    document.getElementById('lock-overlay').style.display = 'none';
-                    
-                    // Update HUD Identity
-                    document.getElementById('ui-role-name').innerText = "Опытный Инвестор";
-                    document.getElementById('ui-phase-icon').innerText = "🚀";
-                    document.getElementById('row-assets').classList.remove('opacity-50');
-
-                    // Reset animation class after play
-                    setTimeout(() => panel.classList.remove('animate-unlock'), 2000);
-                }
-            }
-
-            checkWinLoss(passive) {
-                // Bounds
-                this.state.health = Math.min(100, Math.max(0, this.state.health));
-                this.state.happiness = Math.min(100, Math.max(0, this.state.happiness));
-
-                if (this.state.health <= 0 || this.state.happiness <= 0) {
-                    this.showModal("Игра Окончена", "Вы выгорели или потеряли здоровье. Финансы важны, но не ценой жизни.", "💀");
-                    this.isGameOver = true;
-                    return;
-                }
-
-                // Win Condition
-                const totalWealth = this.state.cash + this.state.assets;
-                if (passive >= 2000 || totalWealth >= CONFIG.thresholds.victoryWealth) {
-                    this.showModal("Финансовая Свобода!", `Вы достигли капитала $${totalWealth.toLocaleString()} и пассивного дохода $${passive}/мес. Вы победили систему!`, "🏆");
-                    this.isGameOver = true;
-                }
-            }
-
-            updateHistory() {
-                this.history.labels.push(this.turn);
-                this.history.cash.push(this.state.cash);
-                this.history.assets.push(this.state.assets);
-
-                // Update Chart
-                wealthChart.data.labels = this.history.labels;
-                wealthChart.data.datasets[0].data = this.history.cash;
-                wealthChart.data.datasets[1].data = this.history.assets;
-                wealthChart.update();
-            }
-
-            updateUI() {
-                // Vitals
-                document.getElementById('ui-turn').innerText = this.turn;
-                document.getElementById('ui-health').innerText = Math.floor(this.state.health) + '%';
-                document.getElementById('ui-happy').innerText = Math.floor(this.state.happiness) + '%';
-                
-                // Stats
-                document.getElementById('stat-savings').innerText = '$' + this.state.cash.toLocaleString();
-                document.getElementById('stat-assets').innerText = '$' + this.state.assets.toLocaleString();
-                document.getElementById('stat-total').innerText = '$' + (this.state.cash + this.state.assets).toLocaleString();
-                document.getElementById('stat-passive').innerText = '+$' + Math.floor(this.state.assets * 0.005);
-
-                // Goal Bar
-                let goalPct = 0;
-                let goalLabel = "";
-                
-                if (this.phase === 1) {
-                    goalPct = (this.state.cash / CONFIG.thresholds.phase2) * 100;
-                    goalLabel = `Цель: Подушка $${CONFIG.thresholds.phase2}`;
-                } else {
-                    goalPct = ((this.state.cash + this.state.assets) / CONFIG.thresholds.victoryWealth) * 100;
-                    goalLabel = `Цель: Капитал $${CONFIG.thresholds.victoryWealth.toLocaleString()}`;
-                }
-                
-                document.getElementById('bar-goal').style.width = Math.min(100, goalPct) + '%';
-                document.getElementById('ui-goal-percent').innerText = Math.floor(goalPct) + '%';
-                document.getElementById('ui-goal-label').innerText = goalLabel;
-
-                // Visual Jars (Liquid Level)
-                // For savings, we map 0 to Threshold for visual filling in Phase 1
-                const savingsMax = this.phase === 1 ? CONFIG.thresholds.phase2 : CONFIG.thresholds.victoryWealth; 
-                // Just aesthetic capping
-                const savingsH = Math.min(100, (this.state.cash / (this.phase === 1 ? 3000 : 10000)) * 100);
-                document.getElementById('fill-savings').style.height = `${savingsH}%`;
-
-                this.calcPreview(); // Refresh summary numbers
-            }
-
-            log(msg, type) {
-                const logEl = document.getElementById('event-log');
-                const div = document.createElement('div');
-                let color = "border-stone-300 bg-white";
-                if (type === "good") color = "border-emerald-400 bg-emerald-50";
-                if (type === "bad") color = "border-rose-400 bg-rose-50";
-                
-                div.className = `p-2 rounded border-l-2 text-stone-700 mb-2 ${color} animate-pulse`;
-                div.innerHTML = `<span class="font-bold text-xs opacity-50">Мес ${this.turn}:</span> ${msg}`;
-                
-                // Remove empty state text
-                if(logEl.children[0]?.classList.contains('text-center')) logEl.innerHTML = '';
-                
-                logEl.prepend(div);
-                if (logEl.children.length > 20) logEl.lastElementChild.remove();
-            }
-
-            showToast(msg, type) {
-                const container = document.getElementById('toast-container');
-                const el = document.createElement('div');
-                el.className = `toast-enter px-4 py-2 rounded shadow-lg text-white text-sm font-bold ${type === 'success' ? 'bg-emerald-600' : 'bg-stone-800'}`;
-                el.innerText = msg;
-                container.appendChild(el);
-                setTimeout(() => el.remove(), 3000);
-            }
-
-            showModal(title, text, icon) {
-                document.getElementById('modal-title').innerText = title;
-                document.getElementById('modal-text').innerHTML = text; // Allow HTML
-                document.getElementById('modal-icon').innerText = icon;
-                document.getElementById('modal-overlay').classList.remove('hidden');
+        function handleSliderChange(jarId, newVal) {
+            const jarIndex = state.jars.findIndex(j => j.id === jarId);
+            if(jarIndex !== -1) {
+                state.jars[jarIndex].percent = parseInt(newVal);
+                updateCalculations();
             }
         }
 
-        // --- CHART SETUP ---
-        let wealthChart;
-        function initChartSetup() {
-            const ctx = document.getElementById('wealthChart').getContext('2d');
-            wealthChart = new Chart(ctx, {
-                type: 'line',
+        function updateCalculations() {
+            const totalPercent = state.jars.reduce((acc, j) => acc + j.percent, 0);
+            
+            // Update Jar UI Numbers
+            state.jars.forEach(jar => {
+                const amount = Math.round((state.income * jar.percent) / 100);
+                
+                // Update Amount Text
+                const amountEl = document.getElementById(`amount-${jar.id}`);
+                if(amountEl) amountEl.textContent = amount.toLocaleString('ru-RU') + ' ₽';
+                
+                // Update Percent Badge
+                const badgeEl = document.getElementById(`badge-${jar.id}`);
+                if(badgeEl) badgeEl.textContent = jar.percent + '%';
+
+                // Update Slider Background (Visual Fill)
+                const rangeEl = document.getElementById(`range-${jar.id}`);
+                if(rangeEl) {
+                    // CSS gradient trick for slider track fill
+                    const val = (jar.percent - rangeEl.min) / (rangeEl.max - rangeEl.min) * 100;
+                    rangeEl.style.background = `linear-gradient(to right, ${jar.color} 0%, ${jar.color} ${val}%, #E5E7EB ${val}%, #E5E7EB 100%)`;
+                    // Color the thumb via inline style logic or class toggle if needed, but simple CSS handles it globally mostly.
+                    // To color the thumb specifically, we need more complex CSS or just let it be neutral.
+                    // Let's set the text color of the range input to the jar color so 'currentColor' works in CSS
+                    rangeEl.style.color = jar.color;
+                }
+            });
+
+            // Update Global Status Bar
+            els.totalPercentDisplay.textContent = totalPercent + '%';
+            els.progressBar.style.width = Math.min(totalPercent, 100) + '%';
+            
+            if (totalPercent === 100) {
+                els.progressBar.className = 'h-4 rounded-full transition-all duration-300 bg-green-500';
+                els.msg.className = 'text-xs mt-2 text-right text-green-600 font-medium';
+                els.msg.textContent = "✔ Бюджет распределен полностью";
+            } else if (totalPercent < 100) {
+                els.progressBar.className = 'h-4 rounded-full transition-all duration-300 bg-blue-400';
+                els.msg.className = 'text-xs mt-2 text-right text-blue-600 font-medium';
+                els.msg.textContent = `Осталось распределить: ${100 - totalPercent}%`;
+            } else {
+                els.progressBar.className = 'h-4 rounded-full transition-all duration-300 bg-red-500';
+                els.msg.className = 'text-xs mt-2 text-right text-red-600 font-medium';
+                els.msg.textContent = `⚠ Превышение бюджета на ${totalPercent - 100}%`;
+            }
+
+            // Update Quick Stats
+            const nec = state.jars.find(j => j.id === 'nec');
+            const inv = state.jars.find(j => j.id === 'inv');
+            const lts = state.jars.find(j => j.id === 'lts');
+            
+            const savings = ((inv?.percent || 0) + (lts?.percent || 0)) / 100 * state.income;
+            const needs = (nec?.percent || 0) / 100 * state.income;
+
+            els.savingsTotal.textContent = Math.round(savings).toLocaleString('ru-RU') + ' ₽';
+            els.needsTotal.textContent = Math.round(needs).toLocaleString('ru-RU') + ' ₽';
+
+            // Update Chart
+            updateChart();
+        }
+
+        // --- RENDERING ---
+
+        function renderJars() {
+            els.jarsGrid.innerHTML = '';
+            
+            state.jars.forEach(jar => {
+                const card = document.createElement('div');
+                card.className = 'jar-card bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col gap-4';
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-3">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm" style="background-color: ${jar.color}">
+                                <i class="fa-solid ${jar.icon}"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-stone-800">${jar.name}</h3>
+                                <p class="text-xs text-stone-400">${jar.sub}</p>
+                            </div>
+                        </div>
+                        <div id="badge-${jar.id}" class="px-2 py-1 rounded text-xs font-bold bg-stone-100 text-stone-600">
+                            ${jar.percent}%
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                         <div class="flex justify-between items-end">
+                            <label class="text-xs font-semibold text-stone-400 uppercase tracking-wider">Сумма</label>
+                            <span id="amount-${jar.id}" class="text-xl font-bold text-stone-800 tracking-tight">0 ₽</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <input type="range" 
+                               id="range-${jar.id}"
+                               min="0" max="100" 
+                               value="${jar.percent}" 
+                               class="w-full focus:outline-none"
+                               oninput="handleSliderChange('${jar.id}', this.value)"
+                        >
+                        <div class="flex justify-between text-[10px] text-stone-300 mt-1 font-mono">
+                            <span>0%</span>
+                            <span>50%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                `;
+                
+                els.jarsGrid.appendChild(card);
+            });
+        }
+
+        // --- CHART JS ---
+        function initChart() {
+            const ctx = els.chartCanvas.getContext('2d');
+            
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
                 data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            label: 'Сбережения',
-                            data: [],
-                            borderColor: '#059669', // Emerald
-                            backgroundColor: 'rgba(5, 150, 105, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Инвестиции',
-                            data: [],
-                            borderColor: '#4f46e5', // Indigo
-                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 0
-                        }
-                    ]
+                    labels: state.jars.map(j => j.name),
+                    datasets: [{
+                        data: state.jars.map(j => j.percent),
+                        backgroundColor: state.jars.map(j => j.color),
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { display: false },
-                        y: { 
-                            beginAtZero: true,
-                            grid: { color: '#f5f5f4' }
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            display: false 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}%`;
+                                }
+                            }
                         }
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
                     }
                 }
             });
         }
 
-        // --- INIT ---
-        const game = new Game();
-        game.initChart = initChartSetup;
-
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.add('hidden');
-            if(game.isGameOver) location.reload();
+        function updateChart() {
+            if(!chartInstance) return;
+            chartInstance.data.datasets[0].data = state.jars.map(j => j.percent);
+            chartInstance.update();
         }
+
+        // --- REPORT GENERATION ---
+        function generateReport() {
+            els.reportSection.classList.remove('hidden');
+            // Scroll to report
+            setTimeout(() => {
+                els.reportSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+
+            const total = state.jars.reduce((a, b) => a + b.percent, 0);
+            const nec = state.jars.find(j => j.id === 'nec').percent;
+            const inv = state.jars.find(j => j.id === 'inv').percent;
+            const fun = state.jars.find(j => j.id === 'fun').percent;
+
+            let feedbackHTML = '';
+            let recommendation = '';
+
+            // Total Check
+            if (total !== 100) {
+                feedbackHTML += `<p class="text-red-600 font-bold mb-4">⚠ Внимание: Ваш бюджет не равен 100%. Текущая сумма: ${total}%. Это нарушает основной принцип метода.</p>`;
+                recommendation = "Сначала скорректируйте проценты, чтобы в сумме получилось ровно 100%.";
+            } else {
+                feedbackHTML += `<p class="text-green-600 font-bold mb-4">Отлично! Бюджет полностью распределен.</p>`;
+                
+                // NEC Analysis
+                if (nec > 60) {
+                    feedbackHTML += `<p><strong>Высокая нагрузка на "Нужды" (${nec}%):</strong> Вы тратите слишком много на обязательные расходы. Это зона риска. Постарайтесь оптимизировать бытовые траты или найти способы увеличить доход.</p>`;
+                    recommendation = "Проведите аудит постоянных расходов. Попробуйте снизить долю обязательных трат до 50-55%.";
+                } else if (nec < 40) {
+                    feedbackHTML += `<p><strong>Низкие расходы на жизнь (${nec}%):</strong> У вас отличный запас прочности! Вы можете позволить себе инвестировать больше.</p>`;
+                    recommendation = "Увеличьте долю инвестиций (ФС) или образовательный фонд.";
+                } else {
+                    feedbackHTML += `<p><strong>Сбалансированные нужды (${nec}%):</strong> Вы находитесь в пределах нормы (50-55%). Это здоровая финансовая база.</p>`;
+                    recommendation = "Продолжайте придерживаться этого баланса.";
+                }
+
+                // INV Analysis
+                if (inv < 10) {
+                    feedbackHTML += `<p class="mt-2"><strong>Недостаток инвестиций (${inv}%):</strong> "Кувшин ФС" — это ваш билет к финансовой свободе. 10% — это минимум, который нужно платить самому себе.</p>`;
+                } else {
+                    feedbackHTML += `<p class="mt-2"><strong>Хороший темп накоплений (${inv}%):</strong> Вы формируете капитал. Главное — не тратить эти деньги, а инвестировать.</p>`;
+                }
+
+                // FUN Analysis
+                if (fun < 5) {
+                    feedbackHTML += `<p class="mt-2"><strong>Риск выгорания (${fun}%):</strong> Вы выделили слишком мало на развлечения. Метод кувшинов настаивает на том, чтобы тратить деньги на удовольствия, иначе вы сорветесь и потратите накопления.</p>`;
+                    if(!recommendation) recommendation = "Обязательно добавьте денег в кувшин 'Развлечения' и потратьте их на себя в этом месяце!";
+                }
+            }
+
+            els.reportContent.innerHTML = feedbackHTML;
+            els.reportRec.textContent = recommendation || "Соблюдайте дисциплину распределения каждый раз при получении дохода.";
+        }
+
+        // Run on load
+        window.addEventListener('DOMContentLoaded', init);
+
     </script>
+    
+    <!-- CONFIRMATION: NO SVG graphics used (FontAwesome + Canvas used). NO Mermaid JS used. -->
 </body>
 </html>
-```
