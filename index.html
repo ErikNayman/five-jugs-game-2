@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финансовая Гонка: Кризис и Сложность</title>
+    <title>Финансовая Гонка: Структура Капитала</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -185,16 +185,19 @@
                 </div>
             </div>
 
-            <!-- VS Chart -->
+            <!-- VS Chart (Stacked) -->
             <div class="md:col-span-8 lg:col-span-9 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 relative flex flex-col h-56">
                 <div class="flex justify-between items-start mb-2">
                     <div>
-                        <h3 class="text-[10px] font-bold text-slate-400 uppercase">Гонка Капиталов</h3>
-                        <div class="text-xs text-slate-500">Вы (Зеленый) vs Джон (Серый)</div>
+                        <h3 class="text-[10px] font-bold text-slate-400 uppercase">Структура Капитала</h3>
+                        <div class="text-xs text-slate-500">Сбережения (Зеленый) + Инвестиции (Фиолетовый) vs Джон (Серый)</div>
                     </div>
                     <div class="text-right text-[10px]">
-                        <div class="flex items-center gap-1 justify-end"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span>Вы</span></div>
-                        <div class="flex items-center gap-1 justify-end"><span class="w-2 h-2 rounded-full bg-slate-400"></span> <span>Джон (Сберегает 15% + 5% доход)</span></div>
+                        <div class="flex items-center gap-3 justify-end">
+                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> <span>Инвест.</span></div>
+                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span>Сбер.</span></div>
+                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400"></span> <span>Джон</span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="flex-grow w-full relative h-48">
@@ -279,14 +282,16 @@
 
     <script>
         const CONFIG = { phase1Goal: 5000, phase2Goal: 1000, baseIncome: 4000, rates: { savings: 0.04, investments: 0.10, debt: 0.15 } };
+        
+        // REORDERED JARS as requested
         const JARS = [
             { id: 'nec', name: 'Необходимое', def: 60, color: '#64748B', liquid: '#94A3B8', icon: 'fa-house', type: 'exp' }, 
-            { id: 'sav', name: 'Сбережения', def: 10, color: '#10B981', liquid: '#34D399', icon: 'fa-piggy-bank', type: 'save' }, 
-            { id: 'inv', name: 'Инвестиции', def: 10, color: '#6366F1', liquid: '#818CF8', icon: 'fa-chart-line', type: 'invest' }, 
+            { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }, 
             { id: 'edu', name: 'Образование', def: 10, color: '#3B82F6', liquid: '#60A5FA', icon: 'fa-book', type: 'exp' }, 
-            { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }
+            { id: 'sav', name: 'Сбережения', def: 10, color: '#10B981', liquid: '#34D399', icon: 'fa-piggy-bank', type: 'save' }, 
+            { id: 'inv', name: 'Инвестиции', def: 10, color: '#6366F1', liquid: '#818CF8', icon: 'fa-chart-line', type: 'invest' }
         ];
-        // Updated EVENTS with Crisis
+        
         const EVENTS = [
             { text: "Срочный ремонт зубов.", effect: { money: -400, health: 5 }, type: 'bad', icon: 'fa-tooth' },
             { text: "Грипп свалил с ног.", effect: { money: -100, health: -15 }, type: 'bad', icon: 'fa-temperature-arrow-up' },
@@ -294,12 +299,14 @@
             { text: "Премия за проект!", effect: { money: 600, happy: 10 }, type: 'good', icon: 'fa-trophy' },
             { text: "Скачок инфляции. Цены выросли.", effect: { money: -150 }, type: 'bad', icon: 'fa-arrow-trend-up' },
             { text: "Выгорание на работе.", effect: { health: -5, happy: -20 }, type: 'bad', icon: 'fa-battery-empty' },
-            // New CRISIS Event
+            // Crisis
             { text: "КРИЗИС! Обвал фондового рынка на 25%!", effect: { crash: 0.25 }, type: 'crash', icon: 'fa-chart-line-down' },
             { text: "Коррекция рынка. Акции упали на 10%.", effect: { crash: 0.10 }, type: 'bad', icon: 'fa-arrow-trend-down' }
         ];
 
-        let state = { month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, allocations: {}, health: 100, happiness: 100, history: { labels: [], data: [], rivalData: [] }, rivalNetWorth: 0, isDead: false };
+        // Track breakdown in history
+        let state = { month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, allocations: {}, health: 100, happiness: 100, 
+                      history: { labels: [], savingsData: [], investmentsData: [], rivalData: [] }, rivalNetWorth: 0, isDead: false };
         JARS.forEach(j => state.allocations[j.id] = j.def);
         let els = {}, chartInstance = null, isDragging = false, currentDragJarId = null;
 
@@ -426,7 +433,7 @@
         function repayDebt() {
             if (state.debt <= 0 || state.savings <= 0) return;
             let amount = Math.min(state.debt, state.savings); state.debt -= amount; state.savings -= amount;
-            updateUI(); updateChart(state.savings + state.investments - state.debt, state.rivalNetWorth);
+            updateUI(); updateChart(state.savings, state.investments, state.rivalNetWorth);
         }
 
         function updateUI() {
@@ -469,8 +476,6 @@
             if (checkDeath()) return;
 
             let event = Math.random() < 0.35 ? EVENTS[Math.floor(Math.random()*EVENTS.length)] : null;
-            
-            // Handle CRISIS Effect logic
             if(event) {
                 if(event.type === 'crash' || event.effect.crash) {
                     state.investments *= (1 - event.effect.crash); // Reduce investments
@@ -493,17 +498,15 @@
             if(state.phase === 1) { addSav += addInv; addInv = 0; }
             state.savings += addSav; state.investments += addInv; state.debt += addDebt;
 
-            // Updated Rival Logic (Harder Mode)
-            // John saves 15% (0.15) and gets ~5% annual growth on his pile (simplified monthly)
             const rivalIncome = state.baseIncome; 
             const rivalSave = rivalIncome * 0.15; 
             state.rivalNetWorth += rivalSave; 
-            state.rivalNetWorth *= 1.004; // ~5% APY compound for John
+            state.rivalNetWorth *= 1.004;
 
             if(state.phase === 1 && state.savings >= CONFIG.phase1Goal && state.debt <= 0) { state.phase = 2; document.getElementById('mainHeader').classList.add('border-amber-500', 'border-b-4'); }
             
             const net = state.savings + state.investments - state.debt;
-            updateChart(net, state.rivalNetWorth);
+            updateChart(state.savings, state.investments, state.rivalNetWorth);
             openReport(event, addSav + addInv - addDebt, pas, net, salaryInc, state.rivalNetWorth);
             state.month++; if(els.monthCount) els.monthCount.innerText = state.month;
             updateUI();
@@ -515,13 +518,33 @@
         function initChart() {
             if(!els.chartCanvas) return;
             const ctx = els.chartCanvas.getContext('2d');
-            chartInstance = new Chart(ctx, { type: 'line', data: { labels: state.history.labels, datasets: [
-                { label: 'Вы', data: state.history.data, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4, pointRadius: 2 },
-                { label: 'Джон', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0 }
-            ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { borderDash: [4, 4], color: '#f1f5f9' } } } } });
-            updateChart(0, 0);
+            chartInstance = new Chart(ctx, { 
+                type: 'line', 
+                data: { 
+                    labels: state.history.labels, 
+                    datasets: [
+                        { label: 'Сбережения', data: state.history.savingsData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1, stack: 'player' },
+                        { label: 'Инвестиции', data: state.history.investmentsData, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1, stack: 'player' },
+                        { label: 'Джон', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'rival' }
+                    ] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, 
+                    scales: { x: { display: false }, y: { stacked: false, grid: { borderDash: [4, 4], color: '#f1f5f9' } } } 
+                } 
+            });
+            updateChart(0, 0, 0);
         }
-        function updateChart(val, rivalVal) { state.history.labels.push(state.month); state.history.data.push(val); state.history.rivalData.push(rivalVal); if(chartInstance) chartInstance.update(); }
+        function updateChart(sav, inv, rivalVal) { 
+            state.history.labels.push(state.month); 
+            state.history.savingsData.push(sav);
+            state.history.investmentsData.push(inv);
+            state.history.rivalData.push(rivalVal); 
+            if(chartInstance) chartInstance.update(); 
+        }
 
         function openReport(event, actGain, pas, net, salGrow, rivalNet) {
             els.reportMonthNum.innerText = state.month;
@@ -552,6 +575,7 @@
             els.reportHappyChange.innerHTML = `<i class="fa-solid fa-face-smile ${hapDiff < 0 ? 'text-rose-500' : 'text-emerald-500'}"></i> ${hapDiff > 0 ? '+' : ''}${Math.round(hapDiff)}%`;
             state.lastHealth = state.health; state.lastHappy = state.happiness;
 
+            // Comparison
             els.compUserNet.innerText = '$' + Math.floor(net).toLocaleString();
             els.compRivalNet.innerText = '$' + Math.floor(rivalNet).toLocaleString();
             const total = Math.max(net, rivalNet) * 1.5 || 100;
