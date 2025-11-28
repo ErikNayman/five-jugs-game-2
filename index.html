@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финансовая Гонка: Справка</title>
+    <title>Финансовая Гонка: Стабильный Интерфейс</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -72,8 +74,8 @@
         }
         .tooltip-container:hover .custom-tooltip { visibility: visible; opacity: 1; }
 
-        /* Info Modal */
-        .info-overlay { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(3px); z-index: 60; }
+        /* Modal */
+        .info-overlay { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(3px); z-index: 80; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen text-slate-800 select-none pb-24 md:pb-0">
@@ -81,72 +83,76 @@
     <!-- HEADER -->
     <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-xl border-b border-slate-700 transition-colors duration-500" id="mainHeader">
         <div class="max-w-7xl mx-auto px-4 py-3">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
                 
-                <!-- Left: Rival Status & INFO BUTTON -->
-                <div class="flex items-center gap-6 w-full md:w-auto">
-                    <div class="flex items-center gap-3">
-                        <div>
-                            <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Гонка</div>
-                            <div id="rivalStatusText" class="text-xs font-bold text-slate-300 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Вы лидируете
-                            </div>
-                        </div>
-                        
-                        <!-- INFO BUTTON -->
-                        <button onclick="openInfoModal()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors btn-pulse">
+                <!-- LEFT GROUP: Goals & Vitals -->
+                <div class="flex flex-col md:flex-row items-center gap-6 w-full lg:w-auto">
+                    
+                    <!-- Goal Progress -->
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <button onclick="openInfoModal()" class="w-8 h-8 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
                             <i class="fa-solid fa-info"></i>
                         </button>
-                    </div>
-                    
-                    <div class="pl-6 border-l border-slate-700">
-                        <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Время</div>
-                        <div class="text-sm font-bold">Месяц <span id="monthCount">1</span></div>
-                    </div>
-                    <div class="pl-6 border-l border-slate-700 hidden sm:block">
-                        <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Пассивный Доход</div>
-                        <div class="text-sm font-bold text-emerald-300 flex items-center gap-1">
-                            <span id="passiveIncomeVal">$0</span>
-                            <span class="text-[10px] text-slate-400 font-normal">/мес</span>
+
+                        <div class="flex-grow md:w-48">
+                            <div class="flex justify-between items-end mb-1">
+                                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider" id="goalTitle">Цель: Подушка</div>
+                                <div class="text-xs font-bold text-emerald-400" id="goalValue">$0 / $5k</div>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden shadow-inner border border-slate-600">
+                                <div id="goalProgressBar" class="bg-emerald-500 h-full rounded-full transition-all duration-700 relative overflow-hidden" style="width: 0%">
+                                    <div class="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]"></div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Vitals (Moved to Left & Fixed Alignment) -->
+                    <div class="flex gap-6 w-full md:w-auto border-t md:border-t-0 md:border-l border-slate-700 pt-2 md:pt-0 md:pl-6">
+                        
+                        <!-- Health -->
+                        <div class="flex items-center gap-3 min-w-[120px]">
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-[9px] uppercase font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-heart text-rose-500"></i> Здоровье</span>
+                                    <div id="healthPrediction" class="text-[9px] font-bold w-12 text-right"><!-- Dynamic --></div>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                                    <div id="hudHealthBar" class="bg-rose-500 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <span id="hudHealthVal" class="text-[10px] font-bold text-white w-8 text-right tabular-nums">100%</span>
+                        </div>
+
+                        <!-- Happiness -->
+                        <div class="flex items-center gap-3 min-w-[120px]">
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-[9px] uppercase font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-face-smile text-amber-400"></i> Счастье</span>
+                                    <div id="happyPrediction" class="text-[9px] font-bold w-12 text-right"><!-- Dynamic --></div>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                                    <div id="hudHappyBar" class="bg-amber-400 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <span id="hudHappyVal" class="text-[10px] font-bold text-white w-8 text-right tabular-nums">100%</span>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- Center: Vitals -->
-                <div class="flex gap-4 w-full md:w-auto bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700 relative overflow-hidden justify-center">
-                    <div class="flex flex-col w-24 relative z-10">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[9px] uppercase font-bold text-slate-400">Здоровье</span>
-                            <span id="hudHealthVal" class="text-[10px] font-bold text-white">100%</span>
-                        </div>
-                        <div class="w-full bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                            <div id="hudHealthBar" class="bg-rose-500 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
-                        </div>
-                        <div id="healthPrediction" class="text-[9px] h-3 mt-0.5 font-medium transition-colors duration-300 flex items-center gap-1 justify-end">Стабильно</div>
+                <!-- RIGHT GROUP: Action & Capital -->
+                <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end border-t lg:border-none border-slate-700 pt-3 lg:pt-0">
+                    <div class="flex flex-col items-end">
+                         <div class="text-[9px] text-slate-400 uppercase tracking-widest">Капитал</div>
+                         <div id="hudNetWorth" class="font-mono font-bold text-lg text-emerald-400">$0</div>
                     </div>
-                    <div class="flex flex-col w-24 border-l border-slate-700 pl-4 relative z-10">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[9px] uppercase font-bold text-slate-400">Счастье</span>
-                            <span id="hudHappyVal" class="text-[10px] font-bold text-white">100%</span>
-                        </div>
-                        <div class="w-full bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                            <div id="hudHappyBar" class="bg-amber-400 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
-                        </div>
-                        <div id="happyPrediction" class="text-[9px] h-3 mt-0.5 font-medium transition-colors duration-300 flex items-center gap-1 justify-end">Стабильно</div>
-                    </div>
-                </div>
-
-                <!-- Right: Action -->
-                <div class="flex items-center gap-4 w-full md:w-auto justify-end">
-                    <div class="text-right hidden lg:block">
-                        <div class="text-[9px] text-slate-400 uppercase tracking-widest">Капитал</div>
-                        <div id="hudNetWorth" class="font-mono font-bold text-lg text-emerald-400">$0</div>
-                    </div>
-                    <button id="nextMonthBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-6 rounded-lg shadow-lg shadow-emerald-900/40 transform active:scale-95 transition-all flex items-center gap-2 text-xs uppercase tracking-wide">
+                    <button id="nextMonthBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-8 rounded-lg shadow-lg shadow-emerald-900/40 transform active:scale-95 transition-all flex items-center gap-2 text-xs uppercase tracking-wide">
                         <span>Прожить Месяц</span>
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
+
             </div>
         </div>
     </header>
@@ -171,6 +177,7 @@
                             <div class="custom-tooltip">
                                 <div class="font-bold text-rose-400 mb-1 text-xs">Эффективность снижена</div>
                                 <p class="text-[10px] text-slate-300 leading-relaxed mb-1">Ваше состояние критическое (<50%). Доход падает.</p>
+                                <ul class="list-disc pl-3 text-[10px] text-white/80 space-y-0.5"><li>Поднимите Необходимое</li><li>Поднимите Развлечения</li></ul>
                             </div>
                         </div>
                     </div>
@@ -193,7 +200,7 @@
                             <span class="text-indigo-600 font-bold" id="investmentInterestText">+$0/мес</span>
                         </div>
                         <div class="flex justify-between mt-1 pt-2 border-t border-slate-100">
-                            <span class="text-slate-400">Рост ЗП (от Образ.):</span>
+                            <span>Рост ЗП (от Образ.):</span>
                             <span class="text-blue-600 font-bold" id="salaryGrowthPreview">+$0/мес</span>
                         </div>
                     </div>
@@ -244,62 +251,67 @@
 
     </main>
 
-    <!-- INFO MODAL -->
+    <!-- INFO MODAL (RULES) -->
     <div id="infoModal" class="fixed inset-0 info-overlay hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-all duration-300 overflow-hidden">
-            <div class="bg-slate-900 p-5 text-white flex justify-between items-center">
-                <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-flag-checkered"></i> Правила Гонки</h2>
-                <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-all duration-300 overflow-hidden text-white">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-flag-checkered"></i> Правила Гонки</h2>
+                <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark fa-lg"></i></button>
             </div>
             <div class="p-6 space-y-6">
                 
-                <!-- Enemy Profile -->
-                <div class="flex gap-4 items-start">
-                    <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-2xl text-slate-500 flex-shrink-0">
+                <!-- John -->
+                <div class="flex gap-4 items-start bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0 border-2 border-white">
                         <i class="fa-solid fa-user-tie"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-800">Соперник: Джон</h3>
-                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-                            Джон — консерватор. Он живет скучно, но стабильно:
-                            <br>• Откладывает <strong>20%</strong> зарплаты.
-                            <br>• Держит деньги в банке под <strong>4% годовых</strong>.
-                            <br>• Не рискует, не учится, не инвестирует.
+                        <h3 class="font-bold text-base">Соперник: Джон</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                            Консерватор. Живет стабильно:<br>
+                            • Откладывает <strong>20%</strong> зарплаты в банк.<br>
+                            • Получает <strong>4% годовых</strong>.<br>
+                            • Не рискует, не учится, не болеет.
                         </p>
                     </div>
                 </div>
 
-                <hr class="border-slate-100">
+                <!-- Phases -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold uppercase text-slate-500 tracking-widest">Две Фазы Игры:</h3>
+                    
+                    <div class="flex gap-3 items-center">
+                        <div class="w-10 h-10 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold">1</div>
+                        <div>
+                            <div class="font-bold text-sm text-emerald-400">Подушка Безопасности</div>
+                            <div class="text-[10px] text-slate-400">Цель: Накопить <strong>$5,000</strong> в Сбережениях (Подушка). <br>Инвестиции работают как сбережения.</div>
+                        </div>
+                    </div>
 
-                <!-- Player Levers -->
-                <div>
-                    <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase tracking-wide">Ваши рычаги победы:</h3>
-                    <div class="space-y-3">
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-chart-line"></i></div>
-                            <div>
-                                <div class="text-xs font-bold text-slate-700">Инвестиции (10%+)</div>
-                                <div class="text-[10px] text-slate-500">Высокий доход, но есть риск кризиса. Обгоняют банк на дистанции.</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-book"></i></div>
-                            <div>
-                                <div class="text-xs font-bold text-slate-700">Образование</div>
-                                <div class="text-[10px] text-slate-500">Каждые $100 вложенные сюда увеличивают вашу зарплату навсегда.</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-heart-pulse"></i></div>
-                            <div>
-                                <div class="text-xs font-bold text-slate-700">Здоровье и Счастье</div>
-                                <div class="text-[10px] text-slate-500">Держите выше 50%, иначе получите штраф к доходу или проиграете.</div>
-                            </div>
+                    <div class="flex gap-3 items-center">
+                        <div class="w-10 h-10 rounded bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg font-bold">2</div>
+                        <div>
+                            <div class="font-bold text-sm text-amber-400">Финансовая Свобода</div>
+                            <div class="text-[10px] text-slate-400">Цель: Пассивный доход <strong>$1,000/мес</strong>. <br>Инвестиции разгоняются до 10%, но возможны кризисы!</div>
                         </div>
                     </div>
                 </div>
 
-                <button onclick="closeInfoModal()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 transition-transform active:scale-95">Понятно, к бою!</button>
+                <!-- Mechanics -->
+                <div class="grid grid-cols-2 gap-3 mt-2">
+                    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-scale-balanced text-blue-400 mb-1"></i>
+                        <div class="text-[10px] font-bold">Авто-баланс</div>
+                        <div class="text-[9px] text-slate-500 leading-tight mt-1">Кувшин "Сбережения" автоматически заполняется остатком.</div>
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-skull-crossbones text-rose-400 mb-1"></i>
+                        <div class="text-[10px] font-bold">Риск смерти</div>
+                        <div class="text-[9px] text-slate-500 leading-tight mt-1">Если Здоровье или Счастье упадут до 0% — игра окончена.</div>
+                    </div>
+                </div>
+
+                <button onclick="closeInfoModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg transition-transform active:scale-95">Понятно, к бою!</button>
             </div>
         </div>
     </div>
@@ -361,6 +373,7 @@
 
     <div id="mobileOverlay" onclick="closeReport()" class="fixed inset-0 bg-black/20 z-30 hidden md:hidden transition-opacity opacity-0"></div>
 
+    <!-- GAME OVER -->
     <div id="gameOverScreen" class="fixed inset-0 z-[100] game-over-overlay hidden flex flex-col items-center justify-center text-white p-6 text-center opacity-0 transition-opacity duration-1000">
         <div class="w-20 h-20 rounded-full bg-rose-600 flex items-center justify-center text-3xl mb-4 shadow-[0_0_30px_rgba(225,29,72,0.6)] animate-pulse"><i id="deathIcon" class="fa-solid fa-skull"></i></div>
         <h1 class="text-3xl font-black mb-1">ИГРА ОКОНЧЕНА</h1>
@@ -368,9 +381,30 @@
         <button onclick="location.reload()" class="bg-white text-slate-900 hover:bg-slate-200 font-bold py-2.5 px-8 rounded-full text-sm uppercase transition hover:scale-105 shadow-xl">Заново</button>
     </div>
 
+    <!-- WIN SCREEN -->
+    <div id="winScreen" class="fixed inset-0 z-[100] game-over-overlay hidden flex flex-col items-center justify-center text-white p-6 text-center opacity-0 transition-opacity duration-1000 bg-slate-900/95">
+        <div class="w-24 h-24 rounded-full bg-emerald-500 flex items-center justify-center text-4xl mb-6 shadow-[0_0_50px_rgba(16,185,129,0.5)] animate-bounce"><i class="fa-solid fa-trophy"></i></div>
+        <h1 class="text-4xl font-black mb-2 text-emerald-400 tracking-tight">ПОБЕДА!</h1>
+        <p class="text-lg text-slate-300 font-medium mb-8 max-w-md">Вы достигли финансовой свободы!</p>
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 mb-8 w-full max-w-sm text-left space-y-4">
+            <div class="flex justify-between border-b border-slate-700 pb-2">
+                <span class="text-slate-400 text-xs uppercase">Прошло времени</span>
+                <span class="font-bold"><span id="winMonths">0</span> мес.</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700 pb-2">
+                <span class="text-slate-400 text-xs uppercase">Пассивный доход</span>
+                <span class="font-bold text-emerald-400" id="winPassive">$0/мес</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400 text-xs uppercase">Капитал</span>
+                <span class="font-bold text-white" id="winNetWorth">$0</span>
+            </div>
+        </div>
+        <button onclick="location.reload()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-10 rounded-full text-sm uppercase transition hover:scale-105 shadow-xl">Начать заново</button>
+    </div>
+
     <script>
         const CONFIG = { phase1Goal: 5000, phase2Goal: 1000, baseIncome: 4000, rates: { savings: 0.04, investments: 0.10, debt: 0.15 } };
-        // Jars ordered by Life Flow
         const JARS = [
             { id: 'nec', name: 'Необходимое', def: 60, color: '#64748B', liquid: '#94A3B8', icon: 'fa-house', type: 'exp' }, 
             { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }, 
@@ -394,7 +428,8 @@
         ];
 
         let state = { month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, allocations: {}, health: 100, happiness: 100, 
-                      history: { labels: [], savingsData: [], investmentsData: [], rivalData: [] }, rivalNetWorth: 0, isDead: false };
+                      history: { labels: [], savingsData: [], investmentsData: [], rivalData: [] }, rivalNetWorth: 0, isDead: false, isWon: false };
+        
         JARS.forEach(j => state.allocations[j.id] = j.def);
         let els = {}, chartInstance = null, isDragging = false, currentDragJarId = null;
 
@@ -412,23 +447,22 @@
                 hudHappyVal: document.getElementById('hudHappyVal'),
                 happyPrediction: document.getElementById('happyPrediction'),
                 hudNetWorth: document.getElementById('hudNetWorth'),
-                passiveIncomeVal: document.getElementById('passiveIncomeVal'),
                 savingsInterestText: document.getElementById('savingsInterestText'),
                 investmentInterestText: document.getElementById('investmentInterestText'),
                 salaryGrowthPreview: document.getElementById('salaryGrowthPreview'),
                 totalPercent: document.getElementById('totalPercent'),
                 balanceBadgeContainer: document.getElementById('balanceBadgeContainer'),
                 chartCanvas: document.getElementById('historyChart'),
-                phaseGoalText: document.getElementById('phaseGoalText'),
+                goalTitle: document.getElementById('goalTitle'),
+                goalValue: document.getElementById('goalValue'),
+                goalProgressBar: document.getElementById('goalProgressBar'),
                 monthCount: document.getElementById('monthCount'),
                 debtRepayContainer: document.getElementById('debtRepayContainer'),
                 currentDebtVal: document.getElementById('currentDebtVal'),
                 repayDebtBtn: document.getElementById('repayDebtBtn'),
                 
-                // Info Modal
+                // Modal
                 infoModal: document.getElementById('infoModal'),
-
-                // Sidebar
                 reportPanel: document.getElementById('reportPanel'),
                 mobileOverlay: document.getElementById('mobileOverlay'),
                 reportMonthNum: document.getElementById('reportMonthNum'),
@@ -454,31 +488,28 @@
 
                 deathScreen: document.getElementById('gameOverScreen'),
                 deathReason: document.getElementById('deathReason'),
-                deathIcon: document.getElementById('deathIcon')
+                deathIcon: document.getElementById('deathIcon'),
+                winScreen: document.getElementById('winScreen')
             };
 
             renderJars(); initChart(); updateUI();
             els.income.addEventListener('input', (e) => { state.baseIncome = Math.max(0, parseInt(e.target.value) || 0); updateUI(); });
             document.getElementById('nextMonthBtn').addEventListener('click', processTurn);
+            document.getElementById('nextMonthBtnMobile')?.addEventListener('click', processTurn);
             if(els.repayDebtBtn) els.repayDebtBtn.addEventListener('click', repayDebt);
             window.addEventListener('mouseup', endDrag); window.addEventListener('touchend', endDrag);
             window.addEventListener('mousemove', onDragMove); window.addEventListener('touchmove', onDragMove, { passive: false });
+            
+            // Open Info on Start
+            setTimeout(openInfoModal, 500);
         }
 
-        // MODAL LOGIC
-        window.openInfoModal = function() {
-            els.infoModal.classList.remove('hidden');
-            setTimeout(() => els.infoModal.classList.remove('opacity-0'), 10);
-        }
-        window.closeInfoModal = function() {
-            els.infoModal.classList.add('opacity-0');
-            setTimeout(() => els.infoModal.classList.add('hidden'), 300);
-        }
+        window.openInfoModal = function() { els.infoModal.classList.remove('hidden'); setTimeout(() => els.infoModal.classList.remove('opacity-0'), 10); }
+        window.closeInfoModal = function() { els.infoModal.classList.add('opacity-0'); setTimeout(() => els.infoModal.classList.add('hidden'), 300); }
 
-        function startDrag(jarId) { if(state.isDead) return; isDragging = true; currentDragJarId = jarId; }
+        function startDrag(jarId) { if(state.isDead || state.isWon) return; isDragging = true; currentDragJarId = jarId; }
         function endDrag() { isDragging = false; currentDragJarId = null; }
         
-        // UPDATED DRAG LOGIC WITH AUTO-BALANCE
         function onDragMove(e) {
             if (!isDragging || !currentDragJarId) return;
             e.preventDefault();
@@ -488,25 +519,16 @@
             const rect = container.getBoundingClientRect();
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             let percent = ((rect.bottom - clientY) / rect.height) * 100;
-            percent = Math.round(Math.max(0, Math.min(100, percent)));
+            state.allocations[currentDragJarId] = Math.round(Math.max(0, Math.min(100, percent)));
             
-            state.allocations[currentDragJarId] = percent;
-
-            // AUTO-BALANCE: If interacting with any jar EXCEPT 'sav' and 'inv',
-            // we balance via 'sav'. If touching 'inv', we balance via 'sav'.
-            // If touching 'sav', we balance via 'inv'.
-            
-            let bufferId = 'sav';
-            if (currentDragJarId === 'sav') bufferId = 'inv'; 
-            
-            let used = 0;
-            for(let key in state.allocations) {
-                if(key !== bufferId) used += state.allocations[key];
+            if (currentDragJarId !== 'sav') {
+                let bufferId = 'sav';
+                if (currentDragJarId === 'sav') bufferId = 'inv'; 
+                
+                let used = 0;
+                for(let key in state.allocations) if(key !== bufferId) used += state.allocations[key];
+                state.allocations[bufferId] = Math.max(0, 100 - used);
             }
-
-            let remaining = 100 - used;
-            state.allocations[bufferId] = Math.max(0, remaining);
-
             updateUI();
         }
 
@@ -551,7 +573,7 @@
                     card.classList.add('highlight-jar');
                     setTimeout(() => card.classList.remove('highlight-jar'), 2000);
                 }
-            }, 300); // Wait for sidebar to close
+            }, 300);
         }
 
         function calculateRealIncome() {
@@ -566,12 +588,35 @@
             const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments;
             return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) }; 
         }
+        
         function getPrediction() {
             const nec = state.allocations.nec; const fun = state.allocations.fun; const edu = state.allocations.edu;
-            let hPred = "Стаб.", hClass = "text-slate-400"; if(nec<40){hPred="Падает";hClass="text-rose-600 font-bold";} else if(nec<55){hPred="Сниж.";hClass="text-rose-500 font-bold";} else if(nec>65){hPred="Растет";hClass="text-emerald-500 font-bold";}
-            let hapPred = "Стаб.", hapClass = "text-slate-400"; if((fun+edu)<15){hapPred="Падает";hapClass="text-rose-600 font-bold";} else if((fun+edu)<25){hapPred="Сниж.";hapClass="text-rose-500 font-bold";} else if((fun+edu)>35){hapPred="Растет";hapClass="text-emerald-500 font-bold";}
-            return { hPred, hClass, hapPred, hapClass };
+            
+            // Trend logic with icons and colors
+            let hPred = "Стаб.", hClass = "text-slate-400"; 
+            if(nec<40){ hPred = "Падает"; hClass = "text-rose-600 font-bold"; } 
+            else if(nec<55){ hPred = "Сниж."; hClass = "text-rose-500 font-bold"; } 
+            else if(nec>65){ hPred = "Растет"; hClass = "text-emerald-500 font-bold"; }
+            
+            let hapPred = "Стаб.", hapClass = "text-slate-400"; 
+            if((fun+edu)<15){ hapPred = "Падает"; hapClass = "text-rose-600 font-bold"; } 
+            else if((fun+edu)<25){ hapPred = "Сниж."; hapClass = "text-rose-500 font-bold"; } 
+            else if((fun+edu)>35){ hapPred = "Растет"; hapClass = "text-emerald-500 font-bold"; }
+
+            // Add Icons
+            const getIcon = (text) => {
+                if(text.includes("Падает")) return '<i class="fa-solid fa-angles-down"></i> ' + text;
+                if(text.includes("Сниж")) return '<i class="fa-solid fa-angle-down"></i> ' + text;
+                if(text.includes("Растет")) return '<i class="fa-solid fa-angle-up"></i> ' + text;
+                return '<i class="fa-solid fa-circle text-[6px]"></i> ' + text;
+            };
+
+            return { 
+                hPred: getIcon(hPred), hClass, 
+                hapPred: getIcon(hapPred), hapClass 
+            };
         }
+        
         function repayDebt() {
             if (state.debt <= 0 || state.savings <= 0) return;
             let amount = Math.min(state.debt, state.savings); state.debt -= amount; state.savings -= amount;
@@ -597,57 +642,104 @@
                 if (state.debt > 5 && state.savings > 5) { els.debtRepayContainer.classList.remove('hidden'); if(els.currentDebtVal) els.currentDebtVal.innerText = '-$' + Math.floor(state.debt).toLocaleString(); } else els.debtRepayContainer.classList.add('hidden');
             }
             
-            els.realIncomeVal.innerText = '$' + inc.realIncome.toLocaleString(); els.realIncomeVal.className = inc.penaltyAmount > 0 ? "text-rose-600 font-bold" : "text-emerald-600 font-bold";
+            if(els.realIncomeVal) {
+                els.realIncomeVal.innerText = '$' + inc.realIncome.toLocaleString(); 
+                els.realIncomeVal.className = inc.penaltyAmount > 0 ? "text-rose-600 font-bold" : "text-emerald-600 font-bold";
+            }
             
             if (inc.penaltyAmount > 0) {
-                els.penaltyBox.classList.remove('hidden');
+                if(els.penaltyBox) els.penaltyBox.classList.remove('hidden');
                 if(els.penaltyPercent) els.penaltyPercent.innerText = `-${Math.round(inc.penaltyPct*100)}%`;
             } else {
-                els.penaltyBox.classList.add('hidden');
+                if(els.penaltyBox) els.penaltyBox.classList.add('hidden');
             }
 
-            els.savingsInterestText.innerText = `+$${Math.floor(pas.savIncome)}/мес`; els.investmentInterestText.innerText = `+$${Math.floor(pas.invIncome)}/мес`;
+            if(els.savingsInterestText) els.savingsInterestText.innerText = `+$${Math.floor(pas.savIncome)}/мес`; 
+            if(els.investmentInterestText) els.investmentInterestText.innerText = `+$${Math.floor(pas.invIncome)}/мес`;
             
-            JARS.forEach(jar => { const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; document.getElementById(`val-${jar.id}`).innerText = '$' + Math.floor(amount).toLocaleString(); document.getElementById(`pct-${jar.id}`).innerText = pct + '%'; const l = document.getElementById(`liq-${jar.id}`); if(l) l.style.height = pct + '%'; });
-            els.healthPrediction.innerText = pred.hPred; els.healthPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hClass}`; els.happyPrediction.innerText = pred.hapPred; els.happyPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hapClass}`;
-            els.hudHealthBar.style.width = state.health + '%'; els.hudHealthVal.innerText = Math.round(state.health) + '%'; els.hudHappyBar.style.width = state.happiness + '%'; els.hudHappyVal.innerText = Math.round(state.happiness) + '%';
+            JARS.forEach(jar => { 
+                const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; 
+                const valEl = document.getElementById(`val-${jar.id}`);
+                const pctEl = document.getElementById(`pct-${jar.id}`);
+                const liqEl = document.getElementById(`liq-${jar.id}`);
+                
+                if(valEl) valEl.innerText = '$' + Math.floor(amount).toLocaleString(); 
+                if(pctEl) pctEl.innerText = pct + '%'; 
+                if(liqEl) liqEl.style.height = pct + '%'; 
+            });
+
+            // Health/Happy Predictions with Icons
+            if(els.healthPrediction) {
+                els.healthPrediction.innerHTML = pred.hPred; 
+                els.healthPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hClass}`;
+            }
+            if(els.happyPrediction) {
+                els.happyPrediction.innerHTML = pred.hapPred; 
+                els.happyPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hapClass}`;
+            }
+            
+            if(els.hudHealthBar) els.hudHealthBar.style.width = state.health + '%'; 
+            if(els.hudHealthVal) els.hudHealthVal.innerText = Math.round(state.health) + '%'; 
+            if(els.hudHappyBar) els.hudHappyBar.style.width = state.happiness + '%'; 
+            if(els.hudHappyVal) els.hudHappyVal.innerText = Math.round(state.happiness) + '%';
             
             const net = state.savings + state.investments - state.debt;
-            els.hudNetWorth.innerText = '$' + Math.floor(net).toLocaleString(); els.hudNetWorth.className = net < 0 ? "font-mono font-bold text-lg text-rose-500" : "font-mono font-bold text-lg text-emerald-400";
-            els.passiveIncomeVal.innerText = '$' + Math.floor(pas.totalPassive).toLocaleString();
+            if(els.hudNetWorth) {
+                els.hudNetWorth.innerText = '$' + Math.floor(net).toLocaleString(); 
+                els.hudNetWorth.className = net < 0 ? "font-mono font-bold text-lg text-rose-500" : "font-mono font-bold text-lg text-emerald-400";
+            }
             
             if(els.rivalStatusText) {
                 if(net > state.rivalNetWorth) els.rivalStatusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Вы лидируете';
                 else els.rivalStatusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span> Отставание';
             }
 
-            if(els.phaseGoalText) {
-                if (state.phase === 1) els.phaseGoalText.innerHTML = `<span>Накопить $${CONFIG.phase1Goal.toLocaleString()}</span>`;
-                else els.phaseGoalText.innerHTML = `<i class="fa-solid fa-crown text-amber-400"></i> <span class="text-amber-400">Пассив: $${CONFIG.phase2Goal.toLocaleString()}/мес</span>`;
+            if(els.goalTitle) {
+                let target = state.phase === 1 ? CONFIG.phase1Goal : CONFIG.phase2Goal;
+                let current = state.phase === 1 ? state.savings : pas.totalPassive;
+                
+                els.goalTitle.innerText = state.phase === 1 ? "Цель: Подушка" : "Цель: Пассивный Доход";
+                els.goalValue.innerText = `$${Math.floor(current).toLocaleString()} / $${target.toLocaleString()}`;
+                
+                let pct = Math.min(100, Math.max(0, (current / target) * 100));
+                els.goalProgressBar.style.width = pct + '%';
+                els.goalProgressBar.className = state.phase === 1 
+                    ? "bg-emerald-500 h-full rounded-full transition-all duration-700 relative overflow-hidden" 
+                    : "bg-amber-400 h-full rounded-full transition-all duration-700 relative overflow-hidden";
             }
             
-            els.totalPercent.innerText = bal.total;
-            if(bal.balance > 0) { 
-                els.totalPercent.className = "text-2xl font-black text-emerald-500"; 
-                els.balanceBadgeContainer.innerHTML = state.debt > 0 
-                    ? `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1"><i class="fa-solid fa-rotate"></i> Остаток ${bal.balance}% → Погашение Долга</div>`
-                    : `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1"><i class="fa-solid fa-arrow-right-to-bracket"></i> Остаток ${bal.balance}% → В Сбережения</div>`;
-            }
-            else if(bal.balance < 0) { 
-                els.totalPercent.className = "text-2xl font-black text-rose-500"; 
-                els.balanceBadgeContainer.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 uppercase flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Дефицит ${Math.abs(bal.balance)}% → Долг</div>`;
-            }
-            else { 
-                els.totalPercent.className = "text-2xl font-black text-slate-800"; 
-                els.balanceBadgeContainer.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 uppercase">Идеальный баланс</div>`;
+            if(els.totalPercent) els.totalPercent.innerText = bal.total;
+            
+            if(els.balanceBadgeContainer) {
+                if(bal.balance > 0) { 
+                    els.totalPercent.className = "text-2xl font-black text-emerald-500"; 
+                    els.balanceBadgeContainer.innerHTML = state.debt > 0 
+                        ? `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1"><i class="fa-solid fa-rotate"></i> Остаток ${bal.balance}% → Погашение Долга</div>`
+                        : `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1"><i class="fa-solid fa-arrow-right-to-bracket"></i> Остаток ${bal.balance}% → В Сбережения</div>`;
+                }
+                else if(bal.balance < 0) { 
+                    els.totalPercent.className = "text-2xl font-black text-rose-500"; 
+                    els.balanceBadgeContainer.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 uppercase flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Дефицит ${Math.abs(bal.balance)}% → Долг</div>`;
+                }
+                else { 
+                    els.totalPercent.className = "text-2xl font-black text-slate-800"; 
+                    els.balanceBadgeContainer.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 uppercase">Идеальный баланс</div>`;
+                }
             }
         }
 
         function processTurn() {
-            if(state.isDead || checkDeath()) return;
+            if(state.isDead || state.isWon) return;
+            if(checkDeath()) return;
+
             const pred = getPrediction();
-            if(pred.hClass.includes("rose-600")) state.health -= 12; else if(pred.hClass.includes("rose-500")) state.health -= 6; else state.health += 3;
-            if(pred.hapClass.includes("rose-600")) state.happiness -= 12; else if(pred.hapClass.includes("rose-500")) state.happiness -= 6; else state.happiness += 3;
+            
+            // Apply Decay logic
+            const nec = state.allocations.nec; const fun = state.allocations.fun; const edu = state.allocations.edu;
+            
+            if(nec<40) state.health -= 12; else if(nec<55) state.health -= 6; else state.health += 3;
+            if((fun+edu)<15) state.happiness -= 12; else if((fun+edu)<25) state.happiness -= 6; else state.happiness += 3;
+
             state.health = Math.max(0, Math.min(100, state.health)); state.happiness = Math.max(0, Math.min(100, state.happiness));
             if (checkDeath()) return;
 
@@ -702,6 +794,12 @@
             const net = state.savings + state.investments - state.debt;
             updateChart(state.savings, state.investments, state.rivalNetWorth);
             openReport(event, addSav + addInv - addDebt, pas, net, salaryInc, state.rivalNetWorth, rivalImpact);
+            
+            if(state.phase === 2 && pas.totalPassive >= CONFIG.phase2Goal) {
+                triggerWin();
+                return;
+            }
+
             state.month++; if(els.monthCount) els.monthCount.innerText = state.month;
             updateUI();
         }
@@ -709,6 +807,16 @@
         function checkDeath() { if (state.health <= 0) { triggerDeath("Истощение.", "fa-heart-crack"); return true; } if (state.happiness <= 0) { triggerDeath("Выгорание.", "fa-face-dizzy"); return true; } return false; }
         function triggerDeath(reason, icon) { state.isDead = true; document.getElementById('deathReason').innerText = reason; document.getElementById('deathIcon').className = `fa-solid ${icon}`; els.deathScreen.classList.remove('hidden'); setTimeout(() => els.deathScreen.classList.remove('opacity-0'), 50); }
         
+        function triggerWin() {
+            state.isWon = true;
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+            document.getElementById('winMonths').innerText = state.month;
+            document.getElementById('winPassive').innerText = '$' + Math.floor(calculatePassiveIncome().totalPassive).toLocaleString() + '/мес';
+            document.getElementById('winNetWorth').innerText = '$' + Math.floor(state.savings + state.investments).toLocaleString();
+            els.winScreen.classList.remove('hidden');
+            setTimeout(() => els.winScreen.classList.remove('opacity-0'), 50);
+        }
+
         function initChart() {
             if(!els.chartCanvas) return;
             const ctx = els.chartCanvas.getContext('2d');
@@ -720,33 +828,17 @@
                         { 
                             label: 'Сбережения', 
                             data: state.history.savingsData, 
-                            borderColor: '#10B981', // Emerald 500
-                            backgroundColor: 'rgba(16, 185, 129, 0.4)', // Slightly transparent green
-                            fill: 'origin', // Fills from bottom
-                            pointRadius: 0, 
-                            borderWidth: 1, 
-                            stack: 'player' 
+                            borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1, stack: 'player' 
                         },
                         { 
                             label: 'Инвестиции', 
                             data: state.history.investmentsData, 
-                            borderColor: '#6366F1', // Indigo 500
-                            backgroundColor: 'rgba(99, 102, 241, 0.4)', // Slightly transparent purple
-                            fill: '-1', // Fills to previous dataset (Savings)
-                            pointRadius: 0, 
-                            borderWidth: 1, 
-                            stack: 'player' 
+                            borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1, stack: 'player' 
                         },
                         { 
                             label: 'Джон', 
                             data: state.history.rivalData, 
-                            borderColor: '#94A3B8', // Slate 400
-                            borderDash: [5, 5], 
-                            fill: false, 
-                            tension: 0.4, 
-                            pointRadius: 0, 
-                            borderWidth: 2, 
-                            stack: 'rival' 
+                            borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'rival' 
                         }
                     ] 
                 }, 
