@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финансовая Гонка: Структура Капитала</title>
+    <title>Финансовая Гонка: Исправленный График</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -185,20 +185,10 @@
                 </div>
             </div>
 
-            <!-- VS Chart (Stacked) -->
+            <!-- VS Chart (Clean Header) -->
             <div class="md:col-span-8 lg:col-span-9 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 relative flex flex-col h-56">
-                <div class="flex justify-between items-start mb-2">
-                    <div>
-                        <h3 class="text-[10px] font-bold text-slate-400 uppercase">Структура Капитала</h3>
-                        <div class="text-xs text-slate-500">Сбережения (Зеленый) + Инвестиции (Фиолетовый) vs Джон (Серый)</div>
-                    </div>
-                    <div class="text-right text-[10px]">
-                        <div class="flex items-center gap-3 justify-end">
-                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> <span>Инвест.</span></div>
-                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span>Сбер.</span></div>
-                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400"></span> <span>Джон</span></div>
-                        </div>
-                    </div>
+                <div class="mb-1">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase">СТРУКТУРА КАПИТАЛА</h3>
                 </div>
                 <div class="flex-grow w-full relative h-48">
                     <canvas id="historyChart"></canvas>
@@ -282,8 +272,7 @@
 
     <script>
         const CONFIG = { phase1Goal: 5000, phase2Goal: 1000, baseIncome: 4000, rates: { savings: 0.04, investments: 0.10, debt: 0.15 } };
-        
-        // REORDERED JARS as requested
+        // Jars ordered by Life Flow: Spend -> Save -> Invest
         const JARS = [
             { id: 'nec', name: 'Необходимое', def: 60, color: '#64748B', liquid: '#94A3B8', icon: 'fa-house', type: 'exp' }, 
             { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }, 
@@ -304,7 +293,6 @@
             { text: "Коррекция рынка. Акции упали на 10%.", effect: { crash: 0.10 }, type: 'bad', icon: 'fa-arrow-trend-down' }
         ];
 
-        // Track breakdown in history
         let state = { month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, allocations: {}, health: 100, happiness: 100, 
                       history: { labels: [], savingsData: [], investmentsData: [], rivalData: [] }, rivalNetWorth: 0, isDead: false };
         JARS.forEach(j => state.allocations[j.id] = j.def);
@@ -423,7 +411,19 @@
             return { realIncome: Math.floor(state.baseIncome * (1 - penalty)), penaltyAmount: state.baseIncome - Math.floor(state.baseIncome * (1 - penalty)), penaltyPct: penalty };
         }
         function calculateBalance() { const total = Object.values(state.allocations).reduce((a,b)=>a+b,0); return { total, balance: 100 - total }; }
-        function calculatePassiveIncome() { return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (CONFIG.rates.investments / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (CONFIG.rates.investments / 12)) }; }
+        
+        function calculatePassiveIncome() {
+            // PHASE 1 FIX: Even in Phase 1, use savings rate for Investment money
+            const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments;
+            
+            return { 
+                savIncome: state.savings * (CONFIG.rates.savings / 12), 
+                invIncome: state.investments * (invRate / 12), // Use adaptive rate
+                debtCost: state.debt * (CONFIG.rates.debt / 12), 
+                totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) 
+            }; 
+        }
+        
         function getPrediction() {
             const nec = state.allocations.nec; const fun = state.allocations.fun; const edu = state.allocations.edu;
             let hPred = "Стаб.", hClass = "text-slate-400"; if(nec<40){hPred="Падает";hClass="text-rose-600 font-bold";} else if(nec<55){hPred="Сниж.";hClass="text-rose-500 font-bold";} else if(nec>65){hPred="Растет";hClass="text-emerald-500 font-bold";}
@@ -478,7 +478,7 @@
             let event = Math.random() < 0.35 ? EVENTS[Math.floor(Math.random()*EVENTS.length)] : null;
             if(event) {
                 if(event.type === 'crash' || event.effect.crash) {
-                    state.investments *= (1 - event.effect.crash); // Reduce investments
+                    state.investments *= (1 - event.effect.crash); 
                 }
                 if(event.effect.health) state.health += event.effect.health;
                 if(event.effect.happy) state.happiness += event.effect.happy;
@@ -495,7 +495,11 @@
             state.baseIncome += salaryInc; els.income.value = state.baseIncome;
 
             if(rem > 0) { if (state.debt > 0) { if (state.debt >= rem) state.debt -= rem; else { const l = rem - state.debt; state.debt = 0; addSav += l; } } else addSav += rem; } else addDebt += Math.abs(rem);
-            if(state.phase === 1) { addSav += addInv; addInv = 0; }
+            
+            // PHASE 1 FIX: DO NOT TRANSFER INVESTMENTS TO SAVINGS. KEEP THEM SEPARATE.
+            // Just treat them as low-yield in calculatePassiveIncome (already handled).
+            // if(state.phase === 1) { addSav += addInv; addInv = 0; }  <-- REMOVED THIS LINE
+
             state.savings += addSav; state.investments += addInv; state.debt += addDebt;
 
             const rivalIncome = state.baseIncome; 
@@ -523,17 +527,51 @@
                 data: { 
                     labels: state.history.labels, 
                     datasets: [
-                        { label: 'Сбережения', data: state.history.savingsData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1, stack: 'player' },
-                        { label: 'Инвестиции', data: state.history.investmentsData, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1, stack: 'player' },
-                        { label: 'Джон', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'rival' }
+                        { 
+                            label: 'Сбережения', 
+                            data: state.history.savingsData, 
+                            borderColor: '#10B981', // Emerald 500
+                            backgroundColor: 'rgba(16, 185, 129, 0.4)', // Slightly transparent green
+                            fill: 'origin', // Fills from bottom
+                            pointRadius: 0, 
+                            borderWidth: 1, 
+                            stack: 'player' 
+                        },
+                        { 
+                            label: 'Инвестиции', 
+                            data: state.history.investmentsData, 
+                            borderColor: '#6366F1', // Indigo 500
+                            backgroundColor: 'rgba(99, 102, 241, 0.4)', // Slightly transparent purple
+                            fill: '-1', // Fills to previous dataset (Savings)
+                            pointRadius: 0, 
+                            borderWidth: 1, 
+                            stack: 'player' 
+                        },
+                        { 
+                            label: 'Джон', 
+                            data: state.history.rivalData, 
+                            borderColor: '#94A3B8', // Slate 400
+                            borderDash: [5, 5], 
+                            fill: false, 
+                            tension: 0.4, 
+                            pointRadius: 0, 
+                            borderWidth: 2, 
+                            stack: 'rival' 
+                        }
                     ] 
                 }, 
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false, 
                     interaction: { mode: 'index', intersect: false },
-                    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, 
-                    scales: { x: { display: false }, y: { stacked: false, grid: { borderDash: [4, 4], color: '#f1f5f9' } } } 
+                    plugins: { 
+                        legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } },
+                        tooltip: { mode: 'index', intersect: false }
+                    }, 
+                    scales: { 
+                        x: { display: false }, 
+                        y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' } } 
+                    } 
                 } 
             });
             updateChart(0, 0, 0);
