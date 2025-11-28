@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финансовая Гонка: Связанные Активы</title>
+    <title>Финансовая Гонка: Справка</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +26,8 @@
         .jar-container:hover { border-color: #94A3B8; }
         .jar-liquid {
             position: absolute; bottom: 0; left: 0; right: 0;
-            transition: height 0.1s linear; pointer-events: none;
+            transition: height 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
         }
         .jar-surface {
@@ -44,18 +45,11 @@
         
         /* Sidebar */
         .report-panel {
-            position: fixed; z-index: 40; background: white;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+            position: fixed; z-index: 40; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.1);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @media (min-width: 768px) {
-            .report-panel { top: 80px; right: 0; bottom: 0; width: 360px; border-left: 1px solid #E2E8F0; transform: translateX(100%); }
-            .report-panel.open { transform: translateX(0); }
-        }
-        @media (max-width: 767px) {
-            .report-panel { left: 0; right: 0; bottom: 0; height: auto; max-height: 85vh; border-radius: 20px 20px 0 0; transform: translateY(100%); padding-bottom: 20px; }
-            .report-panel.open { transform: translateY(0); }
-        }
+        @media (min-width: 768px) { .report-panel { top: 80px; right: 0; bottom: 0; width: 360px; border-left: 1px solid #E2E8F0; transform: translateX(100%); } .report-panel.open { transform: translateX(0); } }
+        @media (max-width: 767px) { .report-panel { left: 0; right: 0; bottom: 0; height: auto; max-height: 85vh; border-radius: 20px 20px 0 0; transform: translateY(100%); padding-bottom: 20px; } .report-panel.open { transform: translateY(0); } }
 
         .jars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
         @media (min-width: 768px) { .jars-grid { grid-template-columns: repeat(5, 1fr); gap: 1rem; } }
@@ -67,16 +61,8 @@
         .critical-pulse { animation: critical-pulse 1.5s infinite; }
         @keyframes critical-pulse { 0%, 100% { color: #f43f5e; transform: scale(1); } 50% { color: #e11d48; transform: scale(1.2); } }
         
-        .highlight-jar {
-            animation: highlight-bounce 2s ease-in-out infinite;
-            box-shadow: 0 0 0 4px #F43F5E !important; 
-            border-color: #F43F5E !important;
-            z-index: 20;
-        }
-        @keyframes highlight-bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        .highlight-jar { animation: highlight-bounce 2s ease-in-out infinite; box-shadow: 0 0 0 4px #F43F5E !important; border-color: #F43F5E !important; z-index: 20; }
+        @keyframes highlight-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         /* Custom Tooltip */
         .custom-tooltip {
@@ -85,6 +71,9 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-weight: normal; line-height: 1.4; border: 1px solid #475569;
         }
         .tooltip-container:hover .custom-tooltip { visibility: visible; opacity: 1; }
+
+        /* Info Modal */
+        .info-overlay { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(3px); z-index: 60; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen text-slate-800 select-none pb-24 md:pb-0">
@@ -94,20 +83,28 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 
-                <!-- Left: Rival Status -->
+                <!-- Left: Rival Status & INFO BUTTON -->
                 <div class="flex items-center gap-6 w-full md:w-auto">
-                    <div>
-                        <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Гонка</div>
-                        <div id="rivalStatusText" class="text-xs font-bold text-slate-300 flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Вы лидируете
+                    <div class="flex items-center gap-3">
+                        <div>
+                            <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Гонка</div>
+                            <div id="rivalStatusText" class="text-xs font-bold text-slate-300 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Вы лидируете
+                            </div>
                         </div>
+                        
+                        <!-- INFO BUTTON -->
+                        <button onclick="openInfoModal()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors btn-pulse">
+                            <i class="fa-solid fa-info"></i>
+                        </button>
                     </div>
+                    
                     <div class="pl-6 border-l border-slate-700">
                         <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Время</div>
                         <div class="text-sm font-bold">Месяц <span id="monthCount">1</span></div>
                     </div>
                     <div class="pl-6 border-l border-slate-700 hidden sm:block">
-                        <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Пассив</div>
+                        <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Пассивный Доход</div>
                         <div class="text-sm font-bold text-emerald-300 flex items-center gap-1">
                             <span id="passiveIncomeVal">$0</span>
                             <span class="text-[10px] text-slate-400 font-normal">/мес</span>
@@ -173,17 +170,9 @@
                             </div>
                             <div class="custom-tooltip">
                                 <div class="font-bold text-rose-400 mb-1 text-xs">Эффективность снижена</div>
-                                <p class="text-[10px] text-slate-300 leading-relaxed mb-1">
-                                    Критическое состояние (<50%). Доход падает.
-                                </p>
-                                <p class="text-[10px] text-slate-400">Как убрать:</p>
-                                <ul class="list-disc pl-3 text-[10px] text-white/80 space-y-0.5">
-                                    <li>Поднимите <strong>Необходимое</strong> (Здоровье)</li>
-                                    <li>Поднимите <strong>Развлечения</strong> (Счастье)</li>
-                                </ul>
+                                <p class="text-[10px] text-slate-300 leading-relaxed mb-1">Ваше состояние критическое (<50%). Доход падает.</p>
                             </div>
                         </div>
-
                     </div>
                     <div class="relative group mb-1">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold group-focus-within:text-emerald-500 text-sm">$</span>
@@ -255,6 +244,66 @@
 
     </main>
 
+    <!-- INFO MODAL -->
+    <div id="infoModal" class="fixed inset-0 info-overlay hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-all duration-300 overflow-hidden">
+            <div class="bg-slate-900 p-5 text-white flex justify-between items-center">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-flag-checkered"></i> Правила Гонки</h2>
+                <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <!-- Enemy Profile -->
+                <div class="flex gap-4 items-start">
+                    <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-2xl text-slate-500 flex-shrink-0">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Соперник: Джон</h3>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                            Джон — консерватор. Он живет скучно, но стабильно:
+                            <br>• Откладывает <strong>20%</strong> зарплаты.
+                            <br>• Держит деньги в банке под <strong>4% годовых</strong>.
+                            <br>• Не рискует, не учится, не инвестирует.
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- Player Levers -->
+                <div>
+                    <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase tracking-wide">Ваши рычаги победы:</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-chart-line"></i></div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-700">Инвестиции (10%+)</div>
+                                <div class="text-[10px] text-slate-500">Высокий доход, но есть риск кризиса. Обгоняют банк на дистанции.</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-book"></i></div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-700">Образование</div>
+                                <div class="text-[10px] text-slate-500">Каждые $100 вложенные сюда увеличивают вашу зарплату навсегда.</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-heart-pulse"></i></div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-700">Здоровье и Счастье</div>
+                                <div class="text-[10px] text-slate-500">Держите выше 50%, иначе получите штраф к доходу или проиграете.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="closeInfoModal()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 transition-transform active:scale-95">Понятно, к бою!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- REPORT SIDEBAR -->
     <div id="reportPanel" class="report-panel flex flex-col">
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden"><div class="w-12 h-1.5 bg-slate-300 rounded-full"></div></div>
@@ -321,6 +370,7 @@
 
     <script>
         const CONFIG = { phase1Goal: 5000, phase2Goal: 1000, baseIncome: 4000, rates: { savings: 0.04, investments: 0.10, debt: 0.15 } };
+        // Jars ordered by Life Flow
         const JARS = [
             { id: 'nec', name: 'Необходимое', def: 60, color: '#64748B', liquid: '#94A3B8', icon: 'fa-house', type: 'exp' }, 
             { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }, 
@@ -375,6 +425,9 @@
                 currentDebtVal: document.getElementById('currentDebtVal'),
                 repayDebtBtn: document.getElementById('repayDebtBtn'),
                 
+                // Info Modal
+                infoModal: document.getElementById('infoModal'),
+
                 // Sidebar
                 reportPanel: document.getElementById('reportPanel'),
                 mobileOverlay: document.getElementById('mobileOverlay'),
@@ -412,6 +465,16 @@
             window.addEventListener('mousemove', onDragMove); window.addEventListener('touchmove', onDragMove, { passive: false });
         }
 
+        // MODAL LOGIC
+        window.openInfoModal = function() {
+            els.infoModal.classList.remove('hidden');
+            setTimeout(() => els.infoModal.classList.remove('opacity-0'), 10);
+        }
+        window.closeInfoModal = function() {
+            els.infoModal.classList.add('opacity-0');
+            setTimeout(() => els.infoModal.classList.add('hidden'), 300);
+        }
+
         function startDrag(jarId) { if(state.isDead) return; isDragging = true; currentDragJarId = jarId; }
         function endDrag() { isDragging = false; currentDragJarId = null; }
         
@@ -434,16 +497,13 @@
             // If touching 'sav', we balance via 'inv'.
             
             let bufferId = 'sav';
-            if (currentDragJarId === 'sav') bufferId = 'inv'; // If dragging Savings, Investment absorbs
+            if (currentDragJarId === 'sav') bufferId = 'inv'; 
             
-            // Sum all others
             let used = 0;
             for(let key in state.allocations) {
                 if(key !== bufferId) used += state.allocations[key];
             }
 
-            // Update buffer
-            // We allow buffer to go to 0. If used > 100, buffer is 0 and we have deficit.
             let remaining = 100 - used;
             state.allocations[bufferId] = Math.max(0, remaining);
 
@@ -491,7 +551,7 @@
                     card.classList.add('highlight-jar');
                     setTimeout(() => card.classList.remove('highlight-jar'), 2000);
                 }
-            }, 300);
+            }, 300); // Wait for sidebar to close
         }
 
         function calculateRealIncome() {
@@ -512,7 +572,6 @@
             let hapPred = "Стаб.", hapClass = "text-slate-400"; if((fun+edu)<15){hapPred="Падает";hapClass="text-rose-600 font-bold";} else if((fun+edu)<25){hapPred="Сниж.";hapClass="text-rose-500 font-bold";} else if((fun+edu)>35){hapPred="Растет";hapClass="text-emerald-500 font-bold";}
             return { hPred, hClass, hapPred, hapClass };
         }
-        
         function repayDebt() {
             if (state.debt <= 0 || state.savings <= 0) return;
             let amount = Math.min(state.debt, state.savings); state.debt -= amount; state.savings -= amount;
@@ -549,13 +608,7 @@
 
             els.savingsInterestText.innerText = `+$${Math.floor(pas.savIncome)}/мес`; els.investmentInterestText.innerText = `+$${Math.floor(pas.invIncome)}/мес`;
             
-            JARS.forEach(jar => { 
-                const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; 
-                document.getElementById(`val-${jar.id}`).innerText = '$' + Math.floor(amount).toLocaleString(); 
-                document.getElementById(`pct-${jar.id}`).innerText = pct + '%'; 
-                const l = document.getElementById(`liq-${jar.id}`); if(l) l.style.height = pct + '%'; 
-            });
-
+            JARS.forEach(jar => { const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; document.getElementById(`val-${jar.id}`).innerText = '$' + Math.floor(amount).toLocaleString(); document.getElementById(`pct-${jar.id}`).innerText = pct + '%'; const l = document.getElementById(`liq-${jar.id}`); if(l) l.style.height = pct + '%'; });
             els.healthPrediction.innerText = pred.hPred; els.healthPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hClass}`; els.happyPrediction.innerText = pred.hapPred; els.happyPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hapClass}`;
             els.hudHealthBar.style.width = state.health + '%'; els.hudHealthVal.innerText = Math.round(state.health) + '%'; els.hudHappyBar.style.width = state.happiness + '%'; els.hudHappyVal.innerText = Math.round(state.happiness) + '%';
             
