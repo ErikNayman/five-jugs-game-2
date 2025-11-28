@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финансовая Гонка: Исправленный График</title>
+    <title>Финансовая Гонка: Связанные Активы</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,17 +18,10 @@
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; overflow-x: hidden; }
 
         /* Jar Styles */
+        .jar-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .jar-container {
-            position: relative;
-            height: 280px;
-            background-color: #E2E8F0;
-            border-radius: 0 0 12px 12px;
-            overflow: hidden;
-            border: 1px solid #CBD5E1;
-            border-top: none;
-            cursor: ns-resize;
-            touch-action: none;
-            transition: border-color 0.2s;
+            position: relative; height: 280px; background-color: #E2E8F0; border-radius: 0 0 12px 12px; overflow: hidden;
+            border: 1px solid #CBD5E1; border-top: none; cursor: ns-resize; touch-action: none; transition: border-color 0.2s;
         }
         .jar-container:hover { border-color: #94A3B8; }
         .jar-liquid {
@@ -51,14 +44,12 @@
         
         /* Sidebar */
         .report-panel {
-            position: fixed;
-            z-index: 40;
-            background: white;
+            position: fixed; z-index: 40; background: white;
             box-shadow: -5px 0 25px rgba(0,0,0,0.1);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @media (min-width: 768px) {
-            .report-panel { top: 80px; right: 0; bottom: 0; width: 350px; border-left: 1px solid #E2E8F0; transform: translateX(100%); }
+            .report-panel { top: 80px; right: 0; bottom: 0; width: 360px; border-left: 1px solid #E2E8F0; transform: translateX(100%); }
             .report-panel.open { transform: translateX(0); }
         }
         @media (max-width: 767px) {
@@ -75,6 +66,25 @@
         
         .critical-pulse { animation: critical-pulse 1.5s infinite; }
         @keyframes critical-pulse { 0%, 100% { color: #f43f5e; transform: scale(1); } 50% { color: #e11d48; transform: scale(1.2); } }
+        
+        .highlight-jar {
+            animation: highlight-bounce 2s ease-in-out infinite;
+            box-shadow: 0 0 0 4px #F43F5E !important; 
+            border-color: #F43F5E !important;
+            z-index: 20;
+        }
+        @keyframes highlight-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Custom Tooltip */
+        .custom-tooltip {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: left; border-radius: 8px; padding: 10px;
+            position: absolute; z-index: 50; bottom: 110%; left: 0; opacity: 0; transition: opacity 0.2s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-weight: normal; line-height: 1.4; border: 1px solid #475569;
+        }
+        .tooltip-container:hover .custom-tooltip { visibility: visible; opacity: 1; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen text-slate-800 select-none pb-24 md:pb-0">
@@ -150,45 +160,83 @@
         <section class="grid grid-cols-1 md:grid-cols-12 gap-4">
             
             <!-- Income Panel -->
-            <div class="md:col-span-4 lg:col-span-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between h-56">
+            <div class="md:col-span-4 lg:col-span-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between h-auto min-h-[14rem]">
                 <div>
-                    <div class="flex justify-between items-baseline mb-1">
+                    <div class="flex justify-between items-center mb-1">
                         <label class="text-[10px] font-bold text-slate-400 uppercase">Зарплата</label>
-                        <div id="incomePenaltyBox" class="hidden text-[9px] text-rose-600 font-bold bg-rose-50 px-1.5 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Штраф
+                        
+                        <!-- Penalty UI -->
+                        <div id="incomePenaltyBox" class="hidden relative tooltip-container cursor-help">
+                            <div class="flex items-center gap-1.5 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
+                                <i class="fa-solid fa-circle-exclamation text-rose-500 text-[10px]"></i>
+                                <span class="text-[9px] text-slate-500 font-medium">Штраф <span id="penaltyPercent" class="text-rose-600 font-bold">-0%</span></span>
+                            </div>
+                            <div class="custom-tooltip">
+                                <div class="font-bold text-rose-400 mb-1 text-xs">Эффективность снижена</div>
+                                <p class="text-[10px] text-slate-300 leading-relaxed mb-1">
+                                    Критическое состояние (<50%). Доход падает.
+                                </p>
+                                <p class="text-[10px] text-slate-400">Как убрать:</p>
+                                <ul class="list-disc pl-3 text-[10px] text-white/80 space-y-0.5">
+                                    <li>Поднимите <strong>Необходимое</strong> (Здоровье)</li>
+                                    <li>Поднимите <strong>Развлечения</strong> (Счастье)</li>
+                                </ul>
+                            </div>
                         </div>
+
                     </div>
                     <div class="relative group mb-1">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold group-focus-within:text-emerald-500 text-sm">$</span>
                         <input type="number" id="incomeInput" value="4000" class="w-full pl-6 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800 text-base transition-all">
                     </div>
                     <div class="flex justify-between text-xs font-bold text-slate-500 mt-1 pb-2 border-b border-slate-100">
-                        <span>На руки:</span>
+                        <span>На руки (Факт):</span>
                         <span id="realIncomeVal" class="text-emerald-600">$4,000</span>
                     </div>
-                    <div class="mt-2 text-[9px] text-slate-400 flex flex-col gap-1">
-                        <div class="flex justify-between"><span>Сбережения (4%):</span><span class="text-emerald-500 font-bold" id="savingsInterestText">+$0</span></div>
-                        <div class="flex justify-between"><span>Инвестиции (10%):</span><span class="text-indigo-500 font-bold" id="investmentInterestText">+$0</span></div>
-                        <div class="flex justify-between mt-1 pt-1 border-t border-slate-100"><span>Рост зарплаты:</span><span class="text-blue-500 font-bold">+5% вклада</span></div>
+                    
+                    <div class="mt-2 text-[10px] text-slate-500 flex flex-col gap-1.5">
+                        <div class="flex justify-between">
+                            <span>Сбережения (4% год.):</span>
+                            <span class="text-emerald-600 font-bold" id="savingsInterestText">+$0/мес</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Инвестиции (10% год.):</span>
+                            <span class="text-indigo-600 font-bold" id="investmentInterestText">+$0/мес</span>
+                        </div>
+                        <div class="flex justify-between mt-1 pt-2 border-t border-slate-100">
+                            <span class="text-slate-400">Рост ЗП (от Образ.):</span>
+                            <span class="text-blue-600 font-bold" id="salaryGrowthPreview">+$0/мес</span>
+                        </div>
                     </div>
                 </div>
                 
-                <div id="debtRepayContainer" class="hidden mt-1 pt-1 border-t border-slate-100">
+                <div id="debtRepayContainer" class="hidden mt-2 pt-2 border-t border-slate-100">
                     <button id="repayDebtBtn" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold py-1.5 rounded-lg border border-rose-200 text-xs transition-colors flex items-center justify-center gap-1 btn-pulse">
                         <i class="fa-solid fa-fire"></i> Погасить: <span id="currentDebtVal">$0</span>
                     </button>
                 </div>
 
-                <div class="mt-auto pt-2 flex items-center justify-between">
-                    <div><div class="text-[9px] font-bold text-slate-400 uppercase">Баланс</div><div id="balanceBadge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 inline-block mt-0.5">OK</div></div>
-                    <div class="text-right"><div class="flex items-baseline gap-0.5 justify-end"><span id="totalPercent" class="text-2xl font-black text-slate-800">100</span><span class="text-xs font-bold text-slate-400">%</span></div></div>
+                <div class="mt-auto pt-3 flex items-center justify-between border-t border-slate-100">
+                    <div>
+                        <div class="text-[9px] font-bold text-slate-400 uppercase">Остаток / Баланс</div>
+                        <div id="balanceBadgeContainer">
+                            <div id="balanceBadge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 inline-block mt-0.5">OK</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="flex items-baseline gap-0.5 justify-end">
+                            <span id="totalPercent" class="text-2xl font-black text-slate-800">100</span>
+                            <span class="text-xs font-bold text-slate-400">%</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- VS Chart (Clean Header) -->
-            <div class="md:col-span-8 lg:col-span-9 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 relative flex flex-col h-56">
-                <div class="mb-1">
+            <!-- VS Chart -->
+            <div class="md:col-span-8 lg:col-span-9 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 relative flex flex-col h-auto min-h-[14rem]">
+                <div class="mb-1 flex justify-between items-center">
                     <h3 class="text-[10px] font-bold text-slate-400 uppercase">СТРУКТУРА КАПИТАЛА</h3>
+                    <span class="text-[9px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Джон = 20% в банк (без риска)</span>
                 </div>
                 <div class="flex-grow w-full relative h-48">
                     <canvas id="historyChart"></canvas>
@@ -200,7 +248,7 @@
         <section>
             <div class="flex items-center gap-2 mb-3 px-1">
                 <i class="fa-solid fa-hand-pointer text-slate-400 animate-bounce text-sm"></i>
-                <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Распределение бюджета</h2>
+                <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Распределение бюджета (Тяните за уровень)</h2>
             </div>
             <div class="jars-grid" id="jarsContainer"></div>
         </section>
@@ -237,6 +285,7 @@
             <div id="eventCard" class="hidden bg-slate-50 border-l-4 border-indigo-500 p-4 rounded-r-xl mb-4 shadow-sm">
                 <div class="flex items-center gap-2 mb-1" id="eventHeader"></div>
                 <p id="eventText" class="text-xs text-slate-600 leading-relaxed"></p>
+                <p id="eventJohnText" class="text-[10px] text-slate-400 mt-2 pt-2 border-t border-slate-200" style="display:none;"></p>
             </div>
 
             <div class="space-y-3 mb-4">
@@ -272,7 +321,6 @@
 
     <script>
         const CONFIG = { phase1Goal: 5000, phase2Goal: 1000, baseIncome: 4000, rates: { savings: 0.04, investments: 0.10, debt: 0.15 } };
-        // Jars ordered by Life Flow: Spend -> Save -> Invest
         const JARS = [
             { id: 'nec', name: 'Необходимое', def: 60, color: '#64748B', liquid: '#94A3B8', icon: 'fa-house', type: 'exp' }, 
             { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }, 
@@ -281,16 +329,18 @@
             { id: 'inv', name: 'Инвестиции', def: 10, color: '#6366F1', liquid: '#818CF8', icon: 'fa-chart-line', type: 'invest' }
         ];
         
-        const EVENTS = [
+        const STANDARD_EVENTS = [
             { text: "Срочный ремонт зубов.", effect: { money: -400, health: 5 }, type: 'bad', icon: 'fa-tooth' },
             { text: "Грипп свалил с ног.", effect: { money: -100, health: -15 }, type: 'bad', icon: 'fa-temperature-arrow-up' },
             { text: "Нашел $200 в старой куртке!", effect: { money: 200 }, type: 'good', icon: 'fa-money-bill-1-wave' },
             { text: "Премия за проект!", effect: { money: 600, happy: 10 }, type: 'good', icon: 'fa-trophy' },
-            { text: "Скачок инфляции. Цены выросли.", effect: { money: -150 }, type: 'bad', icon: 'fa-arrow-trend-up' },
-            { text: "Выгорание на работе.", effect: { health: -5, happy: -20 }, type: 'bad', icon: 'fa-battery-empty' },
-            // Crisis
-            { text: "КРИЗИС! Обвал фондового рынка на 25%!", effect: { crash: 0.25 }, type: 'crash', icon: 'fa-chart-line-down' },
-            { text: "Коррекция рынка. Акции упали на 10%.", effect: { crash: 0.10 }, type: 'bad', icon: 'fa-arrow-trend-down' }
+            { text: "Скачок инфляции. Цены выросли.", effect: { money: -150, rivalMod: -0.03 }, type: 'bad', icon: 'fa-arrow-trend-up', global: true },
+            { text: "Выгорание на работе.", effect: { health: -5, happy: -20 }, type: 'bad', icon: 'fa-battery-empty' }
+        ];
+
+        const EVENTS = [
+            { text: "КРИЗИС! Обвал фондового рынка на 25%!", effect: { crash: 0.25, rivalMod: -0.05 }, type: 'crash', icon: 'fa-chart-line-down', global: true },
+            { text: "Коррекция рынка. Акции упали на 10%.", effect: { crash: 0.10, rivalMod: -0.02 }, type: 'bad', icon: 'fa-arrow-trend-down', global: true }
         ];
 
         let state = { month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, allocations: {}, health: 100, happiness: 100, 
@@ -304,6 +354,7 @@
                 income: document.getElementById('incomeInput'),
                 realIncomeVal: document.getElementById('realIncomeVal'),
                 penaltyBox: document.getElementById('incomePenaltyBox'),
+                penaltyPercent: document.getElementById('penaltyPercent'),
                 hudHealthBar: document.getElementById('hudHealthBar'),
                 hudHealthVal: document.getElementById('hudHealthVal'),
                 healthPrediction: document.getElementById('healthPrediction'),
@@ -314,8 +365,9 @@
                 passiveIncomeVal: document.getElementById('passiveIncomeVal'),
                 savingsInterestText: document.getElementById('savingsInterestText'),
                 investmentInterestText: document.getElementById('investmentInterestText'),
+                salaryGrowthPreview: document.getElementById('salaryGrowthPreview'),
                 totalPercent: document.getElementById('totalPercent'),
-                balanceBadge: document.getElementById('balanceBadge'),
+                balanceBadgeContainer: document.getElementById('balanceBadgeContainer'),
                 chartCanvas: document.getElementById('historyChart'),
                 phaseGoalText: document.getElementById('phaseGoalText'),
                 monthCount: document.getElementById('monthCount'),
@@ -330,6 +382,7 @@
                 eventCard: document.getElementById('eventCard'),
                 eventHeader: document.getElementById('eventHeader'),
                 eventText: document.getElementById('eventText'),
+                eventJohnText: document.getElementById('eventJohnText'),
                 reportActiveGain: document.getElementById('reportActiveGain'),
                 reportPassiveGain: document.getElementById('reportPassiveGain'),
                 reportSalaryGrowth: document.getElementById('reportSalaryGrowth'),
@@ -361,15 +414,39 @@
 
         function startDrag(jarId) { if(state.isDead) return; isDragging = true; currentDragJarId = jarId; }
         function endDrag() { isDragging = false; currentDragJarId = null; }
+        
+        // UPDATED DRAG LOGIC WITH AUTO-BALANCE
         function onDragMove(e) {
             if (!isDragging || !currentDragJarId) return;
             e.preventDefault();
             const container = document.getElementById(`jar-cont-${currentDragJarId}`);
             if (!container) return;
+            
             const rect = container.getBoundingClientRect();
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             let percent = ((rect.bottom - clientY) / rect.height) * 100;
-            state.allocations[currentDragJarId] = Math.round(Math.max(0, Math.min(100, percent)));
+            percent = Math.round(Math.max(0, Math.min(100, percent)));
+            
+            state.allocations[currentDragJarId] = percent;
+
+            // AUTO-BALANCE: If interacting with any jar EXCEPT 'sav' and 'inv',
+            // we balance via 'sav'. If touching 'inv', we balance via 'sav'.
+            // If touching 'sav', we balance via 'inv'.
+            
+            let bufferId = 'sav';
+            if (currentDragJarId === 'sav') bufferId = 'inv'; // If dragging Savings, Investment absorbs
+            
+            // Sum all others
+            let used = 0;
+            for(let key in state.allocations) {
+                if(key !== bufferId) used += state.allocations[key];
+            }
+
+            // Update buffer
+            // We allow buffer to go to 0. If used > 100, buffer is 0 and we have deficit.
+            let remaining = 100 - used;
+            state.allocations[bufferId] = Math.max(0, remaining);
+
             updateUI();
         }
 
@@ -378,7 +455,8 @@
             els.jars.innerHTML = '';
             JARS.forEach(jar => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-64 select-none';
+                card.className = 'jar-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-64 select-none';
+                card.id = `card-${jar.id}`; 
                 card.innerHTML = `
                     <div class="p-2 bg-white z-10 border-b border-slate-100 pointer-events-none text-center">
                         <div class="flex justify-center items-center gap-1.5 mb-1">
@@ -392,7 +470,7 @@
                     </div>
                     <div id="jar-cont-${jar.id}" class="jar-container flex-grow relative w-full group cursor-ns-resize bg-slate-50">
                         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px); background-size: 100% 20px;"></div>
-                        <div id="liq-${jar.id}" class="jar-liquid w-full absolute bottom-0 transition-all duration-75 ease-out pointer-events-none" style="background-color: ${jar.liquid}; height: ${state.allocations[jar.id]}%;">
+                        <div id="liq-${jar.id}" class="jar-liquid w-full absolute bottom-0 transition-all duration-150 ease-out pointer-events-none" style="background-color: ${jar.liquid}; height: ${state.allocations[jar.id]}%;">
                              <div class="jar-surface absolute top-0 w-full h-0 border-t-2 border-white/50 flex justify-center"><div class="jar-handle w-5 h-5 bg-white rounded-full shadow-md flex items-center justify-center -translate-y-1/2 text-slate-400 text-[8px] group-hover:scale-110 transition-transform"><i class="fa-solid fa-grip-lines"></i></div></div>
                         </div>
                     </div>`;
@@ -403,6 +481,19 @@
             });
         }
 
+        // --- FOCUS JAR LOGIC ---
+        window.focusJar = function(id) {
+            window.closeReport();
+            setTimeout(() => {
+                const card = document.getElementById(`card-${id}`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.classList.add('highlight-jar');
+                    setTimeout(() => card.classList.remove('highlight-jar'), 2000);
+                }
+            }, 300);
+        }
+
         function calculateRealIncome() {
             let penalty = 0;
             if (state.health < 50) penalty += (50 - state.health) * 0.015; 
@@ -411,39 +502,60 @@
             return { realIncome: Math.floor(state.baseIncome * (1 - penalty)), penaltyAmount: state.baseIncome - Math.floor(state.baseIncome * (1 - penalty)), penaltyPct: penalty };
         }
         function calculateBalance() { const total = Object.values(state.allocations).reduce((a,b)=>a+b,0); return { total, balance: 100 - total }; }
-        
-        function calculatePassiveIncome() {
-            // PHASE 1 FIX: Even in Phase 1, use savings rate for Investment money
+        function calculatePassiveIncome() { 
             const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments;
-            
-            return { 
-                savIncome: state.savings * (CONFIG.rates.savings / 12), 
-                invIncome: state.investments * (invRate / 12), // Use adaptive rate
-                debtCost: state.debt * (CONFIG.rates.debt / 12), 
-                totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) 
-            }; 
+            return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) }; 
         }
-        
         function getPrediction() {
             const nec = state.allocations.nec; const fun = state.allocations.fun; const edu = state.allocations.edu;
             let hPred = "Стаб.", hClass = "text-slate-400"; if(nec<40){hPred="Падает";hClass="text-rose-600 font-bold";} else if(nec<55){hPred="Сниж.";hClass="text-rose-500 font-bold";} else if(nec>65){hPred="Растет";hClass="text-emerald-500 font-bold";}
             let hapPred = "Стаб.", hapClass = "text-slate-400"; if((fun+edu)<15){hapPred="Падает";hapClass="text-rose-600 font-bold";} else if((fun+edu)<25){hapPred="Сниж.";hapClass="text-rose-500 font-bold";} else if((fun+edu)>35){hapPred="Растет";hapClass="text-emerald-500 font-bold";}
             return { hPred, hClass, hapPred, hapClass };
         }
+        
         function repayDebt() {
             if (state.debt <= 0 || state.savings <= 0) return;
             let amount = Math.min(state.debt, state.savings); state.debt -= amount; state.savings -= amount;
-            updateUI(); updateChart(state.savings, state.investments, state.rivalNetWorth);
+            updateUI(); 
+            const idx = state.history.labels.length - 1;
+            if (idx >= 0) {
+                state.history.savingsData[idx] = state.savings;
+                state.history.investmentsData[idx] = state.investments;
+                if(chartInstance) chartInstance.update();
+            }
         }
 
         function updateUI() {
             if(!els.jars) return;
             const inc = calculateRealIncome(), pas = calculatePassiveIncome(), bal = calculateBalance(), pred = getPrediction();
-            if (state.debt > 5 && state.savings > 5) { els.debtRepayContainer.classList.remove('hidden'); els.currentDebtVal.innerText = '-$' + Math.floor(state.debt).toLocaleString(); } else els.debtRepayContainer.classList.add('hidden');
+            
+            const eduAlloc = state.allocations.edu; 
+            const eduAmount = (inc.realIncome * eduAlloc) / 100;
+            const projectedSalaryGrowth = Math.floor(eduAmount * 0.05);
+            if(els.salaryGrowthPreview) els.salaryGrowthPreview.innerText = `+$${projectedSalaryGrowth}/мес`;
+
+            if (els.debtRepayContainer) {
+                if (state.debt > 5 && state.savings > 5) { els.debtRepayContainer.classList.remove('hidden'); if(els.currentDebtVal) els.currentDebtVal.innerText = '-$' + Math.floor(state.debt).toLocaleString(); } else els.debtRepayContainer.classList.add('hidden');
+            }
+            
             els.realIncomeVal.innerText = '$' + inc.realIncome.toLocaleString(); els.realIncomeVal.className = inc.penaltyAmount > 0 ? "text-rose-600 font-bold" : "text-emerald-600 font-bold";
-            els.penaltyBox.classList.toggle('hidden', inc.penaltyAmount <= 0);
+            
+            if (inc.penaltyAmount > 0) {
+                els.penaltyBox.classList.remove('hidden');
+                if(els.penaltyPercent) els.penaltyPercent.innerText = `-${Math.round(inc.penaltyPct*100)}%`;
+            } else {
+                els.penaltyBox.classList.add('hidden');
+            }
+
             els.savingsInterestText.innerText = `+$${Math.floor(pas.savIncome)}/мес`; els.investmentInterestText.innerText = `+$${Math.floor(pas.invIncome)}/мес`;
-            JARS.forEach(jar => { const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; document.getElementById(`val-${jar.id}`).innerText = '$' + Math.floor(amount).toLocaleString(); document.getElementById(`pct-${jar.id}`).innerText = pct + '%'; const l = document.getElementById(`liq-${jar.id}`); if(l) l.style.height = pct + '%'; });
+            
+            JARS.forEach(jar => { 
+                const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; 
+                document.getElementById(`val-${jar.id}`).innerText = '$' + Math.floor(amount).toLocaleString(); 
+                document.getElementById(`pct-${jar.id}`).innerText = pct + '%'; 
+                const l = document.getElementById(`liq-${jar.id}`); if(l) l.style.height = pct + '%'; 
+            });
+
             els.healthPrediction.innerText = pred.hPred; els.healthPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hClass}`; els.happyPrediction.innerText = pred.hapPred; els.happyPrediction.className = `text-[9px] h-3 mt-0.5 flex items-center gap-1 justify-end transition-all ${pred.hapClass}`;
             els.hudHealthBar.style.width = state.health + '%'; els.hudHealthVal.innerText = Math.round(state.health) + '%'; els.hudHappyBar.style.width = state.happiness + '%'; els.hudHappyVal.innerText = Math.round(state.happiness) + '%';
             
@@ -462,9 +574,20 @@
             }
             
             els.totalPercent.innerText = bal.total;
-            if(bal.balance > 0) { els.totalPercent.className = "text-2xl font-black text-emerald-500"; els.balanceBadge.innerText = `В долг/сбер +${bal.balance}%`; els.balanceBadge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-600 uppercase"; }
-            else if(bal.balance < 0) { els.totalPercent.className = "text-2xl font-black text-rose-500"; els.balanceBadge.innerText = `В долг ${bal.balance}%`; els.balanceBadge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-600 uppercase"; }
-            else { els.totalPercent.className = "text-2xl font-black text-slate-800"; els.balanceBadge.innerText = "OK"; els.balanceBadge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 uppercase"; }
+            if(bal.balance > 0) { 
+                els.totalPercent.className = "text-2xl font-black text-emerald-500"; 
+                els.balanceBadgeContainer.innerHTML = state.debt > 0 
+                    ? `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1"><i class="fa-solid fa-rotate"></i> Остаток ${bal.balance}% → Погашение Долга</div>`
+                    : `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1"><i class="fa-solid fa-arrow-right-to-bracket"></i> Остаток ${bal.balance}% → В Сбережения</div>`;
+            }
+            else if(bal.balance < 0) { 
+                els.totalPercent.className = "text-2xl font-black text-rose-500"; 
+                els.balanceBadgeContainer.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 uppercase flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Дефицит ${Math.abs(bal.balance)}% → Долг</div>`;
+            }
+            else { 
+                els.totalPercent.className = "text-2xl font-black text-slate-800"; 
+                els.balanceBadgeContainer.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 uppercase">Идеальный баланс</div>`;
+            }
         }
 
         function processTurn() {
@@ -475,13 +598,25 @@
             state.health = Math.max(0, Math.min(100, state.health)); state.happiness = Math.max(0, Math.min(100, state.happiness));
             if (checkDeath()) return;
 
-            let event = Math.random() < 0.35 ? EVENTS[Math.floor(Math.random()*EVENTS.length)] : null;
+            let event = null; const roll = Math.random();
+            if (roll < 0.02) { event = EVENTS.find(e => e.type === 'crash'); if(!event) event = EVENTS[EVENTS.length-2]; } 
+            else if (roll < 0.10) { event = EVENTS.find(e => e.text.includes('Коррекция')); if(!event) event = EVENTS[EVENTS.length-1]; } 
+            else if (roll < 0.40) { event = STANDARD_EVENTS[Math.floor(Math.random() * STANDARD_EVENTS.length)]; }
+
+            // Rival Impact
+            let rivalImpact = 0;
             if(event) {
-                if(event.type === 'crash' || event.effect.crash) {
-                    state.investments *= (1 - event.effect.crash); 
-                }
+                if(event.type === 'crash' || event.effect.crash) state.investments *= (1 - event.effect.crash);
                 if(event.effect.health) state.health += event.effect.health;
                 if(event.effect.happy) state.happiness += event.effect.happy;
+                
+                if (event.global || event.effect.rivalMod) {
+                    const mod = event.effect.rivalMod || (event.type === 'crash' ? -0.05 : -0.02); 
+                    const lost = Math.floor(state.rivalNetWorth * Math.abs(mod));
+                    state.rivalNetWorth *= (1 + mod);
+                    rivalImpact = -lost;
+                }
+
                 state.health = Math.max(0, Math.min(100, state.health)); state.happiness = Math.max(0, Math.min(100, state.happiness));
                 if (checkDeath()) return;
             }
@@ -494,16 +629,18 @@
             const eduSpent = (effInc * state.allocations.edu) / 100, salaryInc = Math.floor(eduSpent * 0.05);
             state.baseIncome += salaryInc; els.income.value = state.baseIncome;
 
-            if(rem > 0) { if (state.debt > 0) { if (state.debt >= rem) state.debt -= rem; else { const l = rem - state.debt; state.debt = 0; addSav += l; } } else addSav += rem; } else addDebt += Math.abs(rem);
+            // AUTO-BALANCE LOGIC
+            if(rem > 0) { 
+                if (state.debt > 0) { 
+                    if (state.debt >= rem) state.debt -= rem; 
+                    else { const l = rem - state.debt; state.debt = 0; addSav += l; } 
+                } else addSav += rem; 
+            } else addDebt += Math.abs(rem);
             
-            // PHASE 1 FIX: DO NOT TRANSFER INVESTMENTS TO SAVINGS. KEEP THEM SEPARATE.
-            // Just treat them as low-yield in calculatePassiveIncome (already handled).
-            // if(state.phase === 1) { addSav += addInv; addInv = 0; }  <-- REMOVED THIS LINE
-
             state.savings += addSav; state.investments += addInv; state.debt += addDebt;
 
             const rivalIncome = state.baseIncome; 
-            const rivalSave = rivalIncome * 0.15; 
+            const rivalSave = rivalIncome * 0.20; 
             state.rivalNetWorth += rivalSave; 
             state.rivalNetWorth *= 1.004;
 
@@ -511,7 +648,7 @@
             
             const net = state.savings + state.investments - state.debt;
             updateChart(state.savings, state.investments, state.rivalNetWorth);
-            openReport(event, addSav + addInv - addDebt, pas, net, salaryInc, state.rivalNetWorth);
+            openReport(event, addSav + addInv - addDebt, pas, net, salaryInc, state.rivalNetWorth, rivalImpact);
             state.month++; if(els.monthCount) els.monthCount.innerText = state.month;
             updateUI();
         }
@@ -566,7 +703,7 @@
                     interaction: { mode: 'index', intersect: false },
                     plugins: { 
                         legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } },
-                        tooltip: { mode: 'index', intersect: false }
+                        tooltip: { mode: 'index', intersect: false, callbacks: { label: function(context) { let label = context.dataset.label || ''; if (label) { label += ': '; } if (context.parsed.y !== null) { label += Math.round(context.parsed.y).toLocaleString(); } return label; } } }
                     }, 
                     scales: { 
                         x: { display: false }, 
@@ -584,12 +721,25 @@
             if(chartInstance) chartInstance.update(); 
         }
 
-        function openReport(event, actGain, pas, net, salGrow, rivalNet) {
+        function openReport(event, actGain, pas, net, salGrow, rivalNet, rivalImpact) {
             els.reportMonthNum.innerText = state.month;
             
+            // Critical Warnings Generation with Interaction
             els.criticalWarnings.innerHTML = ''; 
-            if (state.health < 35) { const w = document.createElement('div'); w.className = 'bg-rose-50 border border-rose-200 rounded-lg p-3 text-xs text-rose-800 critical-pulse'; w.innerHTML = `<strong><i class="fa-solid fa-heart-pulse"></i> Критическое здоровье!</strong><br>Увеличьте расходы на "Необходимое" (NEC) > 55%.`; els.criticalWarnings.appendChild(w); }
-            if (state.happiness < 35) { const w = document.createElement('div'); w.className = 'bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 critical-pulse'; w.innerHTML = `<strong><i class="fa-solid fa-face-sad-tear"></i> Депрессия!</strong><br>Потратьте больше на "Развлечения" или "Образование".`; els.criticalWarnings.appendChild(w); }
+            if (state.health < 35) { 
+                const w = document.createElement('div'); 
+                w.className = 'bg-rose-50 border border-rose-200 rounded-lg p-3 text-xs text-rose-800 critical-alert flex items-center gap-3'; 
+                w.innerHTML = `<i class="fa-solid fa-heart-pulse text-lg"></i> <div><strong>Критическое здоровье!</strong><div class="opacity-75">Нажми, чтобы исправить</div></div>`; 
+                w.onclick = () => focusJar('nec');
+                els.criticalWarnings.appendChild(w); 
+            }
+            if (state.happiness < 35) { 
+                const w = document.createElement('div'); 
+                w.className = 'bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 critical-alert flex items-center gap-3'; 
+                w.innerHTML = `<i class="fa-solid fa-face-sad-tear text-lg"></i> <div><strong>Депрессия!</strong><div class="opacity-75">Нажми, чтобы исправить</div></div>`; 
+                w.onclick = () => focusJar('fun');
+                els.criticalWarnings.appendChild(w); 
+            }
 
             if(event) {
                 els.eventCard.classList.remove('hidden');
@@ -599,6 +749,14 @@
                 els.eventHeader.innerHTML = iconHtml;
                 els.eventText.innerText = event.text;
                 els.eventCard.className = `p-4 rounded-xl mb-4 shadow-sm border-l-4 ${event.type === 'good' ? 'bg-emerald-50 border-emerald-500' : event.type === 'crash' ? 'bg-rose-100 border-rose-600' : 'bg-rose-50 border-rose-500'}`;
+                
+                if (rivalImpact < 0) {
+                    els.eventJohnText.innerText = `Джон тоже пострадал: ${rivalImpact.toLocaleString()} $`;
+                    els.eventJohnText.style.display = 'block';
+                } else {
+                    els.eventJohnText.style.display = 'none';
+                }
+
             } else els.eventCard.classList.add('hidden');
 
             els.reportActiveGain.innerText = (actGain >= 0 ? '+' : '') + '$' + Math.floor(actGain).toLocaleString();
@@ -613,7 +771,6 @@
             els.reportHappyChange.innerHTML = `<i class="fa-solid fa-face-smile ${hapDiff < 0 ? 'text-rose-500' : 'text-emerald-500'}"></i> ${hapDiff > 0 ? '+' : ''}${Math.round(hapDiff)}%`;
             state.lastHealth = state.health; state.lastHappy = state.happiness;
 
-            // Comparison
             els.compUserNet.innerText = '$' + Math.floor(net).toLocaleString();
             els.compRivalNet.innerText = '$' + Math.floor(rivalNet).toLocaleString();
             const total = Math.max(net, rivalNet) * 1.5 || 100;
