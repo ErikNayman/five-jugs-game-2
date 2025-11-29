@@ -197,7 +197,9 @@
                         <button id="shopBtn" onclick="openShop()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-emerald-600 text-slate-300 hover:text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </button>
-                        <!-- Sound Button REMOVED -->
+                        <button id="soundBtn" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
                         <button onclick="openInfoModal()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0 btn-pulse">
                             <i class="fa-solid fa-info"></i>
                         </button>
@@ -318,6 +320,8 @@
                             <span class="text-indigo-600 font-bold tabular-nums" id="investmentInterestText">+$0/мес</span>
                         </div>
                         <div id="investStratDisplay" class="text-[9px] text-right text-indigo-400 font-medium mt-0.5">Акции (10%)</div>
+                        <!-- NEW ASSET INCOME -->
+                        <div id="assetsIncomeRow" class="flex justify-between hidden pt-1 border-t border-slate-100 mt-1"><span>Активы:</span><span class="text-emerald-600 font-bold tabular-nums" id="assetsIncomeText">+$0/мес</span></div>
                     </div>
                 </div>
                 
@@ -449,9 +453,8 @@
                         <strong class="text-white block mb-1">🔥 Новые механики:</strong>
                         <ul class="list-disc pl-4 space-y-1 text-xs">
                             <li><strong>Инвестиции:</strong> Выбирайте риск (Облигации, Акции, Крипта).</li>
-                            <li><strong>Карьера:</strong> Вкладывайте в Образование для повышения.</li>
+                            <li><strong>Активы (New):</strong> Покупайте недвижимость для пассивного дохода.</li>
                             <li><strong>Магазин:</strong> Улучшайте качество жизни.</li>
-                            <li><strong>Подсказки:</strong> Следите за красными сигналами!</li>
                         </ul>
                     </div>
                     <div id="resumeBtnContainer" class="hidden mb-2">
@@ -497,7 +500,10 @@
         const SHOP_ITEMS = [
             { id: 'mattress', name: 'Ортопедический матрас', cost: 800, icon: 'fa-bed', desc: 'Здоровье падает на 20% медленнее.', effect: { healthDecay: 0.8 } },
             { id: 'console', name: 'Игровая консоль', cost: 1500, icon: 'fa-gamepad', desc: 'Счастье падает на 20% медленнее.', effect: { happyDecay: 0.8 } },
-            { id: 'broker', name: 'Личный брокер', cost: 2500, icon: 'fa-user-tie', desc: 'Доходность инвестиций +2% годовых.', effect: { investRateFlat: 0.02 } }
+            { id: 'broker', name: 'Личный брокер', cost: 2500, icon: 'fa-user-tie', desc: 'Доходность инвестиций +2% годовых.', effect: { investRateFlat: 0.02 } },
+            // REAL ASSETS
+            { id: 'sportscar', name: 'Спорткар', cost: 15000, icon: 'fa-car-sport', desc: 'Счастье не падает ниже 50%. Расход -$200/мес.', effect: { minHappy: 50, passiveExpense: 200 } },
+            { id: 'studio', name: 'Студия под сдачу', cost: 30000, icon: 'fa-building', desc: 'Пассивный доход +$150/мес. Стабильность.', effect: { passiveIncome: 150 } }
         ];
 
         const INVEST_STRATEGIES = {
@@ -519,8 +525,8 @@
         ];
 
         const EVENTS = [
-            { text: "КРИЗИС! Обвал рынка на 25%!", type: 'crash', crash: 0.25, rivalMod: -0.05, icon: 'fa-chart-line-down' },
-            { text: "Коррекция рынка (-10%).", type: 'bad', crash: 0.10, rivalMod: -0.02, icon: 'fa-arrow-trend-down' }
+            { text: "КРИЗИС! Обвал рынка на 25%!", type: 'crash', crash: 0.25, rivalMod: -0.10, icon: 'fa-chart-line-down' }, // Stronger hit on rival
+            { text: "Коррекция рынка (-10%).", type: 'bad', crash: 0.10, rivalMod: -0.05, icon: 'fa-arrow-trend-down' }
         ];
 
         let state = { 
@@ -531,7 +537,7 @@
             flowStreak: 0, isFlow: false, isMuted: true,
             unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false,
             inventory: [], modifiers: { healthDecay: 1, happyDecay: 1, investRateFlat: 0 },
-            careerXP: 0, activeStrategy: 'balanced' // DEFAULT STRATEGY
+            careerXP: 0, activeStrategy: 'balanced'
         };
         
         function triggerHaptic(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
@@ -570,7 +576,7 @@
                          'infoModal','reportPanel','mobileOverlay','reportMonthNum','reportContent','dilemmaModal',
                          'gameOverScreen','deathReason','deathIcon','winScreen','roomProgress','vitalsPanel','flowBadge','flowLabel',
                          'historyChart', 'soundBtn', 'resumeBtnContainer', 'shopModal', 'shopBalance', 'shopItems', 'careerXpBar', 'careerXpVal',
-                         'shopBtn', 'repayDebtBtn', 'investModal', 'investStrategies', 'investStratDisplay']; 
+                         'shopBtn', 'repayDebtBtn', 'investModal', 'investStrategies', 'investStratDisplay', 'assetsIncomeRow', 'assetsIncomeText']; 
             ids.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) els[id] = el;
@@ -682,7 +688,6 @@
                 const card = document.createElement('div');
                 card.className = 'jar-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-64 select-none';
                 
-                // Nudge logic inserted BEFORE container to avoid clipping
                 let nudgeHtml = '';
                 if (jar.id === 'nec') nudgeHtml = '<div id="nudge-nec" class="nudge-arrow hidden"><span>Мало!</span><i class="fa-solid fa-arrow-down"></i></div>';
                 if (jar.id === 'fun') nudgeHtml = '<div id="nudge-fun" class="nudge-arrow hidden"><span>Мало!</span><i class="fa-solid fa-arrow-down"></i></div>';
@@ -721,7 +726,24 @@
         function calculatePassiveIncome() { 
             const strat = INVEST_STRATEGIES[state.activeStrategy] || INVEST_STRATEGIES.balanced;
             const invRate = state.phase === 1 ? CONFIG.rates.savings : strat.rate + state.modifiers.investRateFlat;
-            return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) }; 
+            
+            // Calculate Asset Income/Expense
+            let assetIncome = 0;
+            let assetExpense = 0;
+            state.inventory.forEach(itemId => {
+                const item = SHOP_ITEMS.find(i => i.id === itemId);
+                if (item && item.effect.passiveIncome) assetIncome += item.effect.passiveIncome;
+                if (item && item.effect.passiveExpense) assetExpense += item.effect.passiveExpense;
+            });
+
+            return { 
+                savIncome: state.savings * (CONFIG.rates.savings / 12), 
+                invIncome: state.investments * (invRate / 12), 
+                debtCost: state.debt * (CONFIG.rates.debt / 12), 
+                assetIncome: assetIncome,
+                assetExpense: assetExpense,
+                totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) + assetIncome - assetExpense
+            }; 
         }
 
         function renderRoom() {
@@ -774,8 +796,14 @@
             
             if(nec<40) state.health -= 12 * modHealth; else if(nec<55) state.health -= 6 * modHealth; else state.health += 3;
             if((fun+edu)<15) state.happiness -= 12 * modHappy; else if((fun+edu)<25) state.happiness -= 6 * modHappy; else state.happiness += 3;
+            
+            // Apply Asset Buffs (Sportscar min happiness)
+            let minHappy = 0;
+            if (state.inventory.includes('sportscar')) minHappy = 50;
+            
             state.health = Math.max(0, Math.min(100, state.health)); 
-            state.happiness = Math.max(0, Math.min(100, state.happiness));
+            state.happiness = Math.max(minHappy, Math.min(100, state.happiness));
+            
             checkFlowState();
             if (checkDeath()) return;
 
@@ -796,7 +824,11 @@
             if (roll < 0.20) {
                 const dilemma = DILEMMAS[Math.floor(Math.random() * DILEMMAS.length)];
                 triggerHaptic(50); showDilemma(dilemma); return; 
-            } 
+            } else if (roll < 0.25) {
+                turnEvent = EVENTS[0];
+            } else if (roll < 0.35) {
+                turnEvent = EVENTS[1];
+            }
             completeTurn(turnEvent);
         }
 
@@ -885,7 +917,16 @@
             } else addDebt += Math.abs(rem);
             
             state.savings += addSav; state.investments += addInv; state.debt += addDebt;
+            
+            // Handle Asset Expenses (Sportscar) automatically deducted from passive flow? 
+            // logic in calculatePassiveIncome handles debtCost and assetExpense. 
+            // We need to apply asset income/expenses to actual balances here.
+            state.savings += pas.assetIncome;
+            state.savings -= pas.assetExpense;
+
             const rivalIncome = state.baseIncome; state.rivalNetWorth += (rivalIncome * 0.20); state.rivalNetWorth *= 1.004;
+            // Random Rival Fluctuation to look "real"
+            state.rivalNetWorth += (Math.random() * 100 - 50);
 
             if(state.phase === 1 && state.savings >= CONFIG.phase1Goal && state.debt <= 0) { 
                 state.phase = 2; document.getElementById('mainHeader').classList.add('border-amber-500', 'border-b-4'); 
@@ -907,7 +948,7 @@
                 if(state.isFlow) msg = `🔥 ПОТОК! Капитал: $${Math.floor(net).toLocaleString()}`;
                 showToast(`Месяц ${state.month-1}`, msg, 'neutral');
             }
-            if(state.phase === 2 && (pas.savIncome + pas.invIncome) >= CONFIG.phase2Goal) triggerWin();
+            if(state.phase === 2 && pas.totalPassive >= CONFIG.phase2Goal) triggerWin();
         }
 
         // --- CONTEXTUAL NUDGES ---
@@ -978,8 +1019,16 @@
             const net = state.savings + state.investments - state.debt;
             els.hudNetWorth.innerText = '$' + Math.floor(net).toLocaleString();
 
+            // NEW ASSET ROW UPDATE
+            const netAssetFlow = pas.assetIncome - pas.assetExpense;
+            if (netAssetFlow !== 0) {
+                els.assetsIncomeRow.classList.remove('hidden');
+                els.assetsIncomeText.innerText = (netAssetFlow > 0 ? '+' : '') + '$' + netAssetFlow + '/мес';
+                els.assetsIncomeText.className = netAssetFlow > 0 ? "text-emerald-600 font-bold tabular-nums" : "text-rose-600 font-bold tabular-nums";
+            }
+
             let target = state.phase === 1 ? CONFIG.phase1Goal : CONFIG.phase2Goal;
-            let current = state.phase === 1 ? state.savings : (pas.savIncome + pas.invIncome);
+            let current = state.phase === 1 ? state.savings : pas.totalPassive;
             els.goalTitle.innerText = state.phase === 1 ? "Цель: Подушка" : "Цель: Пассивный Доход";
             els.goalValue.innerText = `$${Math.floor(current).toLocaleString()} / $${target.toLocaleString()}`;
             els.goalProgressBar.style.width = Math.min(100, Math.max(0, (current / target) * 100)) + '%';
