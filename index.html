@@ -164,6 +164,11 @@
         .shop-bounce { animation: shop-bounce 2s infinite; color: #10B981 !important; transform-origin: center; }
         @keyframes shop-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } 60% { transform: translateY(-3px); } }
 
+        /* Strategy Card */
+        .strat-card { transition: all 0.2s; cursor: pointer; border: 2px solid transparent; }
+        .strat-card:hover { transform: translateY(-2px); }
+        .strat-card.active { border-color: #10B981; background-color: #ECFDF5; }
+
     </style>
 </head>
 <body class="flex flex-col min-h-screen text-slate-800 select-none pb-24 md:pb-0">
@@ -192,9 +197,7 @@
                         <button id="shopBtn" onclick="openShop()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-emerald-600 text-slate-300 hover:text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </button>
-                        <button id="soundBtn" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
-                            <i class="fa-solid fa-volume-high"></i>
-                        </button>
+                        <!-- Sound Button REMOVED -->
                         <button onclick="openInfoModal()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0 btn-pulse">
                             <i class="fa-solid fa-info"></i>
                         </button>
@@ -307,7 +310,14 @@
                     
                     <div class="mt-2 text-[10px] text-slate-500 flex flex-col gap-1.5">
                         <div class="flex justify-between"><span>Сбережения (4%):</span><span class="text-emerald-600 font-bold tabular-nums" id="savingsInterestText">+$0/мес</span></div>
-                        <div class="flex justify-between"><span>Инвестиции (10%):</span><span class="text-indigo-600 font-bold tabular-nums" id="investmentInterestText">+$0/мес</span></div>
+                        <div class="flex justify-between flex-wrap">
+                            <div class="flex items-center gap-1">
+                                <span>Инвестиции:</span>
+                                <button onclick="openInvestMenu()" class="w-4 h-4 rounded bg-indigo-100 text-indigo-600 hover:bg-indigo-200 flex items-center justify-center text-[9px] transition-colors"><i class="fa-solid fa-gear"></i></button>
+                            </div>
+                            <span class="text-indigo-600 font-bold tabular-nums" id="investmentInterestText">+$0/мес</span>
+                        </div>
+                        <div id="investStratDisplay" class="text-[9px] text-right text-indigo-400 font-medium mt-0.5">Акции (10%)</div>
                     </div>
                 </div>
                 
@@ -394,6 +404,22 @@
         </div>
     </div>
 
+    <!-- INVEST STRATEGY MODAL -->
+    <div id="investModal" class="fixed inset-0 z-[95] game-over-overlay hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-all">
+            <div class="bg-indigo-900 p-4 text-white flex justify-between items-center">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Стратегия</h2>
+                <button onclick="closeInvestMenu()" class="text-indigo-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 bg-slate-50 border-b border-slate-200 text-center text-xs text-slate-500">
+                Выберите риск и доходность портфеля.
+            </div>
+            <div class="p-4 space-y-3" id="investStrategies">
+                <!-- Strategies injected here -->
+            </div>
+        </div>
+    </div>
+
     <!-- REPORT SIDEBAR -->
     <div id="reportPanel" class="report-panel flex flex-col">
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden"><div class="w-12 h-1.5 bg-slate-300 rounded-full"></div></div>
@@ -422,6 +448,7 @@
                     <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 mb-4">
                         <strong class="text-white block mb-1">🔥 Новые механики:</strong>
                         <ul class="list-disc pl-4 space-y-1 text-xs">
+                            <li><strong>Инвестиции:</strong> Выбирайте риск (Облигации, Акции, Крипта).</li>
                             <li><strong>Карьера:</strong> Вкладывайте в Образование для повышения.</li>
                             <li><strong>Магазин:</strong> Улучшайте качество жизни.</li>
                             <li><strong>Подсказки:</strong> Следите за красными сигналами!</li>
@@ -473,6 +500,12 @@
             { id: 'broker', name: 'Личный брокер', cost: 2500, icon: 'fa-user-tie', desc: 'Доходность инвестиций +2% годовых.', effect: { investRateFlat: 0.02 } }
         ];
 
+        const INVEST_STRATEGIES = {
+            safe: { id: 'safe', name: 'Облигации', rate: 0.05, risk: 0.00, color: 'text-emerald-500', desc: 'Стабильно. 5% годовых, 0% риска.' },
+            balanced: { id: 'balanced', name: 'Акции', rate: 0.10, risk: 0.05, color: 'text-blue-500', desc: 'Баланс. 10% годовых, риск 5%.' },
+            risky: { id: 'risky', name: 'Крипта', rate: 0.25, risk: 0.15, color: 'text-rose-500', desc: 'Азарт. 25% годовых, риск 15%.' }
+        };
+
         const ACHIEVEMENTS = [
             { id: 'scrooge', title: 'Скряга', text: 'Накопить $1000 и не тратить на развлечения 3 месяца.', check: (s) => s.savings >= 1000 && s.lowFunStreak >= 3 },
             { id: 'wolf', title: 'Волк с Уолл-стрит', text: 'Пассивный доход > $500/мес.', check: (s, passive) => passive >= 500 },
@@ -495,17 +528,15 @@
             allocations: {}, health: 100, happiness: 100, 
             history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
             rivalNetWorth: 0, isDead: false, isWon: false,
-            flowStreak: 0, isFlow: false, isMuted: true, // Muted by default to be safe
+            flowStreak: 0, isFlow: false, isMuted: true,
             unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false,
             inventory: [], modifiers: { healthDecay: 1, happyDecay: 1, investRateFlat: 0 },
-            careerXP: 0
+            careerXP: 0, activeStrategy: 'balanced' // DEFAULT STRATEGY
         };
         
         function triggerHaptic(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
         JARS.forEach(j => state.allocations[j.id] = j.def);
         let els = {}, chartInstance = null, isDragging = false, currentDragJarId = null;
-
-        // NO AUDIO ENGINE
 
         function saveGame() { try { localStorage.setItem('finRaceSave', JSON.stringify(state)); } catch(e) {} }
         function loadGame() { try { const saved = localStorage.getItem('finRaceSave'); if (saved) return JSON.parse(saved); } catch(e) {} return null; }
@@ -519,7 +550,7 @@
                 flowStreak: 0, isFlow: false, isMuted: true,
                 unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false,
                 inventory: [], modifiers: { healthDecay: 1, happyDecay: 1, investRateFlat: 0 },
-                careerXP: 0
+                careerXP: 0, activeStrategy: 'balanced'
             };
             JARS.forEach(j => state.allocations[j.id] = j.def);
             els.incomeInput.value = state.baseIncome;
@@ -539,7 +570,7 @@
                          'infoModal','reportPanel','mobileOverlay','reportMonthNum','reportContent','dilemmaModal',
                          'gameOverScreen','deathReason','deathIcon','winScreen','roomProgress','vitalsPanel','flowBadge','flowLabel',
                          'historyChart', 'soundBtn', 'resumeBtnContainer', 'shopModal', 'shopBalance', 'shopItems', 'careerXpBar', 'careerXpVal',
-                         'shopBtn', 'repayDebtBtn']; 
+                         'shopBtn', 'repayDebtBtn', 'investModal', 'investStrategies', 'investStratDisplay']; 
             ids.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) els[id] = el;
@@ -551,6 +582,7 @@
                 if(!state.modifiers) state.modifiers = { healthDecay: 1, happyDecay: 1, investRateFlat: 0 };
                 if(!state.inventory) state.inventory = [];
                 if(state.careerXP === undefined) state.careerXP = 0;
+                if(!state.activeStrategy) state.activeStrategy = 'balanced';
                 if(!state.history.labels.length) state.history = { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] };
                 els.resumeBtnContainer.classList.remove('hidden');
             } else { JARS.forEach(j => state.allocations[j.id] = j.def); }
@@ -560,13 +592,40 @@
             els.incomeInput.addEventListener('input', (e) => { state.baseIncome = Math.max(0, parseInt(e.target.value) || 0); updateUI(); });
             document.getElementById('nextMonthBtn').addEventListener('click', () => runTurnCycle()); 
             if(els.repayDebtBtn) els.repayDebtBtn.addEventListener('click', repayDebt);
-            
-            // Removed Sound button logic
             if(els.soundBtn) els.soundBtn.style.display = 'none';
 
             window.addEventListener('mouseup', endDrag); window.addEventListener('touchend', endDrag);
             window.addEventListener('mousemove', onDragMove); window.addEventListener('touchmove', onDragMove, { passive: false });
             setTimeout(openInfoModal, 500);
+        }
+
+        // --- INVEST STRATEGY ---
+        window.openInvestMenu = function() {
+            els.investStrategies.innerHTML = '';
+            for(let key in INVEST_STRATEGIES) {
+                const s = INVEST_STRATEGIES[key];
+                const isActive = state.activeStrategy === key;
+                const el = document.createElement('div');
+                el.className = `strat-card p-3 rounded-xl border bg-white flex items-center gap-3 ${isActive ? 'active' : 'border-slate-200'}`;
+                el.onclick = () => selectStrategy(key);
+                el.innerHTML = `
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 font-bold text-xs ${s.color}"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div class="flex-grow">
+                        <div class="font-bold text-sm text-slate-800">${s.name}</div>
+                        <div class="text-[10px] text-slate-500">${s.desc}</div>
+                    </div>
+                    ${isActive ? '<i class="fa-solid fa-circle-check text-emerald-500"></i>' : ''}
+                `;
+                els.investStrategies.appendChild(el);
+            }
+            els.investModal.classList.remove('hidden'); setTimeout(() => els.investModal.classList.remove('opacity-0'), 10);
+        }
+        window.closeInvestMenu = function() { els.investModal.classList.add('opacity-0'); setTimeout(() => els.investModal.classList.add('hidden'), 300); }
+        window.selectStrategy = function(key) {
+            state.activeStrategy = key;
+            updateUI();
+            closeInvestMenu();
+            showToast('Стратегия изменена', INVEST_STRATEGIES[key].name, 'neutral');
         }
 
         window.openShop = function() {
@@ -660,7 +719,8 @@
             return { realIncome: amount, penaltyPct: penalty };
         }
         function calculatePassiveIncome() { 
-            const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments + state.modifiers.investRateFlat;
+            const strat = INVEST_STRATEGIES[state.activeStrategy] || INVEST_STRATEGIES.balanced;
+            const invRate = state.phase === 1 ? CONFIG.rates.savings : strat.rate + state.modifiers.investRateFlat;
             return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) }; 
         }
 
@@ -719,13 +779,24 @@
             checkFlowState();
             if (checkDeath()) return;
 
+            // Strategy Risk Roll
+            const strat = INVEST_STRATEGIES[state.activeStrategy];
+            if (state.investments > 0 && Math.random() < strat.risk) {
+                const crashAmount = strat.id === 'risky' ? 0.2 : 0.1; // 20% drop for risky, 10% for balanced
+                state.investments *= (1 - crashAmount);
+                triggerHaptic(400); triggerShake();
+                showToast('Убыток!', `${strat.name}: рынок просел на ${crashAmount*100}%`, 'bad');
+                // No other event this turn if crash happens
+                completeTurn(null);
+                return;
+            }
+
             const roll = Math.random();
             let turnEvent = null;
             if (roll < 0.20) {
                 const dilemma = DILEMMAS[Math.floor(Math.random() * DILEMMAS.length)];
                 triggerHaptic(50); showDilemma(dilemma); return; 
-            } else if (roll < 0.25) { turnEvent = EVENTS[0]; } 
-            else if (roll < 0.35) { turnEvent = EVENTS[1]; }
+            } 
             completeTurn(turnEvent);
         }
 
@@ -880,6 +951,10 @@
 
             els.careerXpBar.style.width = Math.min(100, state.careerXP) + '%';
             els.careerXpVal.innerText = Math.floor(state.careerXP) + '%';
+
+            const strat = INVEST_STRATEGIES[state.activeStrategy] || INVEST_STRATEGIES.balanced;
+            els.investStratDisplay.innerText = `${strat.name} (${Math.round(strat.rate*100)}%)`;
+            els.investStratDisplay.className = `text-[9px] text-right font-medium mt-0.5 ${strat.color}`;
 
             const funPct = state.allocations.fun; const eduPct = state.allocations.edu;
             const okFun = Math.max(0, 15 - eduPct); const goodFun = Math.max(0, 25 - eduPct);
