@@ -504,7 +504,7 @@
         let state = { 
             month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, 
             allocations: {}, health: 100, happiness: 100, 
-            history: { labels: [], savingsData: [], investmentsData: [], rivalData: [] }, 
+            history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
             rivalNetWorth: 0, isDead: false, isWon: false,
             flowStreak: 0, isFlow: false 
         };
@@ -848,6 +848,7 @@
              } else document.getElementById('debtRepayContainer').classList.add('hidden');
 
             const bal = Object.values(state.allocations).reduce((a,b)=>a+b,0);
+            document.getElementById('totalPercent').innerText = bal; // Fix: Update text content
             const balEl = document.getElementById('balanceBadgeContainer');
             if(bal > 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-rose-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 uppercase">Дефицит ${bal-100}%</div>`; } 
             else if (bal < 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-emerald-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase">Остаток ${100-bal}%</div>`; } 
@@ -911,8 +912,55 @@
             const ctx = els.historyChart.getContext('2d');
             chartInstance = new Chart(ctx, { 
                 type: 'line', 
-                data: { labels: state.history.labels, datasets: [ { label: 'Сбережения', data: state.history.savingsData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1 }, { label: 'Инвестиции', data: state.history.investmentsData, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1 }, { label: 'Джон', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2 } ] }, 
-                options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } }, tooltip: { mode: 'index', intersect: false } }, scales: { x: { display: false }, y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' } } } } 
+                data: { 
+                    labels: state.history.labels, 
+                    datasets: [
+                        { 
+                            label: 'Сбережения', 
+                            data: state.history.savingsData, 
+                            borderColor: '#10B981', 
+                            backgroundColor: 'rgba(16, 185, 129, 0.4)', 
+                            fill: 'origin', 
+                            pointRadius: 0, 
+                            borderWidth: 1, 
+                            stack: 'player' 
+                        },
+                        { 
+                            label: 'Инвестиции', 
+                            data: state.history.investmentsData, 
+                            borderColor: '#6366F1', 
+                            backgroundColor: 'rgba(99, 102, 241, 0.4)', 
+                            fill: '-1', 
+                            pointRadius: 0, 
+                            borderWidth: 1, 
+                            stack: 'player' 
+                        },
+                        { 
+                            label: 'Джон', 
+                            data: state.history.rivalData, 
+                            borderColor: '#94A3B8', 
+                            borderDash: [5, 5], 
+                            fill: false, 
+                            tension: 0.4, 
+                            pointRadius: 0, 
+                            borderWidth: 2, 
+                            stack: 'rival' 
+                        }
+                    ] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { 
+                        legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } },
+                        tooltip: { mode: 'index', intersect: false }
+                    }, 
+                    scales: { 
+                        x: { display: false }, 
+                        y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' } } 
+                    } 
+                } 
             });
         }
 
