@@ -415,20 +415,31 @@
     <div id="infoModal" class="fixed inset-0 info-overlay hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
         <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-all duration-300 overflow-hidden text-white">
             <div class="p-6 border-b border-slate-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-flag-checkered"></i> Старт</h2>
+                <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-flag-checkered"></i> Меню</h2>
                 <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark fa-lg"></i></button>
             </div>
             <div class="p-6 space-y-4 text-sm text-slate-300">
-                <p><strong>Цель:</strong> Накопить капитал, пока Здоровье и Счастье не упали до 0.</p>
-                <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
-                    <strong class="text-white block mb-1">🔥 Новые механики:</strong>
-                    <ul class="list-disc pl-4 space-y-1 text-xs">
-                        <li><strong>Маркеры на кувшинах:</strong> Теперь видно, сколько нужно для здоровья и счастья.</li>
-                        <li><strong>Дилеммы:</strong> Вы сами решаете, чем жертвовать.</li>
-                        <li><strong>Поток:</strong> Держите Здоровье и Счастье выше 80% (3 мес.), чтобы получить бонус.</li>
-                    </ul>
+                <div id="startMenuContent">
+                    <p class="mb-4"><strong>Цель:</strong> Накопить капитал, пока Здоровье и Счастье не упали до 0.</p>
+                    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 mb-4">
+                        <strong class="text-white block mb-1">🔥 Новые механики:</strong>
+                        <ul class="list-disc pl-4 space-y-1 text-xs">
+                            <li><strong>Маркеры на кувшинах:</strong> Теперь видно, сколько нужно для здоровья и счастья.</li>
+                            <li><strong>Дилеммы:</strong> Вы сами решаете, чем жертвовать.</li>
+                            <li><strong>Поток:</strong> Держите Здоровье и Счастье выше 80% (3 мес.), чтобы получить бонус.</li>
+                            <li><strong>Достижения:</strong> Получайте награды за особые стратегии.</li>
+                        </ul>
+                    </div>
+                    <div id="resumeBtnContainer" class="hidden mb-2">
+                        <button onclick="closeInfoModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Продолжить игру
+                        </button>
+                        <div class="text-center text-[10px] text-slate-500 mt-1">Найдено сохранение</div>
+                    </div>
+                    <button onclick="resetGame()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-xl font-bold shadow-lg mt-2">
+                        <i class="fa-solid fa-rotate-right"></i> Новая игра
+                    </button>
                 </div>
-                <button onclick="closeInfoModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg mt-2">Погнали!</button>
             </div>
         </div>
     </div>
@@ -438,7 +449,7 @@
         <div class="w-20 h-20 rounded-full bg-rose-600 flex items-center justify-center text-3xl mb-4 shadow-[0_0_30px_rgba(225,29,72,0.6)] animate-pulse"><i id="deathIcon" class="fa-solid fa-skull"></i></div>
         <h1 class="text-3xl font-black mb-1">ИГРА ОКОНЧЕНА</h1>
         <p id="deathReason" class="text-lg text-rose-300 font-medium mb-6 max-w-sm text-sm">Причина...</p>
-        <button onclick="location.reload()" class="bg-white text-slate-900 hover:bg-slate-200 font-bold py-2.5 px-8 rounded-full text-sm uppercase transition hover:scale-105 shadow-xl">Заново</button>
+        <button onclick="resetGame()" class="bg-white text-slate-900 hover:bg-slate-200 font-bold py-2.5 px-8 rounded-full text-sm uppercase transition hover:scale-105 shadow-xl">Заново</button>
     </div>
 
     <div id="winScreen" class="fixed inset-0 z-[100] game-over-overlay hidden flex flex-col items-center justify-center text-white p-6 text-center opacity-0 transition-opacity duration-1000 bg-slate-900/95">
@@ -449,7 +460,7 @@
              <div class="flex justify-between border-b border-slate-700 pb-2"><span class="text-slate-400 text-xs uppercase">Время</span><span class="font-bold"><span id="winMonths">0</span> мес.</span></div>
              <div class="flex justify-between"><span class="text-slate-400 text-xs uppercase">Капитал</span><span class="font-bold text-white" id="winNetWorth">$0</span></div>
         </div>
-        <button onclick="location.reload()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-10 rounded-full text-sm uppercase transition hover:scale-105 shadow-xl">Начать заново</button>
+        <button onclick="resetGame()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-10 rounded-full text-sm uppercase transition hover:scale-105 shadow-xl">Начать заново</button>
     </div>
 
     <script>
@@ -462,6 +473,13 @@
             { id: 'edu', name: 'Образование', def: 10, color: '#3B82F6', liquid: '#60A5FA', icon: 'fa-book', type: 'exp' }, 
             { id: 'sav', name: 'Сбережения', def: 10, color: '#10B981', liquid: '#34D399', icon: 'fa-piggy-bank', type: 'save' }, 
             { id: 'inv', name: 'Инвестиции', def: 10, color: '#6366F1', liquid: '#818CF8', icon: 'fa-chart-line', type: 'invest' }
+        ];
+
+        // ACHIEVEMENTS
+        const ACHIEVEMENTS = [
+            { id: 'scrooge', title: 'Скряга', text: 'Накопить $1000 и не тратить на развлечения 3 месяца.', check: (s) => s.savings >= 1000 && s.lowFunStreak >= 3 },
+            { id: 'wolf', title: 'Волк с Уолл-стрит', text: 'Пассивный доход > $500/мес.', check: (s, passive) => passive >= 500 },
+            { id: 'survivor', title: 'Выживший', text: 'Восстановить здоровье с <15% до 100%.', check: (s) => s.wasCriticalHealth && s.health >= 100 }
         ];
 
         // DILEMMAS (Agency Mechanic)
@@ -514,9 +532,15 @@
             allocations: {}, health: 100, happiness: 100, 
             history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
             rivalNetWorth: 0, isDead: false, isWon: false,
-            flowStreak: 0, isFlow: false,
-            isMuted: false // SOUND STATE
+            flowStreak: 0, isFlow: false, isMuted: false,
+            unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false
         };
+        
+        // --- HAPTIC ---
+        function triggerHaptic(pattern) {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
+
         JARS.forEach(j => state.allocations[j.id] = j.def);
         
         let els = {}, chartInstance = null, isDragging = false, currentDragJarId = null;
@@ -563,6 +587,52 @@
             }
         };
 
+        // --- PERSISTENCE ---
+        function saveGame() {
+            try { localStorage.setItem('finRaceSave', JSON.stringify(state)); } catch(e) {}
+        }
+        function loadGame() {
+            try {
+                const saved = localStorage.getItem('finRaceSave');
+                if (saved) return JSON.parse(saved);
+            } catch(e) {}
+            return null;
+        }
+        function resetGame() {
+            localStorage.removeItem('finRaceSave');
+            
+            // Soft Reset State (Keep Mute Setting)
+            const currentMuted = state.isMuted;
+            state = { 
+                month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, 
+                allocations: {}, health: 100, happiness: 100, 
+                history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
+                rivalNetWorth: 0, isDead: false, isWon: false,
+                flowStreak: 0, isFlow: false, isMuted: currentMuted,
+                unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false
+            };
+            JARS.forEach(j => state.allocations[j.id] = j.def);
+
+            // Reset UI
+            els.incomeInput.value = state.baseIncome;
+            els.resumeBtnContainer.classList.add('hidden');
+            els.gameOverScreen.classList.add('hidden');
+            els.winScreen.classList.add('hidden');
+            els.gameOverScreen.classList.add('opacity-0'); // Reset opacity fade
+            
+            // Close modal to start playing immediately
+            closeInfoModal();
+            
+            // Re-render
+            if(chartInstance) chartInstance.destroy();
+            initChart();
+            renderJars();
+            updateUI();
+            renderRoom();
+            
+            showToast('Новая игра', 'Удачи!', 'good');
+        }
+
         // --- INIT ---
         function init() {
             // Mapping DOM elements
@@ -570,22 +640,35 @@
                          'hudNetWorth','savingsInterestText','investmentInterestText','goalTitle','goalValue','goalProgressBar',
                          'infoModal','reportPanel','mobileOverlay','reportMonthNum','reportContent','dilemmaModal',
                          'gameOverScreen','deathReason','deathIcon','winScreen','roomProgress','vitalsPanel','flowBadge','flowLabel',
-                         'historyChart', 'soundBtn']; 
+                         'historyChart', 'soundBtn', 'resumeBtnContainer']; 
             ids.forEach(id => els[id] = document.getElementById(id));
+
+            // Check save
+            const savedState = loadGame();
+            if (savedState) {
+                // Keep default methods/structures not in JSON, but overwrite data
+                // Need to merge strictly
+                state = { ...state, ...savedState };
+                // Fix history if empty/bugged
+                if(!state.history.labels.length) state.history = { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] };
+                els.resumeBtnContainer.classList.remove('hidden');
+            } else {
+                // New game state
+                JARS.forEach(j => state.allocations[j.id] = j.def);
+            }
 
             renderJars(); initChart(); updateUI(); renderRoom();
             
+            els.incomeInput.value = state.baseIncome;
             els.incomeInput.addEventListener('input', (e) => { state.baseIncome = Math.max(0, parseInt(e.target.value) || 0); updateUI(); });
             document.getElementById('nextMonthBtn').addEventListener('click', () => { Sound.init(); runTurnCycle(); }); 
             if(document.getElementById('repayDebtBtn')) document.getElementById('repayDebtBtn').addEventListener('click', () => { Sound.coin(); repayDebt(); });
             
             // Sound Toggle
+            updateSoundBtn();
             els.soundBtn.addEventListener('click', () => {
                 state.isMuted = !state.isMuted;
-                els.soundBtn.innerHTML = state.isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
-                els.soundBtn.className = state.isMuted 
-                    ? "w-6 h-6 rounded-full bg-slate-200 text-slate-400 text-[10px] flex items-center justify-center transition-colors flex-shrink-0"
-                    : "w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0";
+                updateSoundBtn();
                 if(!state.isMuted && !audioCtx) Sound.init();
             });
 
@@ -595,16 +678,24 @@
             setTimeout(openInfoModal, 500);
         }
 
+        function updateSoundBtn() {
+            els.soundBtn.innerHTML = state.isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+            els.soundBtn.className = state.isMuted 
+                ? "w-6 h-6 rounded-full bg-slate-200 text-slate-400 text-[10px] flex items-center justify-center transition-colors flex-shrink-0"
+                : "w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0";
+        }
+
         window.openInfoModal = function() { els.infoModal.classList.remove('hidden'); setTimeout(() => els.infoModal.classList.remove('opacity-0'), 10); }
         window.closeInfoModal = function() { els.infoModal.classList.add('opacity-0'); setTimeout(() => els.infoModal.classList.add('hidden'), 300); }
 
         function startDrag(jarId) { 
             if(state.isDead || state.isWon) return; 
             isDragging = true; currentDragJarId = jarId; 
-            if(!audioCtx) Sound.init(); // Init audio on interaction
+            triggerHaptic(5); // Soft click
+            if(!audioCtx) Sound.init(); 
         }
         function endDrag() { 
-            if(isDragging) Sound.click(); // Click sound on release
+            if(isDragging) Sound.click(); 
             isDragging = false; currentDragJarId = null; 
         }
         function onDragMove(e) {
@@ -691,7 +782,7 @@
         }
         function calculatePassiveIncome() { 
             const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments;
-            return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12) }; 
+            return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) }; 
         }
 
         // --- NEW FEATURES LOGIC ---
@@ -704,7 +795,10 @@
             else if (net >= thresholds[0] + 1000) currentLvl = 1;
 
             // Sound on Level Up (simple check)
-            if (state.lastLvl !== undefined && currentLvl > state.lastLvl) Sound.win();
+            if (state.lastLvl !== undefined && currentLvl > state.lastLvl) {
+                Sound.win();
+                triggerHaptic([50, 50, 50]);
+            }
             state.lastLvl = currentLvl;
 
             for(let i=0; i<=3; i++) {
@@ -733,16 +827,38 @@
 
             if (state.flowStreak >= 3 && !state.isFlow) {
                 state.isFlow = true;
-                Sound.win(); // Sound on Flow entry
+                Sound.win(); 
+                triggerHaptic([50, 50, 100]);
                 showToast('В ПОТОКЕ!', 'Вы вошли в режим высокой эффективности (+10% доход).', 'good');
             }
             updateUI();
+        }
+
+        function checkAchievements() {
+            const passive = calculatePassiveIncome().totalPassive;
+            
+            // Track metrics
+            if (state.allocations.fun === 0) state.lowFunStreak++; else state.lowFunStreak = 0;
+            if (state.health < 15) state.wasCriticalHealth = true;
+
+            ACHIEVEMENTS.forEach(ach => {
+                if (!state.unlockedAchievements.includes(ach.id)) {
+                    if (ach.check(state, passive)) {
+                        state.unlockedAchievements.push(ach.id);
+                        Sound.win();
+                        triggerHaptic([100, 100, 200]);
+                        showToast(`<i class="fa-solid fa-trophy text-amber-400"></i> ${ach.title}`, ach.text, 'good');
+                    }
+                }
+            });
         }
 
         // --- TURN LOGIC ---
         function runTurnCycle() {
             if(state.isDead || state.isWon) return;
             if(checkDeath()) return;
+
+            triggerHaptic(10); // Button press feedback
 
             const nec = state.allocations.nec; const fun = state.allocations.fun; const edu = state.allocations.edu;
             if(nec<40) state.health -= 12; else if(nec<55) state.health -= 6; else state.health += 3;
@@ -757,7 +873,7 @@
             let turnEvent = null;
             if (roll < 0.20) {
                 const dilemma = DILEMMAS[Math.floor(Math.random() * DILEMMAS.length)];
-                Sound.bad(); // Warning sound
+                Sound.bad(); triggerHaptic(50);
                 showDilemma(dilemma); 
                 return; 
             } else if (roll < 0.25) {
@@ -814,6 +930,7 @@
                     state.investments *= (1 - event.crash); 
                     triggerShake(); 
                     Sound.bad();
+                    triggerHaptic(400); // Long vibrate on crash
                     showToast(event.text, `Потеряно ${event.crash*100}% инвестиций`, 'bad');
                 }
             }
@@ -849,6 +966,7 @@
                 state.phase = 2; document.getElementById('mainHeader').classList.add('border-amber-500', 'border-b-4'); 
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 Sound.win();
+                triggerHaptic([100, 50, 100]);
             }
 
             const net = state.savings + state.investments - state.debt;
@@ -856,7 +974,10 @@
             state.history.investmentsData.push(state.investments); state.history.rivalData.push(state.rivalNetWorth); 
             if(chartInstance) chartInstance.update(); 
 
-            state.month++; updateUI(); renderRoom();
+            state.month++; 
+            checkAchievements(); // Check achievements
+            updateUI(); renderRoom();
+            saveGame(); // Autosave
             
             // Sounds for income
             if(addSav > 10 || addInv > 10) Sound.coin();
@@ -890,9 +1011,6 @@
             });
 
             // UPDATE DYNAMIC MARKERS
-            // Happy OK = 15 total, Happy+ = 25 total.
-            // For Fun jar: required = 15 - edu.
-            // For Edu jar: required = 15 - fun.
             const funPct = state.allocations.fun;
             const eduPct = state.allocations.edu;
             
@@ -972,7 +1090,7 @@
 
         function showToast(title, message, type = 'neutral') {
             const toast = document.getElementById('gameToast');
-            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastTitle').innerHTML = title;
             document.getElementById('toastMessage').innerText = message;
             const tIcon = document.getElementById('toastIcon');
             if(type === 'good') { tIcon.className = "w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-check"></i>'; }
@@ -985,7 +1103,7 @@
 
         function triggerShake() { document.body.classList.add('shake-screen'); setTimeout(() => document.body.classList.remove('shake-screen'), 500); }
         function checkDeath() { if (state.health <= 0) { triggerDeath("Истощение.", "fa-heart-crack"); return true; } if (state.happiness <= 0) { triggerDeath("Выгорание.", "fa-face-dizzy"); return true; } return false; }
-        function triggerDeath(reason, icon) { state.isDead = true; document.getElementById('deathReason').innerText = reason; document.getElementById('deathIcon').className = `fa-solid ${icon}`; els.gameOverScreen.classList.remove('hidden'); setTimeout(() => els.gameOverScreen.classList.remove('opacity-0'), 50); Sound.bad(); }
+        function triggerDeath(reason, icon) { state.isDead = true; document.getElementById('deathReason').innerText = reason; document.getElementById('deathIcon').className = `fa-solid ${icon}`; els.gameOverScreen.classList.remove('hidden'); setTimeout(() => els.gameOverScreen.classList.remove('opacity-0'), 50); Sound.bad(); triggerHaptic(300); localStorage.removeItem('finRaceSave'); }
         
         function triggerWin() {
             state.isWon = true;
@@ -996,6 +1114,8 @@
             els.winScreen.classList.remove('hidden');
             setTimeout(() => els.winScreen.classList.remove('opacity-0'), 50);
             Sound.win();
+            triggerHaptic([100, 100, 100, 100, 500]);
+            localStorage.removeItem('finRaceSave');
         }
 
         function initChart() {
