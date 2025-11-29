@@ -20,7 +20,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; overflow-x: hidden; }
 
         /* Jar Styles */
-        .jar-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .jar-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
         .jar-container {
             position: relative; height: 280px; background-color: #E2E8F0; border-radius: 0 0 12px 12px; overflow: hidden;
             border: 1px solid #CBD5E1; border-top: none; cursor: ns-resize; touch-action: none; transition: border-color 0.2s;
@@ -31,7 +31,7 @@
             transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-            z-index: 10; /* Liquid behind markers/handles but visible */
+            z-index: 10;
         }
         .jar-surface {
             position: absolute; top: 0; left: 0; right: 0; height: 0;
@@ -46,28 +46,14 @@
         }
         .jar-container:hover .jar-handle { transform: translateY(-50%) scale(1.15); }
 
-        /* MARKERS (New) */
+        /* MARKERS */
         .jar-marker {
-            position: absolute;
-            left: 0; right: 0;
-            border-top: 1px dashed;
-            pointer-events: none;
-            z-index: 5;
-            font-size: 9px;
-            font-weight: 800;
-            padding-left: 6px;
-            display: flex;
-            align-items: flex-end; /* Text sits on line */
-            line-height: 0;
-            opacity: 0.7;
-            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute; left: 0; right: 0; border-top: 1px dashed; pointer-events: none; z-index: 5;
+            font-size: 9px; font-weight: 800; padding-left: 6px; display: flex; align-items: flex-end; line-height: 0;
+            opacity: 0.7; transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .jar-marker span {
-            background: rgba(255,255,255,0.8);
-            padding: 2px 4px;
-            border-radius: 4px;
-            transform: translateY(-50%);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.8); padding: 2px 4px; border-radius: 4px; transform: translateY(-50%); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .marker-red { border-color: #F43F5E; color: #E11D48; }
         .marker-green { border-color: #10B981; color: #059669; }
@@ -135,23 +121,11 @@
 
         .game-toast {
             position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%) translateY(40px);
-            background: rgba(15, 23, 42, 0.95);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 90;
-            pointer-events: none;
-            white-space: nowrap;
-            border: 1px solid rgba(255,255,255,0.1);
+            bottom: 90px; left: 50%; transform: translateX(-50%) translateY(40px);
+            background: rgba(15, 23, 42, 0.95); color: white; padding: 10px 20px; border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 12px;
+            opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 90;
+            pointer-events: none; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1);
         }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         @media (min-width: 768px) { .game-toast { bottom: 30px; } }
@@ -160,6 +134,30 @@
         .room-icon.active { opacity: 1; filter: grayscale(0%); transform: scale(1); }
         .room-icon.just-unlocked { animation: unlock-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes unlock-pop { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        /* XP BAR ANIMATION */
+        .xp-shine { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: xp-shine 2s infinite; }
+        @keyframes xp-shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        /* CONTEXTUAL NUDGES */
+        .nudge-arrow {
+            position: absolute; top: 55px; left: 50%; transform: translateX(-50%);
+            color: #F43F5E; font-size: 20px; z-index: 50; text-align: center;
+            animation: nudge-bounce 1s infinite;
+            pointer-events: none;
+        }
+        .nudge-arrow span { display: block; font-size: 10px; font-weight: bold; background: white; padding: 1px 4px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; }
+        @keyframes nudge-bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-5px); } }
+
+        .btn-danger-glow { 
+            animation: pulse-red 1.5s infinite; 
+            border-color: #F43F5E !important; background-color: #FEF2F2 !important; color: #E11D48 !important; 
+            box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.3) !important;
+        }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); transform: scale(1); } 50% { transform: scale(1.02); } 100% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); transform: scale(1); } }
+
+        .shop-bounce { animation: shop-bounce 2s infinite; color: #10B981 !important; transform-origin: center; }
+        @keyframes shop-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } 60% { transform: translateY(-3px); } }
 
     </style>
 </head>
@@ -185,20 +183,21 @@
                     </div>
                     
                     <div class="flex items-center gap-2">
-                        <!-- Sound Button -->
+                        <!-- Shop Button with ID -->
+                        <button id="shopBtn" onclick="openShop()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-emerald-600 text-slate-300 hover:text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </button>
                         <button id="soundBtn" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0">
                             <i class="fa-solid fa-volume-high"></i>
                         </button>
-                        <!-- Info Button -->
                         <button onclick="openInfoModal()" class="w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0 btn-pulse">
                             <i class="fa-solid fa-info"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Center: Vitals (With Flow Glow) -->
+                <!-- Center: Vitals -->
                 <div id="vitalsPanel" class="hidden md:flex gap-4 w-full md:w-auto bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700 relative overflow-hidden justify-center transition-all duration-500">
-                    <!-- Flow Label -->
                     <div id="flowLabel" class="absolute inset-0 flex items-center justify-center bg-amber-500/10 opacity-0 transition-opacity pointer-events-none">
                         <span class="text-[50px] font-black text-amber-500/20 uppercase tracking-widest rotate-12">FLOW</span>
                     </div>
@@ -240,47 +239,21 @@
 
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-6 space-y-6 md:pr-4 lg:pr-8 transition-all duration-300" id="mainContent">
 
-        <!-- ROOM / LEVEL OF LIFE VISUALIZATION -->
+        <!-- ROOM -->
         <section class="bg-slate-800 rounded-2xl p-4 shadow-lg border border-slate-700 relative overflow-hidden">
             <div class="flex justify-between items-center mb-3 relative z-10">
-                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group"></i> Уровень жизни
-                </h3>
-                <div id="flowBadge" class="hidden px-2 py-0.5 bg-amber-500/20 text-amber-400 text-[9px] font-bold rounded uppercase border border-amber-500/50 animate-pulse">
-                    <i class="fa-solid fa-bolt"></i> В Потоке (+10% Эфф.)
-                </div>
+                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Уровень жизни</h3>
+                <div id="flowBadge" class="hidden px-2 py-0.5 bg-amber-500/20 text-amber-400 text-[9px] font-bold rounded uppercase border border-amber-500/50 animate-pulse"><i class="fa-solid fa-bolt"></i> В Потоке (+10% Эфф.)</div>
             </div>
-            
             <div class="flex justify-between items-center gap-2 overflow-x-auto pb-2 md:pb-0">
-                <!-- Level 0 -->
-                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon active" id="lvl-0">
-                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">📦</div>
-                    <div class="text-[9px] text-slate-400 font-bold uppercase">Выживание</div>
-                </div>
+                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon active" id="lvl-0"><div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">📦</div><div class="text-[9px] text-slate-400 font-bold uppercase">Выживание</div></div>
                 <div class="h-0.5 flex-grow bg-slate-700 rounded-full"></div>
-                
-                <!-- Level 1 -->
-                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon" id="lvl-1">
-                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">🛏️</div>
-                    <div class="text-[9px] text-slate-400 font-bold uppercase">Комфорт</div>
-                </div>
+                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon" id="lvl-1"><div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">🛏️</div><div class="text-[9px] text-slate-400 font-bold uppercase">Комфорт</div></div>
                 <div class="h-0.5 flex-grow bg-slate-700 rounded-full"></div>
-
-                <!-- Level 2 -->
-                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon" id="lvl-2">
-                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">💻</div>
-                    <div class="text-[9px] text-slate-400 font-bold uppercase">Свобода</div>
-                </div>
+                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon" id="lvl-2"><div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">💻</div><div class="text-[9px] text-slate-400 font-bold uppercase">Свобода</div></div>
                 <div class="h-0.5 flex-grow bg-slate-700 rounded-full"></div>
-
-                <!-- Level 3 -->
-                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon" id="lvl-3">
-                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">🏝️</div>
-                    <div class="text-[9px] text-slate-400 font-bold uppercase">Мечта</div>
-                </div>
+                <div class="flex flex-col items-center gap-2 min-w-[60px] room-icon" id="lvl-3"><div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xl shadow-inner">🏝️</div><div class="text-[9px] text-slate-400 font-bold uppercase">Мечта</div></div>
             </div>
-            
-            <!-- Progress Bar inside Room -->
             <div class="absolute bottom-0 left-0 h-1 bg-emerald-500 transition-all duration-1000" id="roomProgress" style="width: 0%"></div>
         </section>
 
@@ -299,24 +272,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="relative group mb-1">
+                    
+                    <div class="relative group mb-3">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold group-focus-within:text-emerald-500 text-sm">$</span>
                         <input type="number" id="incomeInput" value="4000" class="w-full pl-6 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800 text-base transition-all tabular-nums">
                     </div>
+
+                    <!-- CAREER PROGRESS BAR -->
+                    <div class="mb-3 bg-slate-50 p-2 rounded-lg border border-slate-100 relative overflow-hidden group tooltip-container">
+                        <div class="flex justify-between items-center mb-1 text-[9px] font-bold uppercase text-slate-400">
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-briefcase text-blue-400"></i> Опыт (Карьера)</span>
+                            <span id="careerXpVal">0%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                            <div id="careerXpBar" class="h-full bg-blue-500 transition-all duration-500 w-0 relative">
+                                <div class="xp-shine"></div>
+                            </div>
+                        </div>
+                        <div class="custom-tooltip">
+                            <div class="font-bold text-blue-400 mb-1 text-xs">Карьерный рост</div>
+                            <p class="text-[10px] text-slate-300 leading-relaxed">Вкладывайте в "Образование", чтобы заполнить шкалу и получить повышение.</p>
+                        </div>
+                    </div>
+
                     <div class="flex justify-between text-xs font-bold text-slate-500 mt-1 pb-2 border-b border-slate-100">
                         <span>На руки (Факт):</span>
                         <span id="realIncomeVal" class="text-emerald-600 tabular-nums">$4,000</span>
                     </div>
                     
                     <div class="mt-2 text-[10px] text-slate-500 flex flex-col gap-1.5">
-                        <div class="flex justify-between">
-                            <span>Сбережения (4%):</span>
-                            <span class="text-emerald-600 font-bold tabular-nums" id="savingsInterestText">+$0/мес</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Инвестиции (10%):</span>
-                            <span class="text-indigo-600 font-bold tabular-nums" id="investmentInterestText">+$0/мес</span>
-                        </div>
+                        <div class="flex justify-between"><span>Сбережения (4%):</span><span class="text-emerald-600 font-bold tabular-nums" id="savingsInterestText">+$0/мес</span></div>
+                        <div class="flex justify-between"><span>Инвестиции (10%):</span><span class="text-indigo-600 font-bold tabular-nums" id="investmentInterestText">+$0/мес</span></div>
                     </div>
                 </div>
                 
@@ -329,15 +315,10 @@
                 <div class="mt-auto pt-3 flex items-center justify-between border-t border-slate-100">
                     <div>
                         <div class="text-[9px] font-bold text-slate-400 uppercase">Баланс</div>
-                        <div id="balanceBadgeContainer">
-                            <div id="balanceBadge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 inline-block mt-0.5">OK</div>
-                        </div>
+                        <div id="balanceBadgeContainer"><div id="balanceBadge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 inline-block mt-0.5">OK</div></div>
                     </div>
                     <div class="text-right">
-                        <div class="flex items-baseline gap-0.5 justify-end">
-                            <span id="totalPercent" class="text-2xl font-black text-slate-800 tabular-nums">100</span>
-                            <span class="text-xs font-bold text-slate-400">%</span>
-                        </div>
+                        <div class="flex items-baseline gap-0.5 justify-end"><span id="totalPercent" class="text-2xl font-black text-slate-800 tabular-nums">100</span><span class="text-xs font-bold text-slate-400">%</span></div>
                     </div>
                 </div>
             </div>
@@ -374,7 +355,7 @@
         </div>
     </div>
 
-    <!-- DILEMMA MODAL (NEW) -->
+    <!-- DILEMMA MODAL -->
     <div id="dilemmaModal" class="fixed inset-0 z-[90] game-over-overlay hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-all">
             <div class="bg-slate-900 p-4 text-white flex items-center gap-3">
@@ -393,7 +374,22 @@
         </div>
     </div>
 
-    <!-- REPORT SIDEBAR (Simplified for big events) -->
+    <!-- SHOP MODAL -->
+    <div id="shopModal" class="fixed inset-0 z-[95] game-over-overlay hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-all">
+            <div class="bg-emerald-900 p-4 text-white flex justify-between items-center">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-shop"></i> Магазин</h2>
+                <button onclick="closeShop()" class="text-emerald-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 bg-slate-50 border-b border-slate-200 text-center">
+                <div class="text-xs text-slate-500 uppercase font-bold">Доступно</div>
+                <div class="text-2xl font-black text-emerald-600" id="shopBalance">$0</div>
+            </div>
+            <div class="p-4 space-y-3 max-h-[60vh] overflow-y-auto" id="shopItems"></div>
+        </div>
+    </div>
+
+    <!-- REPORT SIDEBAR -->
     <div id="reportPanel" class="report-panel flex flex-col">
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden"><div class="w-12 h-1.5 bg-slate-300 rounded-full"></div></div>
         <div class="p-5 flex-grow overflow-y-auto">
@@ -401,10 +397,7 @@
                 <div><div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Отчет</div><h2 class="text-xl font-bold text-slate-800">Месяц <span id="reportMonthNum">1</span></h2></div>
                 <button onclick="closeReport()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
-            <div id="reportContent" class="space-y-4">
-                <!-- Content injected -->
-            </div>
+            <div id="reportContent" class="space-y-4"></div>
         </div>
         <div class="p-4 border-t border-slate-100 bg-white"><button onclick="closeReport()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95">Далее</button></div>
     </div>
@@ -424,27 +417,22 @@
                     <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 mb-4">
                         <strong class="text-white block mb-1">🔥 Новые механики:</strong>
                         <ul class="list-disc pl-4 space-y-1 text-xs">
-                            <li><strong>Маркеры на кувшинах:</strong> Теперь видно, сколько нужно для здоровья и счастья.</li>
-                            <li><strong>Дилеммы:</strong> Вы сами решаете, чем жертвовать.</li>
-                            <li><strong>Поток:</strong> Держите Здоровье и Счастье выше 80% (3 мес.), чтобы получить бонус.</li>
-                            <li><strong>Достижения:</strong> Получайте награды за особые стратегии.</li>
+                            <li><strong>Карьера:</strong> Вкладывайте в Образование для повышения.</li>
+                            <li><strong>Магазин:</strong> Улучшайте качество жизни.</li>
+                            <li><strong>Подсказки:</strong> Следите за красными сигналами!</li>
                         </ul>
                     </div>
                     <div id="resumeBtnContainer" class="hidden mb-2">
-                        <button onclick="closeInfoModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-play"></i> Продолжить игру
-                        </button>
+                        <button onclick="closeInfoModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2"><i class="fa-solid fa-play"></i> Продолжить игру</button>
                         <div class="text-center text-[10px] text-slate-500 mt-1">Найдено сохранение</div>
                     </div>
-                    <button onclick="resetGame()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-xl font-bold shadow-lg mt-2">
-                        <i class="fa-solid fa-rotate-right"></i> Новая игра
-                    </button>
+                    <button onclick="resetGame()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-xl font-bold shadow-lg mt-2"><i class="fa-solid fa-rotate-right"></i> Новая игра</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- GAME OVER / WIN SCREENS (Hidden) -->
+    <!-- GAME OVER / WIN -->
     <div id="gameOverScreen" class="fixed inset-0 z-[100] game-over-overlay hidden flex flex-col items-center justify-center text-white p-6 text-center opacity-0 transition-opacity duration-1000">
         <div class="w-20 h-20 rounded-full bg-rose-600 flex items-center justify-center text-3xl mb-4 shadow-[0_0_30px_rgba(225,29,72,0.6)] animate-pulse"><i id="deathIcon" class="fa-solid fa-skull"></i></div>
         <h1 class="text-3xl font-black mb-1">ИГРА ОКОНЧЕНА</h1>
@@ -466,7 +454,6 @@
     <script>
         const CONFIG = { phase1Goal: 5000, phase2Goal: 1000, baseIncome: 4000, rates: { savings: 0.04, investments: 0.10, debt: 0.15 } };
         
-        // --- DATA ---
         const JARS = [
             { id: 'nec', name: 'Необходимое', def: 60, color: '#64748B', liquid: '#94A3B8', icon: 'fa-house', type: 'exp' }, 
             { id: 'fun', name: 'Развлечения', def: 10, color: '#F59E0B', liquid: '#FBBF24', icon: 'fa-champagne-glasses', type: 'exp' }, 
@@ -475,50 +462,22 @@
             { id: 'inv', name: 'Инвестиции', def: 10, color: '#6366F1', liquid: '#818CF8', icon: 'fa-chart-line', type: 'invest' }
         ];
 
-        // ACHIEVEMENTS
+        const SHOP_ITEMS = [
+            { id: 'mattress', name: 'Ортопедический матрас', cost: 800, icon: 'fa-bed', desc: 'Здоровье падает на 20% медленнее.', effect: { healthDecay: 0.8 } },
+            { id: 'console', name: 'Игровая консоль', cost: 1500, icon: 'fa-gamepad', desc: 'Счастье падает на 20% медленнее.', effect: { happyDecay: 0.8 } },
+            { id: 'broker', name: 'Личный брокер', cost: 2500, icon: 'fa-user-tie', desc: 'Доходность инвестиций +2% годовых.', effect: { investRateFlat: 0.02 } }
+        ];
+
         const ACHIEVEMENTS = [
             { id: 'scrooge', title: 'Скряга', text: 'Накопить $1000 и не тратить на развлечения 3 месяца.', check: (s) => s.savings >= 1000 && s.lowFunStreak >= 3 },
             { id: 'wolf', title: 'Волк с Уолл-стрит', text: 'Пассивный доход > $500/мес.', check: (s, passive) => passive >= 500 },
             { id: 'survivor', title: 'Выживший', text: 'Восстановить здоровье с <15% до 100%.', check: (s) => s.wasCriticalHealth && s.health >= 100 }
         ];
 
-        // DILEMMAS (Agency Mechanic)
         const DILEMMAS = [
-            {
-                id: 'tooth', title: 'Зубная боль', text: 'Зуб мудрости решил, что пора. Боль адская.', icon: 'fa-tooth',
-                options: [
-                    { text: 'В клинику (Дорого)', cost: 400, health: 5, happy: 0, msg: 'Дорого, но не больно.' },
-                    { text: 'Терпеть и пить таблетки', cost: 20, health: -15, happy: -10, msg: 'Вы сэкономили, но страдаете.' }
-                ]
-            },
-            {
-                id: 'burnout', title: 'Выгорание на работе', text: 'Вы ненавидите будильник. Коллеги бесят.', icon: 'fa-battery-empty',
-                options: [
-                    { text: 'Взять отгулы (Потеря дохода)', cost: 300, health: 5, happy: 15, msg: 'Вы отдохнули, но потеряли часть ЗП.' },
-                    { text: 'Собраться! (Премия)', cost: -200, health: -10, happy: -15, msg: 'Вы заработали премию, но нервы на пределе.' }
-                ]
-            },
-            {
-                id: 'course', title: 'Курс по инвестициям', text: 'Друг советует крутой курс. Говорит, окупится.', icon: 'fa-graduation-cap',
-                options: [
-                    { text: 'Купить курс (-$300)', cost: 300, baseIncome: 150, msg: 'Вы повысили квалификацию. Зарплата вырастет.' },
-                    { text: 'Почитать статьи (Бесплатно)', cost: 0, baseIncome: 10, health: -2, msg: 'Медленно, но верно.' }
-                ]
-            },
-            {
-                id: 'friend', title: 'Свадьба друга', text: 'Нужен подарок и костюм. Отказ обидит.', icon: 'fa-gift',
-                options: [
-                    { text: 'Гуляем! (-$500)', cost: 500, happy: 20, msg: 'Отличная вечеринка!' },
-                    { text: 'Сказаться больным', cost: 0, happy: -10, health: 0, msg: 'Друг обиделся, вам стыдно.' }
-                ]
-            },
-            {
-                id: 'gym', title: 'Абонемент в зал', text: 'Акция в фитнес-клубе у дома.', icon: 'fa-dumbbell',
-                options: [
-                    { text: 'Купить годовой (-$400)', cost: 400, health: 15, happy: 5, msg: 'Теперь вы качок (почти).' },
-                    { text: 'Бегать в парке', cost: 0, health: 2, happy: -2, msg: 'Бесплатно, но часто лень.' }
-                ]
-            }
+            { id: 'tooth', title: 'Зубная боль', text: 'Зуб мудрости решил, что пора. Боль адская.', icon: 'fa-tooth', options: [ { text: 'В клинику (Дорого)', cost: 400, health: 5, happy: 0, msg: 'Дорого, но не больно.' }, { text: 'Терпеть и пить таблетки', cost: 20, health: -15, happy: -10, msg: 'Вы сэкономили, но страдаете.' } ] },
+            { id: 'burnout', title: 'Выгорание на работе', text: 'Вы ненавидите будильник. Коллеги бесят.', icon: 'fa-battery-empty', options: [ { text: 'Взять отгулы (Потеря дохода)', cost: 300, health: 5, happy: 15, msg: 'Вы отдохнули, но потеряли часть ЗП.' }, { text: 'Собраться! (Премия)', cost: -200, health: -10, happy: -15, msg: 'Вы заработали премию, но нервы на пределе.' } ] },
+            { id: 'friend', title: 'Свадьба друга', text: 'Нужен подарок и костюм. Отказ обидит.', icon: 'fa-gift', options: [ { text: 'Гуляем! (-$500)', cost: 500, happy: 20, msg: 'Отличная вечеринка!' }, { text: 'Сказаться больным', cost: 0, happy: -10, health: 0, msg: 'Друг обиделся, вам стыдно.' } ] }
         ];
 
         const EVENTS = [
@@ -526,178 +485,116 @@
             { text: "Коррекция рынка (-10%).", type: 'bad', crash: 0.10, rivalMod: -0.02, icon: 'fa-arrow-trend-down' }
         ];
 
-        // --- STATE ---
         let state = { 
             month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, 
             allocations: {}, health: 100, happiness: 100, 
             history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
             rivalNetWorth: 0, isDead: false, isWon: false,
-            flowStreak: 0, isFlow: false, isMuted: false,
-            unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false
+            flowStreak: 0, isFlow: false, isMuted: true, // Muted by default to be safe
+            unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false,
+            inventory: [], modifiers: { healthDecay: 1, happyDecay: 1, investRateFlat: 0 },
+            careerXP: 0
         };
         
-        // --- HAPTIC ---
-        function triggerHaptic(pattern) {
-            if (navigator.vibrate) navigator.vibrate(pattern);
-        }
-
+        function triggerHaptic(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
         JARS.forEach(j => state.allocations[j.id] = j.def);
-        
         let els = {}, chartInstance = null, isDragging = false, currentDragJarId = null;
-        let audioCtx = null; // AUDIO CONTEXT
 
-        // --- SOUND SYSTEM ---
-        const Sound = {
-            init: function() {
-                if (!window.AudioContext && !window.webkitAudioContext) return;
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            },
-            playTone: function(freq, type, duration, vol=0.1) {
-                if(state.isMuted || !audioCtx) return;
-                if(audioCtx.state === 'suspended') audioCtx.resume();
-                
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                
-                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            },
-            coin: () => {
-                if(state.isMuted || !audioCtx) return;
-                Sound.playTone(1200, 'sine', 0.1, 0.1);
-                setTimeout(() => Sound.playTone(1600, 'sine', 0.2, 0.1), 50);
-            },
-            click: () => Sound.playTone(800, 'triangle', 0.05, 0.05),
-            bad: () => {
-                if(state.isMuted || !audioCtx) return;
-                Sound.playTone(150, 'sawtooth', 0.4, 0.15);
-                setTimeout(() => Sound.playTone(100, 'sawtooth', 0.4, 0.15), 100);
-            },
-            win: () => {
-                if(state.isMuted || !audioCtx) return;
-                [440, 554, 659, 880].forEach((f, i) => setTimeout(() => Sound.playTone(f, 'square', 0.3, 0.1), i * 100));
-            }
-        };
+        // NO AUDIO ENGINE
 
-        // --- PERSISTENCE ---
-        function saveGame() {
-            try { localStorage.setItem('finRaceSave', JSON.stringify(state)); } catch(e) {}
-        }
-        function loadGame() {
-            try {
-                const saved = localStorage.getItem('finRaceSave');
-                if (saved) return JSON.parse(saved);
-            } catch(e) {}
-            return null;
-        }
+        function saveGame() { try { localStorage.setItem('finRaceSave', JSON.stringify(state)); } catch(e) {} }
+        function loadGame() { try { const saved = localStorage.getItem('finRaceSave'); if (saved) return JSON.parse(saved); } catch(e) {} return null; }
         function resetGame() {
             localStorage.removeItem('finRaceSave');
-            
-            // Soft Reset State (Keep Mute Setting)
-            const currentMuted = state.isMuted;
             state = { 
                 month: 1, phase: 1, savings: 0, investments: 0, debt: 0, baseIncome: CONFIG.baseIncome, 
                 allocations: {}, health: 100, happiness: 100, 
                 history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
                 rivalNetWorth: 0, isDead: false, isWon: false,
-                flowStreak: 0, isFlow: false, isMuted: currentMuted,
-                unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false
+                flowStreak: 0, isFlow: false, isMuted: true,
+                unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false,
+                inventory: [], modifiers: { healthDecay: 1, happyDecay: 1, investRateFlat: 0 },
+                careerXP: 0
             };
             JARS.forEach(j => state.allocations[j.id] = j.def);
-
-            // Reset UI
             els.incomeInput.value = state.baseIncome;
             els.resumeBtnContainer.classList.add('hidden');
             els.gameOverScreen.classList.add('hidden');
             els.winScreen.classList.add('hidden');
-            els.gameOverScreen.classList.add('opacity-0'); // Reset opacity fade
-            
-            // Close modal to start playing immediately
+            els.gameOverScreen.classList.add('opacity-0');
             closeInfoModal();
-            
-            // Re-render
             if(chartInstance) chartInstance.destroy();
-            initChart();
-            renderJars();
-            updateUI();
-            renderRoom();
-            
+            initChart(); renderJars(); updateUI(); renderRoom();
             showToast('Новая игра', 'Удачи!', 'good');
         }
 
-        // --- INIT ---
         function init() {
-            // Mapping DOM elements
             const ids = ['jarsContainer','incomeInput','realIncomeVal','incomePenaltyBox','penaltyPercent','hudHealthBar','hudHealthVal','hudHappyBar','hudHappyVal',
                          'hudNetWorth','savingsInterestText','investmentInterestText','goalTitle','goalValue','goalProgressBar',
                          'infoModal','reportPanel','mobileOverlay','reportMonthNum','reportContent','dilemmaModal',
                          'gameOverScreen','deathReason','deathIcon','winScreen','roomProgress','vitalsPanel','flowBadge','flowLabel',
-                         'historyChart', 'soundBtn', 'resumeBtnContainer']; 
-            ids.forEach(id => els[id] = document.getElementById(id));
+                         'historyChart', 'soundBtn', 'resumeBtnContainer', 'shopModal', 'shopBalance', 'shopItems', 'careerXpBar', 'careerXpVal',
+                         'shopBtn', 'repayDebtBtn']; 
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) els[id] = el;
+            });
 
-            // Check save
             const savedState = loadGame();
             if (savedState) {
-                // Keep default methods/structures not in JSON, but overwrite data
-                // Need to merge strictly
                 state = { ...state, ...savedState };
-                // Fix history if empty/bugged
+                if(!state.modifiers) state.modifiers = { healthDecay: 1, happyDecay: 1, investRateFlat: 0 };
+                if(!state.inventory) state.inventory = [];
+                if(state.careerXP === undefined) state.careerXP = 0;
                 if(!state.history.labels.length) state.history = { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] };
                 els.resumeBtnContainer.classList.remove('hidden');
-            } else {
-                // New game state
-                JARS.forEach(j => state.allocations[j.id] = j.def);
-            }
+            } else { JARS.forEach(j => state.allocations[j.id] = j.def); }
 
             renderJars(); initChart(); updateUI(); renderRoom();
-            
             els.incomeInput.value = state.baseIncome;
             els.incomeInput.addEventListener('input', (e) => { state.baseIncome = Math.max(0, parseInt(e.target.value) || 0); updateUI(); });
-            document.getElementById('nextMonthBtn').addEventListener('click', () => { Sound.init(); runTurnCycle(); }); 
-            if(document.getElementById('repayDebtBtn')) document.getElementById('repayDebtBtn').addEventListener('click', () => { Sound.coin(); repayDebt(); });
+            document.getElementById('nextMonthBtn').addEventListener('click', () => runTurnCycle()); 
+            if(els.repayDebtBtn) els.repayDebtBtn.addEventListener('click', repayDebt);
             
-            // Sound Toggle
-            updateSoundBtn();
-            els.soundBtn.addEventListener('click', () => {
-                state.isMuted = !state.isMuted;
-                updateSoundBtn();
-                if(!state.isMuted && !audioCtx) Sound.init();
-            });
+            // Removed Sound button logic
+            if(els.soundBtn) els.soundBtn.style.display = 'none';
 
             window.addEventListener('mouseup', endDrag); window.addEventListener('touchend', endDrag);
             window.addEventListener('mousemove', onDragMove); window.addEventListener('touchmove', onDragMove, { passive: false });
-            
             setTimeout(openInfoModal, 500);
         }
 
-        function updateSoundBtn() {
-            els.soundBtn.innerHTML = state.isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
-            els.soundBtn.className = state.isMuted 
-                ? "w-6 h-6 rounded-full bg-slate-200 text-slate-400 text-[10px] flex items-center justify-center transition-colors flex-shrink-0"
-                : "w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-[10px] flex items-center justify-center transition-colors flex-shrink-0";
+        window.openShop = function() {
+            els.shopBalance.innerText = '$' + Math.floor(state.savings).toLocaleString();
+            els.shopItems.innerHTML = '';
+            SHOP_ITEMS.forEach(item => {
+                const isOwned = state.inventory.includes(item.id);
+                const canAfford = state.savings >= item.cost;
+                const el = document.createElement('div');
+                el.className = "flex items-center gap-3 p-3 rounded-xl border " + (isOwned ? "bg-emerald-50 border-emerald-200" : "bg-white border-slate-200");
+                el.innerHTML = `<div class="w-10 h-10 rounded-full flex items-center justify-center text-lg ${isOwned ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}"><i class="fa-solid ${item.icon}"></i></div><div class="flex-grow"><div class="font-bold text-sm text-slate-800">${item.name}</div><div class="text-[10px] text-slate-500">${item.desc}</div></div>${isOwned ? `<div class="text-xs font-bold text-emerald-600"><i class="fa-solid fa-check"></i> Куплено</div>` : `<button onclick="buyItem('${item.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${canAfford ? 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}">$${item.cost.toLocaleString()}</button>`}`;
+                els.shopItems.appendChild(el);
+            });
+            els.shopModal.classList.remove('hidden'); setTimeout(() => els.shopModal.classList.remove('opacity-0'), 10);
+        }
+        
+        window.closeShop = function() { els.shopModal.classList.add('opacity-0'); setTimeout(() => els.shopModal.classList.add('hidden'), 300); }
+
+        window.buyItem = function(id) {
+            const item = SHOP_ITEMS.find(i => i.id === id);
+            if (!item || state.savings < item.cost || state.inventory.includes(id)) return;
+            state.savings -= item.cost; state.inventory.push(id);
+            if (item.effect.healthDecay) state.modifiers.healthDecay *= item.effect.healthDecay;
+            if (item.effect.happyDecay) state.modifiers.happyDecay *= item.effect.happyDecay;
+            if (item.effect.investRateFlat) state.modifiers.investRateFlat += item.effect.investRateFlat;
+            saveGame(); updateUI(); openShop(); showToast('Покупка успешна!', item.name + ' добавлен.', 'good');
         }
 
         window.openInfoModal = function() { els.infoModal.classList.remove('hidden'); setTimeout(() => els.infoModal.classList.remove('opacity-0'), 10); }
         window.closeInfoModal = function() { els.infoModal.classList.add('opacity-0'); setTimeout(() => els.infoModal.classList.add('hidden'), 300); }
 
-        function startDrag(jarId) { 
-            if(state.isDead || state.isWon) return; 
-            isDragging = true; currentDragJarId = jarId; 
-            triggerHaptic(5); // Soft click
-            if(!audioCtx) Sound.init(); 
-        }
-        function endDrag() { 
-            if(isDragging) Sound.click(); 
-            isDragging = false; currentDragJarId = null; 
-        }
+        function startDrag(jarId) { if(state.isDead || state.isWon) return; isDragging = true; currentDragJarId = jarId; triggerHaptic(5); }
+        function endDrag() { isDragging = false; currentDragJarId = null; }
         function onDragMove(e) {
             if (!isDragging || !currentDragJarId) return;
             e.preventDefault();
@@ -707,12 +604,9 @@
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             let percent = ((rect.bottom - clientY) / rect.height) * 100;
             state.allocations[currentDragJarId] = Math.round(Math.max(0, Math.min(100, percent)));
-            
             if (currentDragJarId !== 'sav') {
-                let bufferId = 'sav';
-                if (currentDragJarId === 'sav') bufferId = 'inv'; 
-                let used = 0;
-                for(let key in state.allocations) if(key !== bufferId) used += state.allocations[key];
+                let bufferId = 'sav'; if (currentDragJarId === 'sav') bufferId = 'inv'; 
+                let used = 0; for(let key in state.allocations) if(key !== bufferId) used += state.allocations[key];
                 state.allocations[bufferId] = Math.max(0, 100 - used);
             }
             updateUI();
@@ -723,41 +617,20 @@
             JARS.forEach(jar => {
                 const card = document.createElement('div');
                 card.className = 'jar-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-64 select-none';
-                card.innerHTML = `
-                    <div class="p-2 bg-white z-10 border-b border-slate-100 pointer-events-none text-center">
-                        <div class="flex justify-center items-center gap-1.5 mb-1">
-                            <div class="w-5 h-5 rounded bg-slate-50 flex items-center justify-center text-[10px]" style="color:${jar.color}"><i class="fa-solid ${jar.icon}"></i></div>
-                            <h3 class="font-bold text-slate-700 text-[10px] uppercase truncate">${jar.name}</h3>
-                        </div>
-                        <div class="flex justify-center items-baseline gap-1">
-                            <span id="pct-${jar.id}" class="text-[10px] font-bold text-slate-400 tabular-nums">0%</span>
-                            <span id="val-${jar.id}" class="font-bold text-slate-800 text-xs tabular-nums">$0</span>
-                        </div>
-                    </div>
-                    <div id="jar-cont-${jar.id}" class="jar-container flex-grow relative w-full group cursor-ns-resize bg-slate-50">
-                        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px); background-size: 100% 20px;"></div>
-                        <div id="liq-${jar.id}" class="jar-liquid w-full absolute bottom-0 transition-all duration-150 ease-out pointer-events-none" style="background-color: ${jar.liquid}; height: ${state.allocations[jar.id]}%;">
-                             <div class="jar-surface absolute top-0 w-full h-0 border-t-2 border-white/50 flex justify-center"><div class="jar-handle w-5 h-5 bg-white rounded-full shadow-md flex items-center justify-center -translate-y-1/2 text-slate-400 text-[8px] group-hover:scale-110 transition-transform"><i class="fa-solid fa-grip-lines"></i></div></div>
-                        </div>
-                        <!-- MARKERS CONTAINER -->
-                        <div id="markers-${jar.id}" class="absolute inset-0 pointer-events-none"></div>
-                    </div>`;
+                
+                // Nudge logic inserted BEFORE container to avoid clipping
+                const nudgeHtml = jar.id === 'nec' ? '<div id="nudge-nec" class="nudge-arrow hidden"><span>Мало!</span><i class="fa-solid fa-arrow-down"></i></div>' : '';
+
+                card.innerHTML = `<div class="p-2 bg-white z-10 border-b border-slate-100 pointer-events-none text-center relative"><div class="flex justify-center items-center gap-1.5 mb-1"><div class="w-5 h-5 rounded bg-slate-50 flex items-center justify-center text-[10px]" style="color:${jar.color}"><i class="fa-solid ${jar.icon}"></i></div><h3 class="font-bold text-slate-700 text-[10px] uppercase truncate">${jar.name}</h3></div><div class="flex justify-center items-baseline gap-1"><span id="pct-${jar.id}" class="text-[10px] font-bold text-slate-400 tabular-nums">0%</span><span id="val-${jar.id}" class="font-bold text-slate-800 text-xs tabular-nums">$0</span></div></div>
+                ${nudgeHtml}
+                <div id="jar-cont-${jar.id}" class="jar-container flex-grow relative w-full group cursor-ns-resize bg-slate-50"><div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px); background-size: 100% 20px;"></div><div id="liq-${jar.id}" class="jar-liquid w-full absolute bottom-0 transition-all duration-150 ease-out pointer-events-none" style="background-color: ${jar.liquid}; height: ${state.allocations[jar.id]}%;"><div class="jar-surface absolute top-0 w-full h-0 border-t-2 border-white/50 flex justify-center"><div class="jar-handle w-5 h-5 bg-white rounded-full shadow-md flex items-center justify-center -translate-y-1/2 text-slate-400 text-[8px] group-hover:scale-110 transition-transform"><i class="fa-solid fa-grip-lines"></i></div></div></div><div id="markers-${jar.id}" class="absolute inset-0 pointer-events-none"></div></div>`;
                 els.jarsContainer.appendChild(card);
                 const cont = card.querySelector('.jar-container');
                 cont.addEventListener('mousedown', () => startDrag(jar.id));
                 cont.addEventListener('touchstart', (e) => { startDrag(jar.id); onDragMove(e); }, { passive: false });
-                
-                // CREATE MARKERS ONCE
                 const mCont = document.getElementById(`markers-${jar.id}`);
-                if (jar.id === 'nec') {
-                    // Static markers for Necessities
-                    createMarker(mCont, 40, 'HP Crit', 'marker-red');
-                    createMarker(mCont, 55, 'HP OK', 'marker-green');
-                } else if (jar.id === 'fun' || jar.id === 'edu') {
-                    // Dynamic markers for Happiness
-                    createMarker(mCont, 0, 'Happy OK', 'marker-yellow', `d-ok-${jar.id}`);
-                    createMarker(mCont, 0, 'Happy+', 'marker-green', `d-good-${jar.id}`);
-                }
+                if (jar.id === 'nec') { createMarker(mCont, 40, 'HP Crit', 'marker-red'); createMarker(mCont, 55, 'HP OK', 'marker-green'); } 
+                else if (jar.id === 'fun' || jar.id === 'edu') { createMarker(mCont, 0, 'Happy OK', 'marker-yellow', `d-ok-${jar.id}`); createMarker(mCont, 0, 'Happy+', 'marker-green', `d-good-${jar.id}`); }
             });
         }
 
@@ -770,7 +643,6 @@
             container.appendChild(m);
         }
 
-        // --- CALCULATIONS ---
         function calculateRealIncome() {
             let penalty = 0;
             if (state.health < 50) penalty += (50 - state.health) * 0.015; 
@@ -781,91 +653,62 @@
             return { realIncome: amount, penaltyPct: penalty };
         }
         function calculatePassiveIncome() { 
-            const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments;
+            const invRate = state.phase === 1 ? CONFIG.rates.savings : CONFIG.rates.investments + state.modifiers.investRateFlat;
             return { savIncome: state.savings * (CONFIG.rates.savings / 12), invIncome: state.investments * (invRate / 12), debtCost: state.debt * (CONFIG.rates.debt / 12), totalPassive: (state.savings * (CONFIG.rates.savings / 12)) + (state.investments * (invRate / 12)) }; 
         }
 
-        // --- NEW FEATURES LOGIC ---
         function renderRoom() {
             const net = state.savings + state.investments - state.debt;
             const thresholds = [0, 5000, 20000, 100000]; 
             let currentLvl = 0;
-            if (net >= thresholds[2]) currentLvl = 3;
-            else if (net >= thresholds[1]) currentLvl = 2;
-            else if (net >= thresholds[0] + 1000) currentLvl = 1;
-
-            // Sound on Level Up (simple check)
-            if (state.lastLvl !== undefined && currentLvl > state.lastLvl) {
-                Sound.win();
-                triggerHaptic([50, 50, 50]);
-            }
+            if (net >= thresholds[2]) currentLvl = 3; else if (net >= thresholds[1]) currentLvl = 2; else if (net >= thresholds[0] + 1000) currentLvl = 1;
+            if (state.lastLvl !== undefined && currentLvl > state.lastLvl) { triggerHaptic([50, 50, 50]); }
             state.lastLvl = currentLvl;
-
             for(let i=0; i<=3; i++) {
                 const el = document.getElementById(`lvl-${i}`);
                 if(el) {
-                    if (i <= currentLvl) {
-                        if (!el.classList.contains('active')) {
-                            el.classList.add('active', 'just-unlocked');
-                            setTimeout(() => el.classList.remove('just-unlocked'), 1000);
-                        }
-                    } else {
-                        el.classList.remove('active');
-                    }
+                    if (i <= currentLvl) { if (!el.classList.contains('active')) { el.classList.add('active', 'just-unlocked'); setTimeout(() => el.classList.remove('just-unlocked'), 1000); } } 
+                    else { el.classList.remove('active'); }
                 }
             }
-            let nextGoal = thresholds[1];
-            if(currentLvl === 1) nextGoal = thresholds[2];
-            if(currentLvl >= 2) nextGoal = thresholds[3];
+            let nextGoal = thresholds[1]; if(currentLvl === 1) nextGoal = thresholds[2]; if(currentLvl >= 2) nextGoal = thresholds[3];
             const pct = Math.min(100, Math.max(0, (net / nextGoal) * 100));
             els.roomProgress.style.width = pct + '%';
         }
 
         function checkFlowState() {
-            if (state.health >= 80 && state.happiness >= 80) state.flowStreak++;
-            else { state.flowStreak = 0; state.isFlow = false; }
-
-            if (state.flowStreak >= 3 && !state.isFlow) {
-                state.isFlow = true;
-                Sound.win(); 
-                triggerHaptic([50, 50, 100]);
-                showToast('В ПОТОКЕ!', 'Вы вошли в режим высокой эффективности (+10% доход).', 'good');
-            }
+            if (state.health >= 80 && state.happiness >= 80) state.flowStreak++; else { state.flowStreak = 0; state.isFlow = false; }
+            if (state.flowStreak >= 3 && !state.isFlow) { state.isFlow = true; triggerHaptic([50, 50, 100]); showToast('В ПОТОКЕ!', 'Вы вошли в режим высокой эффективности (+10% доход).', 'good'); }
             updateUI();
         }
 
         function checkAchievements() {
             const passive = calculatePassiveIncome().totalPassive;
-            
-            // Track metrics
             if (state.allocations.fun === 0) state.lowFunStreak++; else state.lowFunStreak = 0;
             if (state.health < 15) state.wasCriticalHealth = true;
-
             ACHIEVEMENTS.forEach(ach => {
                 if (!state.unlockedAchievements.includes(ach.id)) {
                     if (ach.check(state, passive)) {
                         state.unlockedAchievements.push(ach.id);
-                        Sound.win();
-                        triggerHaptic([100, 100, 200]);
-                        showToast(`<i class="fa-solid fa-trophy text-amber-400"></i> ${ach.title}`, ach.text, 'good');
+                        triggerHaptic([100, 100, 200]); showToast(`<i class="fa-solid fa-trophy text-amber-400"></i> ${ach.title}`, ach.text, 'good');
                     }
                 }
             });
         }
 
-        // --- TURN LOGIC ---
         function runTurnCycle() {
             if(state.isDead || state.isWon) return;
             if(checkDeath()) return;
-
-            triggerHaptic(10); // Button press feedback
-
+            triggerHaptic(10);
+            
+            const modHealth = state.modifiers.healthDecay;
+            const modHappy = state.modifiers.happyDecay;
             const nec = state.allocations.nec; const fun = state.allocations.fun; const edu = state.allocations.edu;
-            if(nec<40) state.health -= 12; else if(nec<55) state.health -= 6; else state.health += 3;
-            if((fun+edu)<15) state.happiness -= 12; else if((fun+edu)<25) state.happiness -= 6; else state.happiness += 3;
+            
+            if(nec<40) state.health -= 12 * modHealth; else if(nec<55) state.health -= 6 * modHealth; else state.health += 3;
+            if((fun+edu)<15) state.happiness -= 12 * modHappy; else if((fun+edu)<25) state.happiness -= 6 * modHappy; else state.happiness += 3;
             state.health = Math.max(0, Math.min(100, state.health)); 
             state.happiness = Math.max(0, Math.min(100, state.happiness));
-            
             checkFlowState();
             if (checkDeath()) return;
 
@@ -873,34 +716,52 @@
             let turnEvent = null;
             if (roll < 0.20) {
                 const dilemma = DILEMMAS[Math.floor(Math.random() * DILEMMAS.length)];
-                Sound.bad(); triggerHaptic(50);
-                showDilemma(dilemma); 
-                return; 
-            } else if (roll < 0.25) {
-                turnEvent = EVENTS[0];
-            } else if (roll < 0.35) { // Added 10% chance for correction to make rival graph interesting
-                turnEvent = EVENTS[1];
-            }
+                triggerHaptic(50); showDilemma(dilemma); return; 
+            } else if (roll < 0.25) { turnEvent = EVENTS[0]; } 
+            else if (roll < 0.35) { turnEvent = EVENTS[1]; }
             completeTurn(turnEvent);
+        }
+
+        function showCareerEvent() {
+            const modal = els.dilemmaModal;
+            document.getElementById('dilemmaTitle').innerText = "Карьерный прыжок!";
+            document.getElementById('dilemmaDesc').innerText = "Ваши навыки заметили. Хедхантеры предлагают варианты.";
+            document.getElementById('dilemmaIcon').innerHTML = `<i class="fa-solid fa-briefcase text-blue-400"></i>`;
+            const opts = document.getElementById('dilemmaOptions');
+            opts.innerHTML = '';
+            const options = [ { text: 'Стабильный рост (+$200)', safe: true }, { text: 'Рискованный проект (Шанс +$1000)', safe: false } ];
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all flex justify-between items-center group";
+                btn.innerHTML = `<div><div class="font-bold text-slate-800 text-sm">${opt.text}</div></div><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500"></i>`;
+                btn.onclick = () => { resolveCareerChoice(opt); };
+                opts.appendChild(btn);
+            });
+            modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function resolveCareerChoice(opt) {
+            const modal = els.dilemmaModal; modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
+            if (opt.safe) { state.baseIncome += 200; showToast('Повышение!', 'Зарплата выросла на $200', 'good'); } 
+            else {
+                if (Math.random() > 0.5) { state.baseIncome += 1000; triggerHaptic([50, 50, 50]); showToast('УСПЕХ!', 'Вы сорвали куш! ЗП +$1000', 'good'); } 
+                else { state.happiness = Math.max(0, state.happiness - 20); triggerHaptic(200); showToast('Провал...', 'Стресс и выгорание. ЗП не изменилась.', 'bad'); }
+            }
+            updateUI();
         }
 
         function showDilemma(dilemma) {
             const modal = els.dilemmaModal;
-            const title = document.getElementById('dilemmaTitle');
-            const desc = document.getElementById('dilemmaDesc');
+            document.getElementById('dilemmaTitle').innerText = dilemma.title;
+            document.getElementById('dilemmaDesc').innerText = dilemma.text;
+            document.getElementById('dilemmaIcon').innerHTML = `<i class="fa-solid ${dilemma.icon}"></i>`;
             const opts = document.getElementById('dilemmaOptions');
-            const icon = document.getElementById('dilemmaIcon');
-
-            title.innerText = dilemma.title;
-            desc.innerText = dilemma.text;
-            icon.innerHTML = `<i class="fa-solid ${dilemma.icon}"></i>`;
             opts.innerHTML = '';
-
             dilemma.options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all flex justify-between items-center group";
                 btn.innerHTML = `<div><div class="font-bold text-slate-800 text-sm">${opt.text}</div><div class="text-[10px] text-slate-400 group-hover:text-indigo-400">Последствия непредсказуемы...</div></div><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500"></i>`;
-                btn.onclick = () => { Sound.click(); resolveDilemma(opt); };
+                btn.onclick = () => { resolveDilemma(opt); };
                 opts.appendChild(btn);
             });
             modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10);
@@ -909,54 +770,40 @@
         function resolveDilemma(option) {
             if (option.cost) {
                 let cost = option.cost;
-                if (state.savings >= cost) state.savings -= cost;
-                else { let rem = cost - state.savings; state.savings = 0; state.debt += rem; }
+                if (state.savings >= cost) state.savings -= cost; else { let rem = cost - state.savings; state.savings = 0; state.debt += rem; }
             }
             if (option.baseIncome) state.baseIncome += option.baseIncome;
             if (option.health) state.health = Math.max(0, Math.min(100, state.health + option.health));
             if (option.happy) state.happiness = Math.max(0, Math.min(100, state.happiness + option.happy));
-
-            const modal = els.dilemmaModal;
-            modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
-
+            const modal = els.dilemmaModal; modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
             const resultEvent = { text: `${option.msg}`, type: option.cost > 0 ? 'bad' : 'good' };
             completeTurn(resultEvent);
         }
 
         function completeTurn(event) {
-            // Player Crash Logic
             if(event && (event.type === 'crash' || event.crash)) { 
-                if (event.crash) {
-                    state.investments *= (1 - event.crash); 
-                    triggerShake(); 
-                    Sound.bad();
-                    triggerHaptic(400); // Long vibrate on crash
-                    showToast(event.text, `Потеряно ${event.crash*100}% инвестиций`, 'bad');
-                }
+                if (event.crash) { state.investments *= (1 - event.crash); triggerShake(); triggerHaptic(400); showToast(event.text, `Потеряно ${event.crash*100}% инвестиций`, 'bad'); }
             }
-
-            // Rival Crash Logic (Added back)
-            if (event && event.rivalMod) {
-                state.rivalNetWorth *= (1 + event.rivalMod);
-            }
+            if (event && event.rivalMod) { state.rivalNetWorth *= (1 + event.rivalMod); }
 
             const inc = calculateRealIncome(); const pas = calculatePassiveIncome();
             state.savings += pas.savIncome; state.investments += pas.invIncome; state.debt += pas.debtCost;
 
             let effInc = inc.realIncome;
+            
+            const eduAllocMoney = (effInc * state.allocations.edu) / 100;
+            state.careerXP += (eduAllocMoney / 20);
+            if (state.careerXP >= 100) { state.careerXP = 100; setTimeout(showCareerEvent, 500); state.careerXP = 0; } 
+
             const bal = Object.values(state.allocations).reduce((a,b)=>a+b,0);
-            const balancePct = 100 - bal; 
-            const rem = (effInc * balancePct) / 100;
+            const balancePct = 100 - bal; const rem = (effInc * balancePct) / 100;
             
             let addSav = (effInc * state.allocations.sav) / 100;
             let addInv = (effInc * state.allocations.inv) / 100;
             let addDebt = 0;
             
             if(rem > 0) { 
-                if (state.debt > 0) { 
-                    if (state.debt >= rem) state.debt -= rem; 
-                    else { const l = rem - state.debt; state.debt = 0; addSav += l; } 
-                } else addSav += rem; 
+                if (state.debt > 0) { if (state.debt >= rem) state.debt -= rem; else { const l = rem - state.debt; state.debt = 0; addSav += l; } } else addSav += rem; 
             } else addDebt += Math.abs(rem);
             
             state.savings += addSav; state.investments += addInv; state.debt += addDebt;
@@ -964,9 +811,7 @@
 
             if(state.phase === 1 && state.savings >= CONFIG.phase1Goal && state.debt <= 0) { 
                 state.phase = 2; document.getElementById('mainHeader').classList.add('border-amber-500', 'border-b-4'); 
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                Sound.win();
-                triggerHaptic([100, 50, 100]);
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); triggerHaptic([100, 50, 100]);
             }
 
             const net = state.savings + state.investments - state.debt;
@@ -974,14 +819,7 @@
             state.history.investmentsData.push(state.investments); state.history.rivalData.push(state.rivalNetWorth); 
             if(chartInstance) chartInstance.update(); 
 
-            state.month++; 
-            checkAchievements(); // Check achievements
-            updateUI(); renderRoom();
-            saveGame(); // Autosave
-            
-            // Sounds for income
-            if(addSav > 10 || addInv > 10) Sound.coin();
-
+            state.month++; checkAchievements(); updateUI(); renderRoom(); saveGame();
             if(addSav > 10) spawnFloatingText('sav', addSav, 'good');
             if(addInv > 10) spawnFloatingText('inv', addInv, 'invest');
 
@@ -991,15 +829,28 @@
                 if(state.isFlow) msg = `🔥 ПОТОК! Капитал: $${Math.floor(net).toLocaleString()}`;
                 showToast(`Месяц ${state.month-1}`, msg, 'neutral');
             }
-
             if(state.phase === 2 && (pas.savIncome + pas.invIncome) >= CONFIG.phase2Goal) triggerWin();
         }
 
-        // --- UI UPDATES ---
+        // --- CONTEXTUAL NUDGES ---
+        function checkNudges() {
+            // Health Nudge
+            const nArrow = document.getElementById('nudge-nec');
+            if (state.health < 30) { if(nArrow) nArrow.classList.remove('hidden'); } else { if(nArrow) nArrow.classList.add('hidden'); }
+
+            // Debt Nudge
+            if (state.debt > state.savings && els.repayDebtBtn) els.repayDebtBtn.classList.add('btn-danger-glow'); 
+            else if(els.repayDebtBtn) els.repayDebtBtn.classList.remove('btn-danger-glow');
+
+            // Shop Nudge
+            if (state.savings > 2000 && state.inventory.length === 0 && els.shopBtn) els.shopBtn.classList.add('shop-bounce');
+            else if(els.shopBtn) els.shopBtn.classList.remove('shop-bounce');
+        }
+
         function updateUI() {
+            checkNudges(); // Run nudges on update
+
             const inc = calculateRealIncome(); const pas = calculatePassiveIncome();
-            
-            // Jars
             JARS.forEach(jar => { 
                 const pct = state.allocations[jar.id], amount = (inc.realIncome * pct) / 100; 
                 const valEl = document.getElementById(`val-${jar.id}`);
@@ -1010,26 +861,17 @@
                 if(liqEl) liqEl.style.height = pct + '%'; 
             });
 
-            // UPDATE DYNAMIC MARKERS
-            const funPct = state.allocations.fun;
-            const eduPct = state.allocations.edu;
-            
-            const okFun = Math.max(0, 15 - eduPct);
-            const goodFun = Math.max(0, 25 - eduPct);
-            const okEdu = Math.max(0, 15 - funPct);
-            const goodEdu = Math.max(0, 25 - funPct);
+            els.careerXpBar.style.width = Math.min(100, state.careerXP) + '%';
+            els.careerXpVal.innerText = Math.floor(state.careerXP) + '%';
 
-            const mOkFun = document.getElementById('d-ok-fun');
-            const mGoodFun = document.getElementById('d-good-fun');
-            const mOkEdu = document.getElementById('d-ok-edu');
-            const mGoodEdu = document.getElementById('d-good-edu');
+            const funPct = state.allocations.fun; const eduPct = state.allocations.edu;
+            const okFun = Math.max(0, 15 - eduPct); const goodFun = Math.max(0, 25 - eduPct);
+            const okEdu = Math.max(0, 15 - funPct); const goodEdu = Math.max(0, 25 - funPct);
+            const mOkFun = document.getElementById('d-ok-fun'); const mGoodFun = document.getElementById('d-good-fun');
+            const mOkEdu = document.getElementById('d-ok-edu'); const mGoodEdu = document.getElementById('d-good-edu');
+            if(mOkFun) mOkFun.style.bottom = okFun + '%'; if(mGoodFun) mGoodFun.style.bottom = goodFun + '%';
+            if(mOkEdu) mOkEdu.style.bottom = okEdu + '%'; if(mGoodEdu) mGoodEdu.style.bottom = goodEdu + '%';
 
-            if(mOkFun) mOkFun.style.bottom = okFun + '%';
-            if(mGoodFun) mGoodFun.style.bottom = goodFun + '%';
-            if(mOkEdu) mOkEdu.style.bottom = okEdu + '%';
-            if(mGoodEdu) mGoodEdu.style.bottom = goodEdu + '%';
-
-            // Vitals
             els.hudHealthBar.style.width = state.health + '%'; els.hudHealthVal.innerText = Math.round(state.health) + '%'; 
             els.hudHappyBar.style.width = state.happiness + '%'; els.hudHappyVal.innerText = Math.round(state.happiness) + '%';
             
@@ -1050,133 +892,25 @@
             els.goalValue.innerText = `$${Math.floor(current).toLocaleString()} / $${target.toLocaleString()}`;
             els.goalProgressBar.style.width = Math.min(100, Math.max(0, (current / target) * 100)) + '%';
             
-             if (state.debt > 5 && state.savings > 5) { 
-                 document.getElementById('debtRepayContainer').classList.remove('hidden'); 
-                 document.getElementById('currentDebtVal').innerText = '-$' + Math.floor(state.debt).toLocaleString(); 
-             } else document.getElementById('debtRepayContainer').classList.add('hidden');
+             if (state.debt > 5 && state.savings > 5) { document.getElementById('debtRepayContainer').classList.remove('hidden'); document.getElementById('currentDebtVal').innerText = '-$' + Math.floor(state.debt).toLocaleString(); } else document.getElementById('debtRepayContainer').classList.add('hidden');
 
             const bal = Object.values(state.allocations).reduce((a,b)=>a+b,0);
-            document.getElementById('totalPercent').innerText = bal; // Fix: Update text content
+            document.getElementById('totalPercent').innerText = bal; 
             const balEl = document.getElementById('balanceBadgeContainer');
             if(bal > 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-rose-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 uppercase">Дефицит ${bal-100}%</div>`; } 
             else if (bal < 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-emerald-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase">Остаток ${100-bal}%</div>`; } 
             else { document.getElementById('totalPercent').className = "text-2xl font-black text-slate-800"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 uppercase">Идеально</div>`; }
         }
 
-        // --- UTILS ---
-        function repayDebt() {
-            if (state.debt <= 0 || state.savings <= 0) return;
-            let amount = Math.min(state.debt, state.savings); state.debt -= amount; state.savings -= amount;
-            updateUI(); 
-        }
-
-        function spawnFloatingText(jarId, amount, type = 'good') {
-            const elementId = `jar-cont-${jarId}`;
-            const el = document.getElementById(elementId);
-            if (!el) return;
-            const rect = el.getBoundingClientRect();
-            const floater = document.createElement('div');
-            const text = (amount > 0 ? '+' : '') + '$' + Math.abs(Math.floor(amount)).toLocaleString();
-            floater.innerText = text;
-            let colorClass = 'text-emerald-600';
-            if(type === 'bad') colorClass = 'text-rose-600';
-            if(type === 'invest') colorClass = 'text-indigo-600';
-            floater.className = `float-text ${colorClass} text-xl font-black`;
-            floater.style.left = (rect.left + rect.width / 2 - 20) + 'px'; 
-            floater.style.top = (rect.top + window.scrollY + 50) + 'px';
-            document.body.appendChild(floater);
-            setTimeout(() => floater.remove(), 1200);
-        }
-
-        function showToast(title, message, type = 'neutral') {
-            const toast = document.getElementById('gameToast');
-            document.getElementById('toastTitle').innerHTML = title;
-            document.getElementById('toastMessage').innerText = message;
-            const tIcon = document.getElementById('toastIcon');
-            if(type === 'good') { tIcon.className = "w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-check"></i>'; }
-            else if(type === 'bad') { tIcon.className = "w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-exclamation"></i>'; }
-            else { tIcon.className = "w-6 h-6 rounded-full bg-slate-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-info"></i>'; }
-            toast.classList.add('show');
-            if(window.toastTimeout) clearTimeout(window.toastTimeout);
-            window.toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 2500);
-        }
-
+        function repayDebt() { if (state.debt <= 0 || state.savings <= 0) return; let amount = Math.min(state.debt, state.savings); state.debt -= amount; state.savings -= amount; updateUI(); }
+        function spawnFloatingText(jarId, amount, type = 'good') { const elementId = `jar-cont-${jarId}`; const el = document.getElementById(elementId); if (!el) return; const rect = el.getBoundingClientRect(); const floater = document.createElement('div'); const text = (amount > 0 ? '+' : '') + '$' + Math.abs(Math.floor(amount)).toLocaleString(); floater.innerText = text; let colorClass = 'text-emerald-600'; if(type === 'bad') colorClass = 'text-rose-600'; if(type === 'invest') colorClass = 'text-indigo-600'; floater.className = `float-text ${colorClass} text-xl font-black`; floater.style.left = (rect.left + rect.width / 2 - 20) + 'px'; floater.style.top = (rect.top + window.scrollY + 50) + 'px'; document.body.appendChild(floater); setTimeout(() => floater.remove(), 1200); }
+        function showToast(title, message, type = 'neutral') { const toast = document.getElementById('gameToast'); document.getElementById('toastTitle').innerHTML = title; document.getElementById('toastMessage').innerText = message; const tIcon = document.getElementById('toastIcon'); if(type === 'good') { tIcon.className = "w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-check"></i>'; } else if(type === 'bad') { tIcon.className = "w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-exclamation"></i>'; } else { tIcon.className = "w-6 h-6 rounded-full bg-slate-500 flex items-center justify-center text-xs"; tIcon.innerHTML = '<i class="fa-solid fa-info"></i>'; } toast.classList.add('show'); if(window.toastTimeout) clearTimeout(window.toastTimeout); window.toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 2500); }
         function triggerShake() { document.body.classList.add('shake-screen'); setTimeout(() => document.body.classList.remove('shake-screen'), 500); }
         function checkDeath() { if (state.health <= 0) { triggerDeath("Истощение.", "fa-heart-crack"); return true; } if (state.happiness <= 0) { triggerDeath("Выгорание.", "fa-face-dizzy"); return true; } return false; }
-        function triggerDeath(reason, icon) { state.isDead = true; document.getElementById('deathReason').innerText = reason; document.getElementById('deathIcon').className = `fa-solid ${icon}`; els.gameOverScreen.classList.remove('hidden'); setTimeout(() => els.gameOverScreen.classList.remove('opacity-0'), 50); Sound.bad(); triggerHaptic(300); localStorage.removeItem('finRaceSave'); }
-        
-        function triggerWin() {
-            state.isWon = true;
-            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-            document.getElementById('winMonths').innerText = state.month;
-            document.getElementById('winPassive').innerText = '$' + Math.floor((state.savings * 0.04/12) + (state.investments * 0.1/12)).toLocaleString() + '/мес';
-            document.getElementById('winNetWorth').innerText = '$' + Math.floor(state.savings + state.investments).toLocaleString();
-            els.winScreen.classList.remove('hidden');
-            setTimeout(() => els.winScreen.classList.remove('opacity-0'), 50);
-            Sound.win();
-            triggerHaptic([100, 100, 100, 100, 500]);
-            localStorage.removeItem('finRaceSave');
-        }
-
-        function initChart() {
-            if(!els.historyChart) return;
-            const ctx = els.historyChart.getContext('2d');
-            chartInstance = new Chart(ctx, { 
-                type: 'line', 
-                data: { 
-                    labels: state.history.labels, 
-                    datasets: [
-                        { 
-                            label: 'Сбережения', 
-                            data: state.history.savingsData, 
-                            borderColor: '#10B981', 
-                            backgroundColor: 'rgba(16, 185, 129, 0.4)', 
-                            fill: 'origin', 
-                            pointRadius: 0, 
-                            borderWidth: 1, 
-                            stack: 'player' 
-                        },
-                        { 
-                            label: 'Инвестиции', 
-                            data: state.history.investmentsData, 
-                            borderColor: '#6366F1', 
-                            backgroundColor: 'rgba(99, 102, 241, 0.4)', 
-                            fill: '-1', 
-                            pointRadius: 0, 
-                            borderWidth: 1, 
-                            stack: 'player' 
-                        },
-                        { 
-                            label: 'Джон', 
-                            data: state.history.rivalData, 
-                            borderColor: '#94A3B8', 
-                            borderDash: [5, 5], 
-                            fill: false, 
-                            tension: 0.4, 
-                            pointRadius: 0, 
-                            borderWidth: 2, 
-                            stack: 'rival' 
-                        }
-                    ] 
-                }, 
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: { 
-                        legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } },
-                        tooltip: { mode: 'index', intersect: false }
-                    }, 
-                    scales: { 
-                        x: { display: false }, 
-                        y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' } } 
-                    } 
-                } 
-            });
-        }
-
+        function triggerDeath(reason, icon) { state.isDead = true; document.getElementById('deathReason').innerText = reason; document.getElementById('deathIcon').className = `fa-solid ${icon}`; els.gameOverScreen.classList.remove('hidden'); setTimeout(() => els.gameOverScreen.classList.remove('opacity-0'), 50); triggerHaptic(300); localStorage.removeItem('finRaceSave'); }
+        function triggerWin() { state.isWon = true; confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } }); document.getElementById('winMonths').innerText = state.month; document.getElementById('winPassive').innerText = '$' + Math.floor((state.savings * 0.04/12) + (state.investments * 0.1/12)).toLocaleString() + '/мес'; document.getElementById('winNetWorth').innerText = '$' + Math.floor(state.savings + state.investments).toLocaleString(); els.winScreen.classList.remove('hidden'); setTimeout(() => els.winScreen.classList.remove('opacity-0'), 50); triggerHaptic([100, 100, 100, 100, 500]); localStorage.removeItem('finRaceSave'); }
+        function initChart() { if(!els.historyChart) return; const ctx = els.historyChart.getContext('2d'); chartInstance = new Chart(ctx, { type: 'line', data: { labels: state.history.labels, datasets: [ { label: 'Сбережения', data: state.history.savingsData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1, stack: 'player' }, { label: 'Инвестиции', data: state.history.investmentsData, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1, stack: 'player' }, { label: 'Джон', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'rival' } ] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, callbacks: { label: function(context) { return context.dataset.label + ': $' + Math.floor(context.parsed.y).toLocaleString(); } } } }, scales: { x: { display: false }, y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' }, ticks: { callback: function(value) { return '$' + Math.floor(value).toLocaleString(); } } } } } }); }
         window.closeReport = function() { els.reportPanel.classList.remove('open'); els.mobileOverlay.classList.add('opacity-0'); setTimeout(() => els.mobileOverlay.classList.add('hidden'), 300); }
-
         window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
