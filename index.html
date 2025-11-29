@@ -141,13 +141,18 @@
 
         /* CONTEXTUAL NUDGES */
         .nudge-arrow {
-            position: absolute; top: 55px; left: 50%; transform: translateX(-50%);
-            color: #F43F5E; font-size: 20px; z-index: 50; text-align: center;
+            position: absolute; top: 45px; left: 50%; transform: translateX(-50%);
+            color: #F43F5E; font-size: 24px; z-index: 20; text-align: center;
             animation: nudge-bounce 1s infinite;
             pointer-events: none;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .nudge-arrow span { display: block; font-size: 10px; font-weight: bold; background: white; padding: 1px 4px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; }
-        @keyframes nudge-bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-5px); } }
+        .nudge-arrow span { 
+            display: block; font-size: 10px; font-weight: 800; background: white; color: #F43F5E;
+            padding: 2px 6px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; 
+            margin-bottom: 2px; border: 1px solid #FECDD3;
+        }
+        @keyframes nudge-bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-8px); } }
 
         .btn-danger-glow { 
             animation: pulse-red 1.5s infinite; 
@@ -619,7 +624,9 @@
                 card.className = 'jar-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-64 select-none';
                 
                 // Nudge logic inserted BEFORE container to avoid clipping
-                const nudgeHtml = jar.id === 'nec' ? '<div id="nudge-nec" class="nudge-arrow hidden"><span>Мало!</span><i class="fa-solid fa-arrow-down"></i></div>' : '';
+                let nudgeHtml = '';
+                if (jar.id === 'nec') nudgeHtml = '<div id="nudge-nec" class="nudge-arrow hidden"><span>Мало!</span><i class="fa-solid fa-arrow-down"></i></div>';
+                if (jar.id === 'fun') nudgeHtml = '<div id="nudge-fun" class="nudge-arrow hidden"><span>Мало!</span><i class="fa-solid fa-arrow-down"></i></div>';
 
                 card.innerHTML = `<div class="p-2 bg-white z-10 border-b border-slate-100 pointer-events-none text-center relative"><div class="flex justify-center items-center gap-1.5 mb-1"><div class="w-5 h-5 rounded bg-slate-50 flex items-center justify-center text-[10px]" style="color:${jar.color}"><i class="fa-solid ${jar.icon}"></i></div><h3 class="font-bold text-slate-700 text-[10px] uppercase truncate">${jar.name}</h3></div><div class="flex justify-center items-baseline gap-1"><span id="pct-${jar.id}" class="text-[10px] font-bold text-slate-400 tabular-nums">0%</span><span id="val-${jar.id}" class="font-bold text-slate-800 text-xs tabular-nums">$0</span></div></div>
                 ${nudgeHtml}
@@ -835,8 +842,18 @@
         // --- CONTEXTUAL NUDGES ---
         function checkNudges() {
             // Health Nudge
-            const nArrow = document.getElementById('nudge-nec');
-            if (state.health < 30) { if(nArrow) nArrow.classList.remove('hidden'); } else { if(nArrow) nArrow.classList.add('hidden'); }
+            const nArrowNec = document.getElementById('nudge-nec');
+            if (nArrowNec) {
+                if (state.health < 30) nArrowNec.classList.remove('hidden'); 
+                else nArrowNec.classList.add('hidden');
+            }
+
+            // Happiness Nudge
+            const nArrowFun = document.getElementById('nudge-fun');
+            if (nArrowFun) {
+                if (state.happiness < 30) nArrowFun.classList.remove('hidden');
+                else nArrowFun.classList.add('hidden');
+            }
 
             // Debt Nudge
             if (state.debt > state.savings && els.repayDebtBtn) els.repayDebtBtn.classList.add('btn-danger-glow'); 
