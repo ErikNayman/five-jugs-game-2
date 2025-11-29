@@ -688,6 +688,8 @@
                 return; 
             } else if (roll < 0.25) {
                 turnEvent = EVENTS[0];
+            } else if (roll < 0.35) { // Added 10% chance for correction to make rival graph interesting
+                turnEvent = EVENTS[1];
             }
             completeTurn(turnEvent);
         }
@@ -732,10 +734,18 @@
         }
 
         function completeTurn(event) {
-            if(event && event.type === 'crash') { 
-                state.investments *= (1 - event.crash); 
-                triggerShake(); 
-                showToast("ОБВАЛ РЫНКА!", `Вы потеряли ${event.crash*100}% инвестиций`, 'bad');
+            // Player Crash Logic
+            if(event && (event.type === 'crash' || event.crash)) { 
+                if (event.crash) {
+                    state.investments *= (1 - event.crash); 
+                    triggerShake(); 
+                    showToast(event.text, `Потеряно ${event.crash*100}% инвестиций`, 'bad');
+                }
+            }
+
+            // Rival Crash Logic (Added back)
+            if (event && event.rivalMod) {
+                state.rivalNetWorth *= (1 + event.rivalMod);
             }
 
             const inc = calculateRealIncome(); const pas = calculatePassiveIncome();
