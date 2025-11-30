@@ -121,14 +121,14 @@
 
         .game-toast {
             position: fixed;
-            bottom: 90px; left: 50%; transform: translateX(-50%) translateY(40px);
+            top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
             background: rgba(15, 23, 42, 0.95); color: white; padding: 10px 20px; border-radius: 50px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 12px;
             opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 90;
             pointer-events: none; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1);
         }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        @media (min-width: 768px) { .game-toast { bottom: 30px; } }
+        @media (min-width: 768px) { .game-toast { top: 90px; bottom: auto; } }
         
         .room-icon { transition: all 0.5s ease; opacity: 0.3; filter: grayscale(100%); transform: scale(0.9); }
         .room-icon.active { opacity: 1; filter: grayscale(0%); transform: scale(1); }
@@ -335,7 +335,7 @@
                         </div>
                         <div id="investStratDisplay" class="text-[9px] text-right text-indigo-400 font-medium mt-0.5">Акції (10%)</div>
                         <!-- NEW ASSET INCOME -->
-                        <div id="assetsIncomeRow" class="flex justify-between hidden pt-1 border-t border-slate-100 mt-1"><span>Активи:</span><span class="text-emerald-600 font-bold tabular-nums" id="assetsIncomeText">+$0/міс</span></div>
+                        <div id="assetsIncomeRow" class="flex justify-between hidden pt-1 border-t border-slate-100 mt-1"><span>Активы:</span><span class="text-emerald-600 font-bold tabular-nums" id="assetsIncomeText">+$0/міс</span></div>
                     </div>
                 </div>
                 
@@ -523,7 +523,7 @@
 
         const SHOP_ITEMS = [
             { id: 'mattress', name: 'Ортопедичний матрац', cost: 800, icon: 'fa-bed', desc: "Здоров'я падає на 20% повільніше.", effect: { healthDecay: 0.8 } },
-            { id: 'console', name: 'Ігрова консоль', cost: 1500, icon: 'fa-gamepad', desc: 'Щастя падає на 20% повільніше.', effect: { happyDecay: 0.8 } },
+            { id: 'console', name: 'Ігровая консоль', cost: 1500, icon: 'fa-gamepad', desc: 'Щастя падає на 20% повільніше.', effect: { happyDecay: 0.8 } },
             { id: 'broker', name: 'Особистий брокер', cost: 2500, icon: 'fa-user-tie', desc: 'Дохідність інвестицій +2% річних.', effect: { investRateFlat: 0.02 } },
             // REAL ASSETS
             { id: 'sportscar', name: 'Спорткар', cost: 15000, icon: 'fa-car-sport', desc: 'Щастя не падає нижче 50%. Витрати -$200/міс.', effect: { minHappy: 50, passiveExpense: 200 }, taunt: "Пф, компенсуєш комплекси?" },
@@ -601,7 +601,7 @@
             allocations: {}, health: 100, happiness: 100, 
             history: { labels: [0], savingsData: [0], investmentsData: [0], rivalData: [0] }, 
             rivalNetWorth: 0, isDead: false, isWon: false,
-            flowStreak: 0, isFlow: false, isMuted: true,
+            flowStreak: 0, isFlow: false, isMuted: true, // Muted by default to be safe
             unlockedAchievements: [], lowFunStreak: 0, wasCriticalHealth: false,
             inventory: [], modifiers: { healthDecay: 1, happyDecay: 1, investRateFlat: 0 },
             careerXP: 0, activeStrategy: 'balanced',
@@ -956,7 +956,7 @@
         function showCareerEvent() {
             const modal = els.dilemmaModal;
             document.getElementById('dilemmaTitle').innerText = "Кар'єрний стрибок!";
-            document.getElementById('dilemmaDesc').innerText = "Ваші навички помітили. Хедхантери пропонують варіанти.";
+            document.getElementById('dilemmaDesc').innerText = "Ваши навички помітили. Хедхантеры пропонують варіанти.";
             document.getElementById('dilemmaIcon').innerHTML = `<i class="fa-solid fa-briefcase text-blue-400"></i>`;
             const opts = document.getElementById('dilemmaOptions');
             opts.innerHTML = '';
@@ -1132,7 +1132,7 @@
             if (netAssetFlow !== 0) { els.assetsIncomeRow.classList.remove('hidden'); els.assetsIncomeText.innerText = (netAssetFlow > 0 ? '+' : '') + '$' + netAssetFlow + '/міс'; els.assetsIncomeText.className = netAssetFlow > 0 ? "text-emerald-600 font-bold tabular-nums" : "text-rose-600 font-bold tabular-nums"; }
             let target = state.phase === 1 ? CONFIG.phase1Goal : CONFIG.phase2Goal;
             let current = state.phase === 1 ? state.savings : pas.totalPassive;
-            els.goalTitle.innerText = state.phase === 1 ? "Ціль: Подушка" : "Ціль: Пасивний Дохід";
+            els.goalTitle.innerText = state.phase === 1 ? "Ціль: Подушка" : "Ціль: Пассивний Дохід";
             els.goalValue.innerText = `$${Math.floor(current).toLocaleString()} / $${target.toLocaleString()}`;
             els.goalProgressBar.style.width = Math.min(100, Math.max(0, (current / target) * 100)) + '%';
              if (state.debt > 5 && state.savings > 5) { document.getElementById('debtRepayContainer').classList.remove('hidden'); document.getElementById('currentDebtVal').innerText = '-$' + Math.floor(state.debt).toLocaleString(); } else document.getElementById('debtRepayContainer').classList.add('hidden');
@@ -1140,7 +1140,7 @@
             document.getElementById('totalPercent').innerText = bal; 
             const balEl = document.getElementById('balanceBadgeContainer');
             if(bal > 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-rose-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 uppercase">Дефіцит ${bal-100}%</div>`; } 
-            else if (bal < 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-emerald-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase">Залишок ${100-bal}%</div>`; } 
+            else if (bal < 100) { document.getElementById('totalPercent').className = "text-2xl font-black text-emerald-500"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase">Остаток ${100-bal}%</div>`; } 
             else { document.getElementById('totalPercent').className = "text-2xl font-black text-slate-800"; balEl.innerHTML = `<div class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-500 uppercase">Ідеально</div>`; }
         }
 
@@ -1151,7 +1151,7 @@
         function checkDeath() { if (state.health <= 0) { triggerDeath("Виснаження.", "fa-heart-crack"); return true; } if (state.happiness <= 0) { triggerDeath("Вигорання.", "fa-face-dizzy"); return true; } return false; }
         function triggerDeath(reason, icon) { state.isDead = true; document.getElementById('deathReason').innerText = reason; document.getElementById('deathIcon').className = `fa-solid ${icon}`; els.gameOverScreen.classList.remove('hidden'); setTimeout(() => els.gameOverScreen.classList.remove('opacity-0'), 50); triggerHaptic(300); localStorage.removeItem('finRaceSave'); }
         function triggerWin() { state.isWon = true; confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } }); document.getElementById('winMonths').innerText = state.month; document.getElementById('winPassive').innerText = '$' + Math.floor((state.savings * 0.04/12) + (state.investments * 0.1/12)).toLocaleString() + '/міс'; document.getElementById('winNetWorth').innerText = '$' + Math.floor(state.savings + state.investments).toLocaleString(); els.winScreen.classList.remove('hidden'); setTimeout(() => els.winScreen.classList.remove('opacity-0'), 50); triggerHaptic([100, 100, 100, 100, 500]); localStorage.removeItem('finRaceSave'); }
-        function initChart() { if(!els.historyChart) return; const ctx = els.historyChart.getContext('2d'); chartInstance = new Chart(ctx, { type: 'line', data: { labels: state.history.labels, datasets: [ { label: 'Заощадження', data: state.history.savingsData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1, stack: 'player' }, { label: 'Інвестиції', data: state.history.investmentsData, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1, stack: 'player' }, { label: 'Джо', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'rival' } ] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, callbacks: { label: function(context) { return context.dataset.label + ': $' + Math.floor(context.parsed.y).toLocaleString(); } } } }, scales: { x: { display: false }, y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' }, ticks: { callback: function(value) { return '$' + Math.floor(value).toLocaleString(); } } } } } }); }
+        function initChart() { if(!els.historyChart) return; const ctx = els.historyChart.getContext('2d'); chartInstance = new Chart(ctx, { type: 'line', data: { labels: state.history.labels, datasets: [ { label: 'Заощадження', data: state.history.savingsData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.4)', fill: 'origin', pointRadius: 0, borderWidth: 1, stack: 'player' }, { label: 'Инвестиции', data: state.history.investmentsData, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.4)', fill: '-1', pointRadius: 0, borderWidth: 1, stack: 'player' }, { label: 'Джо', data: state.history.rivalData, borderColor: '#94A3B8', borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'rival' } ] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'top', align: 'end', labels: { boxWidth: 8, font: { size: 10 }, usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, callbacks: { label: function(context) { return context.dataset.label + ': $' + Math.floor(context.parsed.y).toLocaleString(); } } } }, scales: { x: { display: false }, y: { stacked: true, grid: { borderDash: [4, 4], color: '#f1f5f9' }, ticks: { callback: function(value) { return '$' + Math.floor(value).toLocaleString(); } } } } } }); }
         window.closeReport = function() { els.reportPanel.classList.remove('open'); els.mobileOverlay.classList.add('opacity-0'); setTimeout(() => els.mobileOverlay.classList.add('hidden'), 300); }
         window.addEventListener('DOMContentLoaded', init);
     </script>
