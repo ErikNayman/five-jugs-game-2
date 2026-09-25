@@ -154,6 +154,14 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
 #scene.tall .jar-delta{font-size:15px}
 .jar.free .jar-outline{stroke:#ffd76a!important;stroke-width:3!important;stroke-opacity:1!important;filter:drop-shadow(0 0 8px #ffd76acc)}
 .shock-banner.good{background:#24463a;border-color:#97d6bd;color:#dff5e8}
+
+/* Бесконечный режим. */
+.endless-card{width:100%;margin:16px 0 4px;display:grid!important;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;background:linear-gradient(90deg,#1f3d3a,#2b3e2a)!important;border-color:#8c7a48!important}
+.endless-card .level-num{grid-row:1/4;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#dcb275;color:#1f2a14;font-size:22px;font-weight:800}
+.endless-card h3{margin:0;font-size:15px}.endless-card h3 small{font-size:11px;color:var(--muted);font-weight:500;margin-left:6px}.endless-card p{grid-column:2;margin:3px 0 0;font-size:12px}.endless-card .level-stars{grid-column:2;font-size:12px;letter-spacing:0;margin-top:5px}
+.goal-chip.phase{border-color:#dcb275}.goal-chip.ph-bust{background:#3b2a2a;border-color:#f39b75}.goal-chip.ph-heat{background:#3b3322}.goal-chip.ph-boom{background:#1d3d33}.goal-chip.ph-recovery{background:#223b2c}
+.big-years{font:800 64px/1 ui-sans-serif,sans-serif;color:#ffd76a;text-shadow:0 0 24px #ffd76a66;margin:6px 0 4px}
+@media(max-width:420px){.levels.levels-map{grid-template-columns:1fr 1fr!important;gap:7px}.levels-map .level-choice{padding:10px 8px;column-gap:6px}.levels-map .level-num{width:24px;height:24px;font-size:11px}.levels-map h3{font-size:12.5px;padding-right:18px}.levels-map .level-icon{font-size:15px;right:6px;top:6px}.levels-map .level-stars{font-size:11px}}
 </style></head><body>
 <header class="header"><a href="#" class="brand" id="home"><span class="brand-icon">5</span><span>Пять кувшинов<small>КАСКАД · ЛАБОРАТОРИЯ ПОТОКА</small></span></a><div class="header-actions"><button class="quiet" id="badges" aria-label="Значки"><span class="ico">🏅</span><span class="lbl">Значки</span></button><button class="quiet" id="sound" aria-pressed="true" aria-label="Звук"><span class="ico">🔊</span><span class="lbl">Звук</span></button><button class="quiet" id="help" aria-label="Как устроено"><span class="ico">❓</span><span class="lbl">Как устроено</span></button><button class="quiet" id="save" aria-label="Сохранить"><span class="ico">💾</span><span class="lbl">Сохранить</span></button><button class="quiet" id="new" aria-label="Уровни"><span class="ico">🗺</span><span class="lbl">Уровни</span></button></div></header>
 <main><div class="intro-line"><div><div class="eyebrow">Соединяй трубы. Сохраняй переливы.</div><h1>Дай деньгам правильное направление.</h1></div><div class="game-controls"><button id="speed" class="small-button" aria-label="Скорость игры">×1</button><button id="play" class="play">▶ Запустить поток</button></div></div>
@@ -270,7 +278,14 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       targets: { consumption: 120, savings: 250, investments: 3000 }, brim: { consumption: 1.3, savings: 1.15, investments: 1.5 }, incomeCap: 600,
       initial: { income: 120, consumption: 100, savings: 60, investments: 0, speculation: 0 }, upgradeCosts: [200, 300, 400],
       shocks: [{ id: 'bonus', type: 'bonus', at: 60, duration: 4, amount: 400, title: 'Премия' }, { id: 'crisis', type: 'crisis', at: 150, duration: 20, invDrop: 0.15, specDrop: 0, recoverAfter: 30, title: 'Кризис' }],
-      market: null }
+      market: null },
+    endless: { title: 'Экономический цикл', icon: '∞', endless: true, compound: 0.4, wageElasticity: 0.3,
+      news: 'Бесконечный режим: подъёмы, перегревы, рецессии. Сколько лет продержишься?',
+      description: 'Годы идут по кругу: подъём → перегрев → рецессия → восстановление. Цены растут. Продержись как можно дольше и нарасти капитал.',
+      training: true, overtime: true, salary: 16, expense: 6, comfortExpense: 3, volatility: 0, flowTarget: null,
+      targets: { consumption: 150, savings: 500, investments: 2000, speculation: 300 }, brim: { consumption: 2, savings: 6, investments: 50, speculation: 60 }, incomeCap: 2000,
+      initial: { income: 150, consumption: 150, savings: 100, investments: 0, speculation: 0 }, upgradeCosts: [200, 300, 400],
+      shocks: [], market: { start: 15, every: 30, swings: [0] } }
   };
 
   // kind: valve — rate = opening × maxRate; float — opens by itself below the float line;
@@ -323,7 +338,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       balances: { ...cfg.initial }, targets, capacity,
       pipes: PIPES.map(p => ({ ...p, connected: p.id === 'income-consumption',
         opening: p.id === 'income-consumption' ? 0.5 : p.kind === 'valve' ? 0.25 : 1 })),
-      overtime: 0, comfort: 0.35, energy: 100, salaryLevel: 0, training: null, holdTime: 0,
+      overtime: 0, comfort: 0.35, energy: 100, salaryLevel: 0, training: null, holdTime: 0, seed: cfg.endless ? ((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0) : 0,
       events: [], totals: Object.fromEntries(TOTAL_KEYS.map(k => [k, 0])),
       rates: zeroRates(), _accumulator: 0, _eventId: 0, _incomePhase: 'normal', _marketIndex: 0,
       _warned: { eaten: false, savings: false, investments: false, speculation: false, float: false, energy: false } };
@@ -357,20 +372,46 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     return n;
   }
 
+  // Endless mode: a «year» is 30 s; phases repeat; each year's events come from the run's seed.
+  const YEAR = 30, PHASES = [
+    { id: 'boom', name: 'Подъём', icon: '📈', salary: 1.1, drain: 1, swing: 0.08, hint: 'Зарплаты растут, рынок спокойный — время копить.' },
+    { id: 'heat', name: 'Перегрев', icon: '🔥', salary: 1, drain: 1.15, swing: 0.15, hint: 'Жизнь дорожает, рынок на пике.' },
+    { id: 'bust', name: 'Рецессия', icon: '🌧', salary: 0.8, drain: 1, swing: -0.3, hint: 'Рынки падают, работу могут сократить.' },
+    { id: 'recovery', name: 'Восстановление', icon: '🌱', salary: 0.95, drain: 1, swing: 0.05, hint: 'Активы дешёвые, экономика медленно разгоняется.' }];
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function yearShocks(seed, y) {
+    const r = rng((seed ^ Math.imul(y + 1, 2654435761)) >>> 0), c = Math.floor(y / 4), t0 = y * YEAR, ph = y % 4, list = [];
+    if (ph === 0 && r() < 0.5) list.push({ id: `bonus-${y}`, type: 'bonus', at: t0 + 8 + Math.round(r() * 15), duration: 4, amount: Math.round(250 + r() * 100), title: 'Премия' });
+    if (ph === 1 && r() < 0.6) list.push({ id: `repair-${y}`, type: 'bill', at: t0 + 5 + Math.round(r() * 18), duration: 6, extraDrain: 18, title: 'Срочный ремонт' });
+    if (ph === 2) {
+      list.push({ id: `crisis-${y}`, type: 'crisis', at: t0 + 3, duration: Math.min(25, 10 + 3 * c), invDrop: Math.round((0.12 + r() * 0.1) * 100) / 100, specDrop: 0.3, recoverAfter: 45, title: 'Рецессия' });
+      if (r() < 0.3 + 0.05 * c) list.push({ id: `illness-${y}`, type: 'illness', at: t0 + 18, duration: 10, drainFactor: 1.8, title: 'Болезнь' });
+    }
+    if (ph === 3 && r() < 0.4) list.push({ id: `bonus-${y}`, type: 'bonus', at: t0 + 10 + Math.round(r() * 12), duration: 4, amount: 220, title: 'Премия' });
+    return list;
+  }
+  function levelShocks(s, t = s.time) {
+    const cfg = LEVELS[s.level]; if (!cfg.endless) return cfg.shocks;
+    const y = Math.floor((t + EPS) / YEAR), out = [];
+    for (let k = Math.max(0, y - 2); k <= y + 1; k++) out.push(...yearShocks(s.seed || 0, k));
+    return out;
+  }
+  const phaseAt = t => PHASES[Math.floor((t + EPS) / YEAR) % 4];
   function salaryCondition(s) {
     const cfg = LEVELS[s.level], cycle = Math.floor((s.time + EPS) / 45), within = s.time - cycle * 45;
     if (!cfg.volatility || cycle === 0 || within >= 10 - EPS) return { factor: 1, phase: 'normal' };
     return cycle % 2 ? { factor: 1 - cfg.volatility, phase: 'low' } : { factor: 1 + cfg.volatility * 0.5, phase: 'high' };
   }
   function activeShocks(s) {
-    return LEVELS[s.level].shocks.filter(sh => s.time + EPS >= sh.at && s.time + EPS < sh.at + sh.duration);
+    return levelShocks(s).filter(sh => s.time + EPS >= sh.at && s.time + EPS < sh.at + sh.duration);
   }
   function scenario(s) {
     const phase = salaryCondition(s), m = { phase, salaryFactor: phase.factor, drainFactor: 1, extraDrain: 0, overtimeFactor: 1 };
+    if (LEVELS[s.level].endless) { const ph = phaseAt(s.time); m.salaryFactor *= ph.salary; m.drainFactor *= ph.drain; }
     for (const sh of activeShocks(s)) {
       if (sh.type === 'jobLoss' || sh.type === 'crisis') m.salaryFactor = 0;
       if (sh.type === 'illness') { m.drainFactor *= sh.drainFactor; m.overtimeFactor = 0; }
-      if (sh.type === 'bill') m.extraDrain += sh.extraDrain;
+      if (sh.type === 'bill') m.extraDrain += sh.extraDrain * rateScale(s);
       if (sh.type === 'bonus') m.bonus = (m.bonus || 0) + sh.amount / sh.duration;
     }
     return m;
@@ -379,15 +420,18 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
   const availablePipes = level => LEVELS[level].pipes || PIPES.map(p => p.id);
   const pipeAvailable = (level, id) => availablePipes(level).includes(id);
   const floatLine = s => s.targets.consumption * FLOAT_SHARE;
-  const priceLevel = s => 1 + (LEVELS[s.level].inflation || 0) * s.time;
+  const priceLevel = s => LEVELS[s.level].compound ? Math.pow(1 + LEVELS[s.level].compound, s.time / (4 * YEAR)) : 1 + (LEVELS[s.level].inflation || 0) * s.time;
+  // In endless mode every nominal amount (pipes, bills, bonuses) grows with prices; wages grow slower.
+  const rateScale = s => LEVELS[s.level].endless ? priceLevel(s) : 1;
   const nominalDrain = s => (LEVELS[s.level].expense + LEVELS[s.level].comfortExpense * s.comfort) * priceLevel(s);
 
   // One physical step. Mutates s.balances and s.energy, returns rates. No events, no win/lose.
   function advance(s, dt) {
     const cfg = LEVELS[s.level], sc = scenario(s), r = zeroRates(), b = s.balances;
     const pipe = id => s.pipes.find(p => p.id === id);
-    r.salary = (cfg.payEvery ? 0 : (cfg.salary + s.salaryLevel * SKILL_STEP) * sc.salaryFactor) + (sc.bonus || 0);
-    r.overtime = 9 * s.overtime * clamp(s.energy / 10, 0, 1) * sc.overtimeFactor;
+    const wage = cfg.endless ? Math.pow(priceLevel(s), cfg.wageElasticity) : 1, k = rateScale(s);
+    r.salary = (cfg.payEvery ? 0 : (cfg.salary + s.salaryLevel * SKILL_STEP) * sc.salaryFactor * wage) + (sc.bonus || 0) * k;
+    r.overtime = 9 * s.overtime * clamp(s.energy / 10, 0, 1) * sc.overtimeFactor * wage;
     r.investmentIncome = b.investments * YIELD;
     const base = nominalDrain(s);
     r.drain = base * sc.drainFactor + sc.extraDrain;
@@ -396,12 +440,12 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     const moves = [];
     let available = b.income;
     for (const p of s.pipes.filter(p => p.from === 'income' && p.kind === 'valve').sort((a, c) => a.priority - c.priority)) {
-      const amount = p.connected ? Math.min(p.opening * p.maxRate * dt, available) : 0;
+      const amount = p.connected ? Math.min(p.opening * p.maxRate * k * dt, available) : 0;
       available -= amount; moves.push([p, amount]);
     }
     for (const id of ['investments-income', 'speculation-income']) {
       const p = pipe(id);
-      moves.push([p, p.connected ? Math.min(p.opening * p.maxRate * dt, b[p.from]) : 0]);
+      moves.push([p, p.connected ? Math.min(p.opening * p.maxRate * k * dt, b[p.from]) : 0]);
     }
     for (const [p, amount] of moves) {
       b[p.from] -= amount; b[p.to] += amount * (1 - p.loss);
@@ -424,7 +468,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     // 4. Float valve: opens only if consumption would fall below the float line, covers only that gap.
     const need = r.drain * dt, line = floatLine(s), R1 = pipe('savings-consumption');
     if (R1.connected && b.consumption - need < line) {
-      const give = Math.max(0, Math.min(line + need - b.consumption, b.savings, R1.opening * R1.maxRate * dt));
+      const give = Math.max(0, Math.min(line + need - b.consumption, b.savings, R1.opening * R1.maxRate * k * dt));
       b.savings -= give; b.consumption += give; r.actual[R1.id] = give / dt;
     }
     // 5. Living costs.
@@ -452,7 +496,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     // A fixed physical step is 0.02 s; market events are at least 30 s apart.
     // Only the event crossed by this step can run, never events before t0.
     if (afterIndex === beforeIndex) return;
-    const swing = m.swings[(afterIndex - 1) % m.swings.length], before = s.balances.speculation;
+    const swing = LEVELS[s.level].endless ? Math.round((phaseAt(t1).swing + (rng((s.seed ^ Math.imul(afterIndex, 40503)) >>> 0)() - 0.5) * 0.12) * 100) / 100 : m.swings[(afterIndex - 1) % m.swings.length], before = s.balances.speculation;
     const delta = before * swing;
     s.balances.speculation = before + delta; s.totals.marketResult += delta;
     if (before > EPS) event(s, `Рынок: спекуляции ${swing > 0 ? '+' : '−'}${Math.round(Math.abs(swing) * 100)}% (${delta > 0 ? '+' : '−'}${Math.round(Math.abs(delta))} ед.).`, swing > 0 ? 'good' : 'warning');
@@ -460,7 +504,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
   const insured = s => !pipeAvailable(s.level, 'savings-consumption') ? '' : s.pipes.find(p => p.id === 'savings-consumption').connected ? ' Страховка из подушки подключена.' : ' Страховка из подушки выключена — подключите её.';
   function shockEvents(s, t0, t1) {
     const crosses = t => t0 + EPS < t && t <= t1 + EPS;
-    for (const sh of LEVELS[s.level].shocks) {
+    for (const sh of levelShocks(s, t1)) {
       if (sh.type === 'crisis' && crosses(sh.at)) {
         const inv = s.balances.investments * sh.invDrop, spec = s.balances.speculation * sh.specDrop;
         s.balances.investments -= inv; s.balances.speculation -= spec;
@@ -511,6 +555,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     const dt = FIXED_DT, t0 = s.time, t1 = t0 + dt;
     applyMarket(s, t0, t1);
     payday(s, t0, t1);
+    if (LEVELS[s.level].endless && Math.floor((t1 + EPS) / YEAR) !== Math.floor((t0 + EPS) / YEAR)) { const y = Math.floor((t1 + EPS) / YEAR), ph = phaseAt(t1); event(s, `Год ${y + 1}: ${ph.name}. ${ph.hint}`, ph.id === 'bust' ? 'warning' : 'info'); }
     shockEvents(s, t0, t1);
     const phase = salaryCondition(s).phase;
     if (phase !== s._incomePhase) {
@@ -545,6 +590,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       s.status = 'lost'; s.holdTime = 0; s._accumulator = 0;
       event(s, 'Потребление опустело: жить не на что. Поток остановлен.', 'danger'); return;
     }
+    if (LEVELS[s.level].endless) return;
     const gl = goals(s), oldHold = s.holdTime;
     const counts = gl.all && s.time + EPS >= (LEVELS[s.level].goalsAfter || 0);
     s.holdTime = counts ? Math.min(HOLD_SECONDS, s.holdTime + dt) : 0;
@@ -574,6 +620,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       freedom: drain > 0 ? s.balances.investments * YIELD / drain : 0, freedomGoal: !!cfg.freedomGoal, sustainableOvertime: 0.3,
       payEvery: cfg.payEvery || 0, nextPayIn: cfg.payEvery ? cfg.payEvery - ((s.time + EPS) % cfg.payEvery) : 0, payLump: cfg.payEvery ? (cfg.salary + s.salaryLevel * SKILL_STEP) * cfg.payEvery : 0,
       pricePct: Math.round((priceLevel(s) - 1) * 100), drain,
+      cycle: cfg.endless ? { year: Math.floor((s.time + EPS) / YEAR) + 1, years: Math.floor((s.time + EPS) / YEAR), phase: phaseAt(s.time), next: PHASES[(Math.floor((s.time + EPS) / YEAR) + 1) % 4], nextIn: YEAR - ((s.time + EPS) % YEAR), yearLen: YEAR } : null,
       activeShocks: activeShocks(s).map(sh => sh.id), nextShock: cfg.shocks.find(sh => sh.at > s.time + EPS) || null,
       upgradeCost: cost, canUpgrade: editable(s) && cfg.training !== false && !s.training && cost !== null && s.balances.income + EPS >= cost };
   }
@@ -622,13 +669,14 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       n.targets = { ...fresh.targets }; n.capacity = { ...fresh.capacity };
       n._marketIndex = marketIndexAt(n.level, n.time);
       n.rates = zeroRates();
+      n.seed = Number.isSafeInteger(s.seed) && s.seed >= 0 ? s.seed : 0;
       if (n.status === 'running') n.status = 'paused';
       return { ok: true, state: n };
     } catch (error) { return { ok: false, error: error.message || 'Сохранение не удалось прочитать.' }; }
   }
 
   return { VERSION, FIXED_DT, MAX_DT, HOLD_SECONDS, JARS: freeze([...JARS]), LEVELS, PIPES, YIELD, SKILL_STEP, FLOAT_SHARE,
-    activeJars, availablePipes, create, start: create, play, pause, togglePipe, setValve, setSource, upgrade, step, previewRates, metrics, validateSave };
+    activeJars, availablePipes, levelShocks, PHASES, YEAR, create, start: create, play, pause, togglePipe, setValve, setSource, upgrade, step, previewRates, metrics, validateSave };
 });
 </script><script>(function(){'use strict';
 const E=FlowEngine,$=s=>document.querySelector(s),scene=$('#scene'),modal=$('#modal'),KEY='five-jars-flow-v3';
@@ -683,7 +731,7 @@ function mutate(fn){state=fn(state);update();save();}
 function openWelcome(){const firstOpen=LEVEL_ORDER.find(id=>unlocked(id)&&!progress.stars[id]);chosenLevel=saved&&unlocked(state.level)&&!['won','lost'].includes(state.status)?state.level:firstOpen||state.level;if(!unlocked(chosenLevel))chosenLevel=LEVEL_ORDER[0];
  const total=LEVEL_ORDER.reduce((a,id)=>a+(progress.stars[id]||0),0);
  const cards=LEVEL_ORDER.map((id,i)=>{const l=E.LEVELS[id],lock=!unlocked(id),st=progress.stars[id]||0;return `<button class="level-choice ${chosenLevel===id?'selected':''} ${lock?'locked':''} ${st?'done':''}" data-level="${id}" aria-pressed="${chosenLevel===id}" ${lock?'aria-disabled="true"':''}><span class="level-num">${lock?'🔒':i+1}</span><span class="level-icon" aria-hidden="true">${l.icon}</span><h3>${esc(l.title)}</h3><p>${esc(l.news)}</p><span class="level-stars" aria-label="Звёзд: ${st} из 3">${starLine(st)}</span></button>`;}).join('');
- showModal('Пять кувшинов · Каскад',`<div class="welcome-hero"><div class="coach-face">${DROP}</div><div class="modal-copy"><p><b>Деньги текут, как вода.</b> Начни с одного кувшина и шаг за шагом собери всю систему из пяти. На каждом уровне — новый кувшин, новая труба или новая беда.</p></div></div><div class="level-map-head"><span>Путь мастера потока</span><b>★ ${total} из ${LEVEL_ORDER.length*3}</b></div><div class="levels levels-map">${cards}</div><div class="welcome-tip" id="levelBrief"></div><div class="modal-actions">${LEVEL_ORDER.some(id=>!unlocked(id))?'<button data-action="unlock">Открыть все уровни</button>':''}<button data-action="import">Загрузить файл</button>${saved&&!['won','lost'].includes(state.status)&&state.time>0?'<button data-action="resume">Продолжить</button>':''}<button class="primary" data-action="start">Играть →</button></div>`,'welcome');briefLevel();}
+ showModal('Пять кувшинов · Каскад',`<div class="welcome-hero"><div class="coach-face">${DROP}</div><div class="modal-copy"><p><b>Деньги текут, как вода.</b> Начни с одного кувшина и шаг за шагом собери всю систему из пяти. На каждом уровне — новый кувшин, новая труба или новая беда.</p></div></div>${(()=>{const l=E.LEVELS.endless,rec=progress.endless;return `<button class="level-choice endless-card ${chosenLevel==='endless'?'selected':''}" data-level="endless" aria-pressed="${chosenLevel==='endless'}"><span class="level-num">∞</span><h3>${esc(l.title)} <small>бесконечный режим</small></h3><p>${esc(l.news)}</p><span class="level-stars">${rec?`🏆 рекорд: ${rec.years} ${yearsWord(rec.years)} · капитал ${fmt(rec.worth)}`:'Рекорда пока нет'}</span></button>`;})()}<div class="level-map-head"><span>Путь мастера потока</span><b>★ ${total} из ${LEVEL_ORDER.length*3}</b></div><div class="levels levels-map">${cards}</div><div class="welcome-tip" id="levelBrief"></div><div class="modal-actions">${LEVEL_ORDER.some(id=>!unlocked(id))?'<button data-action="unlock">Открыть все уровни</button>':''}<button data-action="import">Загрузить файл</button>${saved&&!['won','lost'].includes(state.status)&&state.time>0?'<button data-action="resume">Продолжить</button>':''}<button class="primary" data-action="start">Играть →</button></div>`,'welcome');briefLevel();}
 function briefLevel(){const el=$('#levelBrief');if(!el)return;const l=E.LEVELS[chosenLevel];el.innerHTML=`<b>${l.icon} Уровень ${LEVEL_META[chosenLevel].n}: ${esc(l.title)}.</b> ${esc(l.description)}<br><b>Новое:</b> ${esc(l.news)}`;const sb=$('#modalBody [data-action="start"]');if(sb)sb.textContent=`Играть: ${l.title} →`;}
 function start(level){state=E.create(level);selected='income-consumption';pending=null;finishedShown=false;speed=1;lastFrame=0;$('#speed').textContent='×1';buildScene();closeModal();save();update();tutOnStart(level,false);if(progress.stars[level])notify('Поток на паузе. Подключи трубы или нажми «Запустить поток».');}
 function connect(from,to){const p=state.pipes.find(p=>p.from===from&&p.to===to);if(!p){notify('Между этими кувшинами нет подходящей трубы. Выбери подсвеченный вход.');return false;}if(!p.connected){state=E.togglePipe(state,p.id);sfx('connect');}selected=p.id;pending=null;$('#ghost').setAttribute('d','');save();update();notify(`${NAMES[from]} → ${NAMES[to]}: ${p.kind==='overflow'?'перелив подключён. Он пропускает только излишек.':p.kind==='float'?'страховка подключена. Сработает у красной черты.':'труба подключена.'}`);return true;}
@@ -704,7 +752,7 @@ function valveMarkup(p){const r=ROUTES[p.id],anchor=r.anchor?` style="text-ancho
  return `<g class="pipe-chip" id="chip-${p.id}" data-chip="${p.id}" transform="translate(${x} ${y})" role="group" aria-label="Кран ${nm}"><rect class="chip-bg" width="${w}" height="52" rx="26"/><g class="chip-btn chip-step" data-step="-1" data-pipe="${p.id}" role="button" tabindex="0" aria-label="Слабее или закрыть: ${nm}"><rect x="7" y="7" width="38" height="38" rx="12"/><text x="26" y="26">−</text></g><g class="chip-bars" aria-hidden="true">${[0,1,2,3].map(i=>`<rect class="bar-bg" x="${53+i*9.5}" y="${40-(8+i*6)}" width="7" height="${8+i*6}" rx="2"/><rect class="bar-fill" id="bar-${p.id}-${i}" x="${53+i*9.5}" y="40" width="7" height="0" rx="2"/>`).join('')}</g><g class="chip-btn chip-step" data-step="1" data-pipe="${p.id}" role="button" tabindex="0" aria-label="Сильнее или открыть: ${nm}"><rect x="95" y="7" width="38" height="38" rx="12"/><text x="114" y="26">+</text></g><title></title></g>${rate}`;}
 function switchMarkup(p){const r=ROUTES[p.id];if(p.kind==='valve'&&!r.compact)return '';const x=r.valve[0]-32,y=r.valve[1]-18;return `<g class="scene-switch overflow-switch ${p.kind==='float'?'float-switch':''}" id="scene-toggle-${p.id}" data-toggle="${p.id}" transform="translate(${x} ${y})" role="switch" tabindex="0" aria-checked="false" aria-label="${p.kind==='overflow'?'Перелив':p.title}: ${NAMES[p.from]} → ${NAMES[p.to]}"><rect class="switch-hit" x="-10" y="-12" width="84" height="60" fill="transparent"/><rect class="switch-bg" width="64" height="36" rx="18"/><circle class="switch-knob" cx="18" cy="18" r="13"/><title></title></g>`;}
 function avail(id){return E.availablePipes(state.level).includes(id);}
-function goalText(m){const names=m.jars.slice(1).map(id=>NAMES[id]);return `Цели: ${names.join(', ')}${m.flowTarget!=null?' + постоянный доход':''}${m.freedomGoal?' + свобода 100%':''}.`;}
+function goalText(m){if(m.cycle)return 'Продержись как можно больше лет. Счёт — годы и капитал.';const names=m.jars.slice(1).map(id=>NAMES[id]);return `Цели: ${names.join(', ')}${m.flowTarget!=null?' + постоянный доход':''}${m.freedomGoal?' + свобода 100%':''}.`;}
 function applyLevelView(){const on=E.activeJars(state.level),av=E.availablePipes(state.level),cfg=E.LEVELS[state.level];
  const hide=(sel,h)=>{const el=$(sel);if(el)el.style.display=h?'none':'';};
  for(const j of JARS)hide('#jar-'+j.id,!on.includes(j.id));
@@ -720,9 +768,9 @@ function buildScene(){pickLayout();const L=LAYOUT;scene.innerHTML=`<defs><patter
 $('#pipeSelect').innerHTML=E.PIPES.filter(p=>avail(p.id)).map(p=>`<option value="${p.id}">${p.kind==='overflow'?'Перелив: ':p.kind==='float'?'Страховка: ':''}${NAMES[p.from]} → ${NAMES[p.to]}</option>`).join('');$('#routes').innerHTML=E.PIPES.filter(p=>avail(p.id)).map(p=>`<button type="button" class="route-toggle" id="route-toggle-${p.id}" data-toggle="${p.id}" aria-label="Труба ${NAMES[p.from]} → ${NAMES[p.to]}" aria-pressed="false"><span>${p.kind==='overflow'?'<small>Перелив</small>':p.kind==='float'?'<small>Автостраховка</small>':''}${NAMES[p.from]} → ${NAMES[p.to]}</span><b class="route-action"></b></button>`).join('');applyLevelView();update();}
 function update(){
  const running=state.status==='running',ended=['won','lost'].includes(state.status),r=ended?state.rates:running?state.rates:E.previewRates(state),m=E.metrics(state),p=state.pipes.find(p=>p.id===selected),cfg=E.LEVELS[state.level];
- const critical=state.balances.consumption<m.floatLine*1.25,shocks=cfg.shocks.filter(sh=>m.activeShocks.includes(sh.id));
+ const critical=state.balances.consumption<m.floatLine*1.25,shocks=E.levelShocks(state).filter(sh=>m.activeShocks.includes(sh.id));
  scene.classList.toggle('is-paused',!running);scene.setAttribute('data-status',state.status);
- $('#time').textContent=clock(state.time);$('#levelLabel').textContent=cfg.title;
+ $('#time').textContent=clock(state.time);$('#levelLabel').textContent=m.cycle?`Год ${m.cycle.year} · ${m.cycle.phase.icon} ${m.cycle.phase.name}`:cfg.title;
  $('#inRate').innerHTML=`${dec(r.salary+r.overtime+r.investmentIncome)} <em>ед./с</em>`;
  $('#outRate').innerHTML=`${dec(r.drain)} <em>ед./с</em>`;
  $('#sourceLabel').textContent=`Труд ${dec(r.salary+r.overtime)} · капитал ${dec(r.investmentIncome)}`;
@@ -742,18 +790,18 @@ function update(){
  $('#yieldPipe').style.opacity=r.investmentIncome>.001?'1':'.3';$('#yieldPipe .pipe-motion').style.display=r.investmentIncome>.001?'':'none';
  $('#drainLabel').textContent=LAYOUT&&LAYOUT.tall?`−${dec(r.drain)}/с`:`НА ЖИЗНЬ: −${dec(r.drain)} /с`;
  $('#incomeOverflow').classList.toggle('dry',r.incomeOverflow<.01);$('#incomeOverflowLabel').textContent=r.incomeOverflow>.01?`авто ${dec(r.incomeOverflow)}/с`:'';
- const lineY=463-m.floatLine/state.capacity.consumption*158;
+ const vf=x=>isEndless()?Math.sqrt(Math.max(0,x)):x,lineY=463-vf(m.floatLine/state.capacity.consumption)*158;
  $('#floatLine').setAttribute('d',`M-66 ${lineY} H64`);$('#floatLabel').setAttribute('y',Math.min(456,lineY+13));
  const net={income:r.salary+r.overtime+r.investmentIncome-r.incomeOverflow,consumption:r.incomeOverflow-r.consumption-r.eaten,savings:0,investments:0,speculation:0};
  for(const q of state.pipes){const f=r.actual[q.id]||0;if(f){net[q.from]-=f;net[q.to]+=f*(1-q.loss);}}
  for(const k in r.spilledBy)net[k]-=r.spilledBy[k];
  for(const j of JARS){
   {const d=$('#delta-'+j.id),v=ended?0:net[j.id];d.textContent=v>.05?`▲ ${dec(v)}/с`:v<-.05?`▼ ${dec(-v)}/с`:'';d.setAttribute('class','jar-delta '+(v>0?'up':'down'));}
-  const b=state.balances[j.id],cap=state.capacity[j.id],top=463-Math.max(0,Math.min(1,b/cap))*158,reached=m.goals[j.id];
+  const b=state.balances[j.id],cap=state.capacity[j.id],top=463-vf(Math.max(0,Math.min(1,b/cap)))*158,reached=m.goals[j.id];
   $('#fill-'+j.id).setAttribute('y',top);$('#fill-'+j.id).setAttribute('height',470-top);
   $('#wave-'+j.id).setAttribute('d',`M-75 ${top} Q-37 ${top-4} 0 ${top} T76 ${top} L76 ${top+5} H-75Z`);
   $('#target-'+j.id).style.display=j.id==='income'?'none':'';
-  if(j.id!=='income')$('#target-'+j.id).setAttribute('d',`M-66 ${463-state.targets[j.id]/cap*158} H64`);
+  if(j.id!=='income')$('#target-'+j.id).setAttribute('d',`M-66 ${463-vf(state.targets[j.id]/cap)*158} H64`);
   $('#value-'+j.id).textContent=fmt(b);
   $('#targetLabel-'+j.id).textContent=j.id==='income'?(m.flowTarget==null?`Зарплата ${dec(m.baseSalary)} ед./с`:LAYOUT&&LAYOUT.tall?`Доход ${dec(m.incomeFlow)} / ${dec(m.flowTarget)}`:`Постоянный доход ${dec(m.incomeFlow)} / ${m.flowTarget} ед./с`):`Цель ${fmt(state.targets[j.id])} · ${Math.floor(b/state.targets[j.id]*100)}%`;
   const loss=j.id==='consumption'?r.eaten:r.spilledBy[j.id]||0;
@@ -801,6 +849,7 @@ function update(){
  else if(r.eaten>.01)message=`Избыток потребления проедается: ${dec(r.eaten)} ед./с. ${avail('consumption-savings')?'Подключи перелив в сбережения.':'Убавь кран в Потребление.'}`;
  else if(r.spilled>.01)message=`Мимо кувшинов льётся ${dec(r.spilled)} ед./с. Проверь переливы и уменьши лишний напор.`;
  $('#eventText').textContent=message;
+ if(m.cycle){$('#targetCount').previousElementSibling.textContent='Год';$('#targetCount').innerHTML=`${m.cycle.year} <em>${m.cycle.phase.icon}</em>`;$('#holdText').textContent=`Капитал ${fmt(m.total)}`;}else $('#targetCount').previousElementSibling.textContent='Цели уровня';
  if(m.payEvery)$('#salaryStream').textContent=`💵 ${fmt(m.payLump)} через ${Math.max(1,Math.ceil(m.nextPayIn))} с`;
  if(m.payEvery){$('#inRate').innerHTML=`${dec(m.payLump/m.payEvery+r.overtime+r.investmentIncome)} <em>ед./с</em>`;$('#sourceLabel').textContent='в среднем · зарплата пачками';}
  if(m.pricePct>0)$('#drainLabel').textContent+=LAYOUT&&LAYOUT.tall?` · +${m.pricePct}%`:` · цены +${m.pricePct}%`;
@@ -810,7 +859,8 @@ function update(){
  afterUpdate(m,r);
 }
 function result(){
- if(finishedShown)return;finishedShown=true;save();const won=state.status==='won',m=E.metrics(state),t=state.totals,signed=n=>(n>0?'+':'')+dec(n),shockNames=E.LEVELS[state.level].shocks.filter(sh=>m.activeShocks.includes(sh.id)).map(sh=>sh.title).join(', ');
+ if(finishedShown)return;finishedShown=true;save();
+ if(isEndless()){endlessResult();return;}const won=state.status==='won',m=E.metrics(state),t=state.totals,signed=n=>(n>0?'+':'')+dec(n),shockNames=E.levelShocks(state).filter(sh=>m.activeShocks.includes(sh.id)).map(sh=>sh.title).join(', ');
  const rate=rateGame(),cfgL=E.LEVELS[state.level],next=nextLevel();
  if(won){progress.stars[state.level]=Math.max(progress.stars[state.level]||0,rate.stars);saveProgress();if(state.level==='first')award('tutorial');if(state.level==='skills')award('half');if(t.liquidationLoss===0)award('cool');if(rate.lossPct<.03)award('clean');if(rate.stars===3)award('three');if(state.level==='hard')award('hard');}
  const starsHtml=won?`<div class="star-row" aria-label="Звёзд: ${rate.stars} из 3">${[0,1,2].map(i=>`<span class="big-star ${i<rate.stars?'on':''}" style="animation-delay:${.2+i*.35}s">★</span>`).join('')}</div><ul class="star-crit">${rate.crit.map(c=>`<li class="${c.ok?'ok':''}">${c.ok?'★':'☆'} ${c.label}</li>`).join('')}</ul>`:`<div class="result-icon">∅</div>`;
@@ -848,9 +898,11 @@ $('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await docum
 document.addEventListener('keydown',e=>{if(e.key==='Escape')cancelConnect();if(e.code==='Space'&&!modal.open&&!['INPUT','BUTTON','SELECT','TEXTAREA','A'].includes(document.activeElement?.tagName)&&!document.activeElement?.closest('[data-port],[data-valve],[data-toggle]')){e.preventDefault();$('#play').click();}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.status==='running'){pause();notify('Автопауза: страница была скрыта. Продолжение — по кнопке.');}lastFrame=0;});window.addEventListener('pagehide',()=>{if(state.status==='running')state=E.pause(state);save();});
 /* ===== Детский режим: наставник Капля, обучение, звёзды, значки, звук, конфетти ===== */
-const PKEY='five-jars-progress-v1',LEVEL_ORDER=Object.keys(E.LEVELS);
+const PKEY='five-jars-progress-v1',LEVEL_ORDER=Object.keys(E.LEVELS).filter(id=>!E.LEVELS[id].endless);
 const PAR={freelance:120,inflation:120,freedom:300,first:45,piggy:90,rainy:180,invest:130,skills:170,crisis:240,easy:280,medium:360,hard:480};
-const LEVEL_META=Object.fromEntries(LEVEL_ORDER.map((id,i)=>[id,{name:E.LEVELS[id].title,icon:E.LEVELS[id].icon,n:i+1}]));
+const LEVEL_META=Object.fromEntries(Object.keys(E.LEVELS).map(id=>[id,{name:E.LEVELS[id].title,icon:E.LEVELS[id].icon,n:E.LEVELS[id].endless?'∞':LEVEL_ORDER.indexOf(id)+1}]));
+const isEndless=()=>!!E.LEVELS[state.level].endless;
+const yearsWord=n=>{const a=n%10,b=n%100;return a===1&&b!==11?'год':a>=2&&a<=4&&(b<10||b>=20)?'года':'лет';};
 const LEARNED={freelance:'Когда деньги приходят пачками, запас в Доходах и копилка помогают дотянуть до следующей получки.',inflation:'Цены растут — монеты, которые просто лежат, дешевеют. Инвестиции помогают догнать инфляцию.',freedom:'Капитал может сам оплачивать жизнь. Меньше лишних трат — ближе свобода.',first:'Вентиль управляет потоком, а Потребление нельзя ни опустошать, ни переполнять.',piggy:'Излишек не надо проедать — перелив отправит его в копилку.',rainy:'Подушка и страховка спасают, когда зарплата пропадает.',invest:'Инвестиции приносят постоянный доход — деньги работают на тебя.',skills:'Навык поднимает зарплату навсегда, а подработка помогает только на время.',crisis:'В кризис спасает подушка, а продажа на дне стоит денег и будущего дохода.',easy:'Спекуляции — только для излишков: рынок может и дать, и отнять.',medium:'Когда доход скачет, выручает запас.',hard:'Ты собрал устойчивую систему из пяти кувшинов. Ты — мастер потока!'};
 const DROP='<svg viewBox="0 0 48 56" width="48" height="56" aria-hidden="true"><path d="M24 2 C24 2 4 26 4 37 a20 18 0 0 0 40 0 C44 26 24 2 24 2Z" fill="#69b8b1" stroke="#1d6b5a" stroke-width="2"/><path d="M13 30 q-3 7 1 13" stroke="#fff" stroke-width="3" fill="none" opacity=".6" stroke-linecap="round"/><circle cx="18" cy="36" r="3.2" fill="#12372e"/><circle cx="30" cy="36" r="3.2" fill="#12372e"/><circle cx="19" cy="35" r="1" fill="#fff"/><circle cx="31" cy="35" r="1" fill="#fff"/><path d="M18 44 q6 5 12 0" stroke="#12372e" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';
 const JAR_INFO={
@@ -869,12 +921,12 @@ const BADGES=[
  {id:'storm',icon:'⛈️',title:'Пережил кризис',text:'Доживи до конца кризиса, не опустошив Потребление.'},
  {id:'cool',icon:'🧊',title:'Холодная голова',text:'Победи, ни разу не продав инвестиции или спекуляции.'},
  {id:'clean',icon:'💎',title:'Ни капли мимо',text:'Победи, потеряв меньше 3% заработанного.'},
- {id:'bonus',icon:'💵',title:'Премия в дело',text:'Разложи премию по кувшинам, почти ничего не пролив.'},{id:'freedom10',icon:'🏝',title:'10% свободы',text:'Инвестиции оплачивают десятую часть расходов на жизнь.'},{id:'freedom',icon:'🏖',title:'Финансовая свобода',text:'Доход капитала покрывает все расходы на жизнь.'},{id:'three',icon:'⭐',title:'Три звезды',text:'Получи три звезды на любом уровне.'},
+ {id:'bonus',icon:'💵',title:'Премия в дело',text:'Разложи премию по кувшинам, почти ничего не пролив.'},{id:'freedom10',icon:'🏝',title:'10% свободы',text:'Инвестиции оплачивают десятую часть расходов на жизнь.'},{id:'freedom',icon:'🏖',title:'Финансовая свобода',text:'Доход капитала покрывает все расходы на жизнь.'},{id:'cycle1',icon:'🔄',title:'Полный цикл',text:'В бесконечном режиме переживи 4 года: подъём, перегрев, рецессию и восстановление.'},{id:'decade',icon:'🗓',title:'Десять лет',text:'Продержись 10 лет в бесконечном режиме.'},{id:'veteran',icon:'🏛',title:'Ветеран рынка',text:'Продержись 25 лет в бесконечном режиме.'},{id:'three',icon:'⭐',title:'Три звезды',text:'Получи три звезды на любом уровне.'},
  {id:'hard',icon:'🏆',title:'Мастер потока',text:'Пройди уровень «Сложно».'}];
 function loadProgress(){const base={stars:{},badges:{},unlockAll:false,sound:true,hints:true,tut:null};try{const p=JSON.parse(localStorage.getItem(PKEY)||'{}');return p&&typeof p==='object'?{...base,...p,stars:{...(p.stars||{})},badges:{...(p.badges||{})}}:base;}catch(_){return base;}}
 let progress=loadProgress();
 function saveProgress(){try{localStorage.setItem(PKEY,JSON.stringify(progress));}catch(_){}}
-function unlocked(level){const i=LEVEL_ORDER.indexOf(level);return progress.unlockAll||i===0||LEVEL_ORDER.slice(i-1).some(id=>(progress.stars[id]||0)>0);}
+function unlocked(level){if(E.LEVELS[level]&&E.LEVELS[level].endless)return true;const i=LEVEL_ORDER.indexOf(level);return progress.unlockAll||i===0||LEVEL_ORDER.slice(i-1).some(id=>(progress.stars[id]||0)>0);}
 const starLine=n=>'★'.repeat(n)+'☆'.repeat(3-n);
 
 /* Звук: короткие синтезированные сигналы, без файлов. */
@@ -947,6 +999,8 @@ const LESSONS={
  easy:[{title:'Пятый кувшин: Спекуляции',text:'<b>Спекуляции</b> — рискованные деньги. Каждые 30 секунд рынок то поднимает, то роняет этот кувшин. Туда стоит лить только <b>излишки</b> — то, что не жалко потерять.',target:['#jar-speculation'],next:'Рискнём'},
   {title:'Полный каскад',text:'Включи перелив <b>Инвестиции → Спекуляции</b>. Теперь у тебя вся система из пяти кувшинов!',target:['#scene-toggle-investments-speculation'],select:'investments-speculation',done:opened('investments-speculation'),doing:'Включи перелив'},
   FINAL('Все пять целей, кризис и рынок. Используй всё, что узнал. Удачи!','Все пять целей — 10 секунд')],
+ endless:[{title:'Экономический цикл',text:'Каждые <b>30 секунд — новый год</b>. Фазы идут по кругу: 📈 Подъём → 🔥 Перегрев → 🌧 Рецессия → 🌱 Восстановление. Сверху видно фазу и сколько до следующей — готовься заранее.',target:['#goalTray'],next:'Дальше'},
+  {title:'Цены растут всегда',text:'Цены растут примерно на 40% за цикл, зарплата — медленнее. Живёт дольше тот, чей <b>капитал</b> приносит доход: 🏖 показывает, какую часть расходов он уже покрывает. Рекорд — сколько лет продержишься.',target:['#goalTray'],next:'Поехали'}],
  medium:[{title:'Переменный поток',text:'Теперь зарплата <b>скачет</b>: то меньше, то больше. Впереди кризис и срочный ремонт. Держи подушку полной!',next:'Готов'}],
  hard:[{title:'Финальный экзамен',text:'Высокие расходы, сильные колебания и три беды подряд: кризис, болезнь и ремонт. Пройдёшь — станешь настоящим мастером потока!',next:'Вперёд!'}]};
 const tut={active:false,level:'first',i:0,timer:0},hint={key:null,seen:{},checked:0};
@@ -961,9 +1015,9 @@ function tutBegin(level,i){if(!LESSONS[level])return;tut.active=true;tut.level=l
 function tutStop(){if(tut.active)tutResume();tut.active=false;clearTimeout(tut.timer);tut.timer=0;coachHide();}
 function tutResume(){if(tut.autoPaused&&state.status==='paused'){state=E.play(state);lastFrame=0;}tut.autoPaused=false;}
 function tutAdvance(){clearTimeout(tut.timer);tut.timer=0;if(tut.i>=steps().length-1){progress.tut=null;saveProgress();tutStop();tutResume();update();return;}tut.i++;progress.tut={level:tut.level,i:tut.i};saveProgress();sfx('step');tutRender();if(!steps()[tut.i].next)tutResume();update();}
-function tutOnStart(level,resume){tutStop();prevGoals=null;bonusTrack=null;lastPay=null;wasFree=false;lastEventSeen=state._eventId;if(['won','lost'].includes(state.status))return;
+function tutOnStart(level,resume){tutStop();prevGoals=null;bonusTrack=null;lastPay=null;wasFree=false;peakWorth=0;lastEventSeen=state._eventId;if(['won','lost'].includes(state.status))return;
  if(resume){if(progress.tut&&progress.tut.level===level)tutBegin(level,progress.tut.i);return;}
- if(!progress.stars[level])tutBegin(level,0);
+ if(!progress.stars[level]&&!(E.LEVELS[level].endless&&progress.endless))tutBegin(level,0);
  else{const c=E.LEVELS[level];hint.key='mission';coachShow(`${c.icon} Уровень ${LEVEL_META[level].n}`,c.title,`${esc(c.description)} <i>${esc(c.news)}</i>`,'','Поехали');glow([]);}}
 function hintFor(m,r){const c=id=>con(state,id),low=state.balances.consumption<m.floatLine*1.25;
  if(m.activeShocks.includes('bonus'))return['bonus','Премия!','В Доходы льётся много денег. Нажми <b>+</b> на кранах в копилку и инвестиции, чтобы ничего не пролилось.',['#chip-income-savings','#chip-income-investments']];
@@ -986,17 +1040,19 @@ function hintTick(m,r){const now=performance.now();
 let eatWarned=false;
 function popText(jarId,text){const j=JARS.find(j=>j.id===jarId);if(!j)return;const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',j.x);t.setAttribute('y',j.y+215);t.setAttribute('class','pop-text');t.textContent=text;scene.appendChild(t);setTimeout(()=>t.remove(),1400);}
 const GOAL_ICON={income:'💰',consumption:'🍕',savings:'🛟',investments:'🌱',speculation:'🎢'};
-function renderTray(m){const tray=$('#goalTray');if(!tray)return;const ended=['won','lost'].includes(state.status),items=[];
+function renderTray(m){const tray=$('#goalTray');if(!tray)return;
+ if(m.cycle){const c=m.cycle,rec=progress.endless,html=`<span class="goal-chip phase ph-${c.phase.id}" title="${c.phase.hint}"><i aria-hidden="true">${c.phase.icon}</i><b>Год ${c.year} · ${c.phase.name}</b><u><s style="width:${Math.round((1-c.nextIn/c.yearLen)*100)}%"></s></u></span><span class="goal-chip" title="Следующая фаза: ${c.next.name}"><i aria-hidden="true">${c.next.icon}</i><b>через ${Math.max(1,Math.ceil(c.nextIn))} с</b></span><span class="goal-chip" title="Капитал — все деньги во всех кувшинах"><i aria-hidden="true">💰</i><b>${fmt(m.total)}</b></span><span class="goal-chip" title="Финансовая свобода: доход капитала покрывает ${Math.round(m.freedom*100)}% расходов"><i aria-hidden="true">🏖</i><b>${Math.round(m.freedom*100)}%</b><u><s style="width:${Math.min(100,Math.round(m.freedom*100))}%"></s></u></span><span class="goal-chip" title="Цены выросли на ${m.pricePct}%"><i aria-hidden="true">🎈</i><b>+${m.pricePct}%</b></span>${rec?`<span class="goal-chip" title="Рекорд"><i aria-hidden="true">🏆</i><b>${rec.years} ${yearsWord(rec.years)}</b></span>`:''}`;if(tray._html!==html){tray.innerHTML=html;tray._html=html;}return;}const ended=['won','lost'].includes(state.status),items=[];
  for(const id of m.jars.slice(1)){const b=state.balances[id],t=state.targets[id];items.push({icon:GOAL_ICON[id],label:`${NAMES[id]}: ${fmt(b)} из ${fmt(t)}`,val:`${fmt(b)}/${fmt(t)}`,frac:t?Math.min(1,b/t):1,ok:m.goals[id]});}
  if(m.flowTarget!=null)items.push({icon:GOAL_ICON.income,label:`Постоянный доход: ${dec(m.incomeFlow)} из ${m.flowTarget} в секунду`,val:`${dec(m.incomeFlow)}/${dec(m.flowTarget)}/с`,frac:Math.min(1,m.incomeFlow/m.flowTarget),ok:m.goals.income});
  if(m.freedomGoal)items.push({icon:'🏖',label:`Финансовая свобода: капитал покрывает ${Math.round(m.freedom*100)}% расходов`,val:`${Math.round(m.freedom*100)}%`,frac:Math.min(1,m.freedom),ok:m.goals.freedom});
  const wait=!ended&&m.goalsAfter>state.time,hold=state.holdTime>0;
  const html=items.map(g=>`<span class="goal-chip ${g.ok?'ok':''}" title="${g.label}" aria-label="${g.label}${g.ok?', выполнено':''}"><i aria-hidden="true">${g.ok?'✓':g.icon}</i><b>${g.val}</b><u><s style="width:${Math.round(g.frac*100)}%"></s></u></span>`).join('')+`<span class="goal-chip hold ${hold?'active':''}" title="Все цели нужно удержать 10 секунд"><i aria-hidden="true">⏱</i><b>${hold?`${dec(state.holdTime)} / 10 с`:wait?`с ${clock(m.goalsAfter)}`:'держи 10 с'}</b><u><s style="width:${Math.round(state.holdTime*10)}%"></s></u></span>`;
  if(tray._html!==html){tray.innerHTML=html;tray._html=html;}}
-let bonusTrack=null,lastPay=null,wasFree=false;
+let bonusTrack=null,lastPay=null,wasFree=false,peakWorth=0;
 function afterUpdate(m,r){const running=state.status==='running';
  {const on=m.activeShocks.includes('bonus'),lost=state.totals.eaten+state.totals.spilled;if(on&&!bonusTrack)bonusTrack={lost};if(!on&&bonusTrack){if(state.status!=='lost'&&lost-bonusTrack.lost<5)award('bonus');bonusTrack=null;}}
  if(m.payEvery){const pi=Math.floor((state.time+1e-6)/m.payEvery);if(lastPay!==null&&pi>lastPay&&running){popText('income',`+${fmt(m.payLump)}`);sfx('up');haptic(15);}lastPay=pi;}
+ if(m.cycle){peakWorth=Math.max(peakWorth,m.total);if(m.cycle.years>=4)award('cycle1');if(m.cycle.years>=10)award('decade');if(m.cycle.years>=25)award('veteran');}
  if(m.freedom>=.1)award('freedom10');if(m.freedom>=1){award('freedom');if(!wasFree&&running)popText('investments','🏖 Свобода!');}wasFree=m.freedom>=1;
  if(E.LEVELS[state.level].challenge==='noEat'&&!['won','lost'].includes(state.status)){const e=state.totals.eaten;$('#holdText').textContent+=` · проедено: ${fmt(e)}`;
   if(e>=.5&&!eatWarned){eatWarned=true;sfx('alert');notify('🍕 Монеты проедаются — звезда «Ни одной монеты» потеряна. Закрой кран «−»!');}if(e<.5)eatWarned=false;}
@@ -1045,6 +1101,10 @@ $('#badges').onclick=openBadges;syncSoundButton();
 
 /* Итог партии: звёзды, значки, совет. */
 function finish(){if(state.status==='won'){const s0=state;sfx('win');haptic([30,60,30,60,80]);confetti();setTimeout(()=>{if(state===s0)result();},1500);}else{sfx('lose');haptic(200);result();}}
+function endlessResult(){const m=E.metrics(state),years=m.cycle.years,peak=Math.max(peakWorth,m.total),rec=progress.endless,isRec=!rec||years>rec.years||(years===rec.years&&peak>rec.worth);
+ if(isRec){progress.endless={years,worth:Math.round(peak),time:Math.round(state.time)};saveProgress();confetti();sfx('win');}
+ const shockNames=E.levelShocks(state).filter(sh=>m.activeShocks.includes(sh.id)).map(sh=>sh.title).join(', ');
+ showModal(isRec?'Новый рекорд!':'Цикл окончен',`<div class="result-copy"><div class="big-years">${years}</div><h3>${yearsWord(years)} продержался</h3><p>Год ${m.cycle.year}, ${m.cycle.phase.icon} ${m.cycle.phase.name.toLowerCase()}${shockNames?` · в момент остановки: ${esc(shockNames)}`:''}. Цены за это время выросли на ${m.pricePct}%.</p>${!isRec&&rec?`<p>Рекорд: <b>${rec.years} ${yearsWord(rec.years)}</b>, капитал ${fmt(rec.worth)}.</p>`:''}<div class="coach-tip"><div class="coach-face">${DROP}</div><p><b>Совет Капли:</b> ${m.freedom<.3?'Капитал покрывал меньше трети расходов. Вкладывай раньше и держи хотелки ниже — инфляция обгоняет зарплату.':m.cycle.phase.id==='bust'?'Рецессия бьёт сильнее всего. Перед ней копи подушку, а страховку держи включённой.':loseTip()}</p></div></div><div class="result-stats"><div><b>${clock(Math.round(state.time))}</b><span>Время в игре</span></div><div><b>${fmt(peak)}</b><span>Пик капитала</span></div><div><b>${Math.round(m.freedom*100)}%</b><span>Свобода в конце</span></div></div><div class="modal-actions"><button data-action="close">Посмотреть схему</button><button data-action="welcome">Уровни</button><button class="primary" data-action="retry">↻ Новый цикл</button></div>`,'result');}
 function rateGame(){const t=state.totals,earned=t.salary+t.overtime+t.investmentIncome,lost=t.eaten+t.spilled+t.liquidationLoss,lossPct=earned>0?lost/earned:0,won=state.status==='won',par=PAR[state.level];
  const noEat=E.LEVELS[state.level].challenge==='noEat';
  const crit=[{ok:won,label:'Победа: все цели удержаны'},noEat?{ok:won&&t.eaten<.5,label:`Ни одной проеденной монеты: проедено ${fmt(t.eaten)}`}:{ok:won&&lossPct<=.1,label:`Бережливость: потеряно ${Math.round(lossPct*100)}% заработанного (норма ≤ 10%)`},{ok:won&&state.time<=par,label:noEat?`Без срывов: победа к ${clock(Math.round(state.time))} (норма ≤ ${clock(par)})`:`Скорость: ${clock(Math.round(state.time))} (норма ≤ ${clock(par)})`}];
