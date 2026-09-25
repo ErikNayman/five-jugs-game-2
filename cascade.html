@@ -184,12 +184,12 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
 .lb-chip{font-size:12px;padding:4px 9px;border-radius:999px;background:#10292f;border:1px solid #3d5f66;white-space:nowrap}
 .lb-slots{display:flex;gap:4px;margin-left:auto}.lb-slot{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#24454b;border:1px solid #5d7f82;font-size:17px;cursor:help}.lb-slot.empty{color:#6f8f92;background:#122f36;border-style:dashed}
 .life-sum{text-align:left;margin-top:12px;font-size:13px}.life-log{margin:6px 0 0;padding-left:18px;color:#c8d8d1;line-height:1.6}
-.lb-focus{display:flex;align-items:center;gap:3px;padding:3px;border-radius:10px;background:#10292f;border:1px solid #3d5f66}.lb-focus em{font-style:normal;font-size:11px;color:#9fb8b2;padding:0 4px}.lb-focus button{width:36px;height:34px;border-radius:8px;border:1px solid transparent;background:transparent;color:inherit;font-size:17px;cursor:pointer;padding:0}.lb-focus button.on{background:#2c5a55;border-color:var(--brass)}.lb-focus button:focus-visible{outline:2px solid var(--brass)}.lb-fstat{font-size:12px;color:#c8d8d1;padding:0 6px;white-space:nowrap}.life-grid.g2{grid-template-columns:repeat(2,1fr)!important}.quality{font-size:14px;color:#c8d8d1}.whatif{margin:12px 0;padding:12px 14px;border-radius:12px;background:#10292f;border:1px solid #3d5f66;text-align:left}.whatif h4{margin:0 0 6px;font-size:15px}.whatif p{margin:4px 0;font-size:13px;color:#c8d8d1}.wi-dec{margin:12px 0 2px;font-size:14px;font-weight:650}.wi-dec em{font-style:normal;font-weight:400;color:#c8d8d1}.wi-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;padding:5px 0;border-top:1px dashed #2c4a50}.wi-b{white-space:nowrap;font-weight:650}.wi-b.up{color:#9fe0b0}.wi-b.down{color:#f39b75}.wi-b.same{color:#9fb8b2}.wi-bar{height:6px;margin:8px 0;background:#243f44;border-radius:3px;overflow:hidden}.wi-bar s{display:block;height:100%;width:0;background:var(--brass);transition:width .2s}.wi-best{padding:8px 10px;border-radius:9px;background:#1d3b33;border:1px solid #4f7f68}
+.lb-focus{display:flex;align-items:center;gap:3px;padding:3px;border-radius:10px;background:#10292f;border:1px solid #3d5f66}.lb-focus em{font-style:normal;font-size:11px;color:#9fb8b2;padding:0 4px}.lb-focus button{width:36px;height:34px;border-radius:8px;border:1px solid transparent;background:transparent;color:inherit;font-size:17px;cursor:pointer;padding:0}.lb-focus button.on{background:#2c5a55;border-color:var(--brass)}.lb-focus button:focus-visible{outline:2px solid var(--brass)}.lb-fstat{font-size:12px;color:#c8d8d1;padding:0 6px;white-space:nowrap}.life-grid.g2{grid-template-columns:repeat(2,1fr)!important}.quality{font-size:14px;color:#c8d8d1}.vital-ico{font-size:9px}.happy-fill{fill:#f3c76a;transition:width .3s}.happy-fill.low{fill:#f39b75}.energy-track.happy{margin-top:4px}.energy-track.happy i{background:#f3c76a}.goal-chip.ls.active{border-color:var(--brass);box-shadow:0 0 12px #ffd76a55}.whatif{margin:12px 0;padding:12px 14px;border-radius:12px;background:#10292f;border:1px solid #3d5f66;text-align:left}.whatif h4{margin:0 0 6px;font-size:15px}.whatif p{margin:4px 0;font-size:13px;color:#c8d8d1}.wi-dec{margin:12px 0 2px;font-size:14px;font-weight:650}.wi-dec em{font-style:normal;font-weight:400;color:#c8d8d1}.wi-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;padding:5px 0;border-top:1px dashed #2c4a50}.wi-b{white-space:nowrap;font-weight:650}.wi-b.up{color:#9fe0b0}.wi-b.down{color:#f39b75}.wi-b.same{color:#9fb8b2}.wi-bar{height:6px;margin:8px 0;background:#243f44;border-radius:3px;overflow:hidden}.wi-bar s{display:block;height:100%;width:0;background:var(--brass);transition:width .2s}.wi-best{padding:8px 10px;border-radius:9px;background:#1d3b33;border:1px solid #4f7f68}
 @media(max-width:730px){.life-grid{grid-template-columns:1fr!important}.life-grid.g2{grid-template-columns:1fr!important}.lb-focus{flex-basis:100%;flex-wrap:wrap;justify-content:space-between}.lb-focus button{flex:1}.lb-fstat{flex-basis:100%;text-align:center;padding:3px 0 2px;white-space:normal}.lb-goal{min-width:0;flex-basis:100%}.lb-slots{margin-left:0}}
 </style></head><body>
 <header class="header"><a href="#" class="brand" id="home"><span class="brand-icon">5</span><span>Пять кувшинов<small>КАСКАД · ЛАБОРАТОРИЯ ПОТОКА</small></span></a><div class="header-actions"><button class="quiet" id="badges" aria-label="Значки"><span class="ico">🏅</span><span class="lbl">Значки</span></button><button class="quiet" id="sound" aria-pressed="true" aria-label="Звук"><span class="ico">🔊</span><span class="lbl">Звук</span></button><button class="quiet" id="help" aria-label="Как устроено"><span class="ico">❓</span><span class="lbl">Как устроено</span></button><button class="quiet" id="save" aria-label="Сохранить"><span class="ico">💾</span><span class="lbl">Сохранить</span></button><button class="quiet" id="new" aria-label="Уровни"><span class="ico">🗺</span><span class="lbl">Уровни</span></button></div></header>
 <main><div class="intro-line"><div><div class="eyebrow">Соединяй трубы. Сохраняй переливы.</div><h1>Дай деньгам правильное направление.</h1></div><div class="game-controls"><button id="speed" class="small-button" aria-label="Скорость игры">×1</button><button id="play" class="play">▶ Запустить поток</button></div></div>
-<section class="hud" aria-label="Состояние системы"><div><span class="hud-label">Время</span><strong id="time">00:00</strong><small id="levelLabel">Первый поток</small></div><div><span class="hud-label">Приходит в систему</span><strong id="inRate">0 <em>ед./с</em></strong><small id="sourceLabel">Труд + капитал</small></div><div><span class="hud-label">Уходит на жизнь</span><strong id="outRate">0 <em>ед./с</em></strong><small id="runway">Потребление под защитой</small></div><div><span class="hud-label">Цели уровня</span><strong id="targetCount">0 <em>из 5</em></strong><small id="holdText">Удержи все цели 10 секунд</small></div><div class="energy-hud"><span class="hud-label">Силы для подработки</span><strong id="energy">100<em>%</em></strong><div class="energy-track"><i id="energyBar"></i></div></div></section>
+<section class="hud" aria-label="Состояние системы"><div><span class="hud-label">Время</span><strong id="time">00:00</strong><small id="levelLabel">Первый поток</small></div><div><span class="hud-label">Приходит в систему</span><strong id="inRate">0 <em>ед./с</em></strong><small id="sourceLabel">Труд + капитал</small></div><div><span class="hud-label">Уходит на жизнь</span><strong id="outRate">0 <em>ед./с</em></strong><small id="runway">Потребление под защитой</small></div><div><span class="hud-label">Цели уровня</span><strong id="targetCount">0 <em>из 5</em></strong><small id="holdText">Удержи все цели 10 секунд</small></div><div class="energy-hud"><span class="hud-label">❤️ Здоровье · 😊 Счастье</span><strong id="energy">100<em>%</em></strong><div class="energy-track"><i id="energyBar"></i></div><div class="energy-track happy"><i id="happyBar"></i></div></div></section>
 <div id="lifeBar" class="life-bar" hidden></div><div id="shockBanner" class="shock-banner" hidden><span id="shockName" role="status"></span><b id="shockCountdown"></b></div>
 <section class="workbench" aria-label="Интерактивная система труб и кувшинов"><div class="bench-top"><span><i class="status-dot" id="statusDot"></i><b id="statusText">Система на паузе</b></span><div id="goalTray" class="goal-tray" aria-label="Цели уровня"></div><button class="quiet" id="fullscreen" aria-label="Развернуть игру на весь экран">⛶</button></div><div class="scene-scroll" id="sceneScroll"><svg id="scene" viewBox="0 0 1180 530" aria-label="Пять кувшинов, трубы с кранами и переливы"></svg></div><div class="bench-bottom"><span><i class="legend-line"></i>золотая черта — цель</span><span><b class="legend-key">− +</b>кран: закрыть · открыть</span><span><b class="legend-key">◐</b>перелив через край</span><button class="quiet" id="cancelConnect" hidden>Отменить соединение</button></div></section>
 <button id="deckToggle" class="deck-toggle">⚙ Точная настройка труб</button>
@@ -372,11 +372,11 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       overtime: 0, comfort: 0.35, energy: 100, salaryLevel: 0, training: null, holdTime: 0, seed: cfg.endless ? (Number.isSafeInteger(seedArg) && seedArg > 0 ? seedArg >>> 0 : ((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0) || 1) : 0,
       events: [], totals: Object.fromEntries(TOTAL_KEYS.map(k => [k, 0])),
       rates: zeroRates(), _accumulator: 0, _eventId: 0, _incomePhase: 'normal', _marketIndex: 0,
-      _warned: { eaten: false, savings: false, investments: false, speculation: false, float: false, energy: false } };
+      _warned: { eaten: false, savings: false, investments: false, speculation: false, float: false, energy: false, happy: false } };
     s.life = cfg.life ? { prof: PROFESSIONS[opts.prof] ? opts.prof : 'office', goal: GOALS[opts.goal] ? opts.goal : 'freedom', slots: [], used: [], log: [], fx: {}, projects: [],
       business: 0, pending: null, offers: 0, nextAt: 0, goalState: 'build', goalUntil: 0, mortgage: 0, freeHold: 0, pauseUntil: 0, extraUntil: 0, extraRate: 0,
       focus: 'rest', edu: 0, eduLvl: 0, proj: 0, dreams: [], qSum: 0, eSum: 0 } : null;
-    s._resAmt = 0; s._resGap = 0; s._yInv = 0; s._yCons = 0;
+    s._resAmt = 0; s._resGap = 0; s._yInv = 0; s._yCons = 0; s.lifestyle = 1; s._lsHold = 0; s.happy = 70; s.lostBy = '';
     event(s, 'Подключайте трубы и переливы. Потребление не должно опустеть.');
     return s;
   }
@@ -425,8 +425,8 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       if (!d || info.cash + EPS < d.price) return s;
       const n = clone(s), B = n.balances; let left = d.price; const a = Math.min(B.income, left); B.income -= a; left -= a;
       const b = Math.min(B.savings, left); B.savings -= b; left -= b; if (left > EPS) { B.investments = Math.max(0, B.investments - left / 0.9); n.totals.liquidationLoss += left / 9; }
-      n.life.dreams.push(d.id); n.energy = Math.min(100, n.energy + 30); n.life.log.push(`${d.icon} ${d.name} — мечта сбылась`);
-      event(n, `${d.icon} ${d.name}: мечта сбылась! −${Math.round(d.price)}, силы +30.`, 'good'); return n;
+      n.life.dreams.push(d.id); n.energy = Math.min(100, n.energy + 30); n.happy = Math.min(100, (n.happy ?? 70) + 25); n.life.log.push(`${d.icon} ${d.name} — мечта сбылась`);
+      event(n, `${d.icon} ${d.name}: мечта сбылась! −${Math.round(d.price)}, здоровье +30, счастье +25.`, 'good'); return n;
     }
     if (!L || !editable(s) || L.goalState !== 'build' || !info.ready || L.goal === 'freedom') return s;
     const n = clone(s), N = n.life;
@@ -453,7 +453,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       if (P.id === 'move' && idx === 0) { fx.salaryMul = (fx.salaryMul || 1) * 1.25; fx.drainMul = (fx.drainMul || 1) * 1.2; }
       if (P.id === 'startup' && idx === 0) N.projects.push({ at: t + 2 * YEAR, pay: P.luck < 0.5 ? 1800 : 0, title: 'Стартап' });
       if (P.id === 'promo' && idx === 0) { fx.salaryMul = (fx.salaryMul || 1) * 1.2; fx.tireAdd = (fx.tireAdd || 0) + 0.6; }
-      if (P.id === 'parents') { if (idx === 1) { N.extraUntil = t + YEAR; N.extraRate = 12; } if (idx === 2) n.energy = Math.max(0, n.energy - 35); }
+      if (P.id === 'parents') { if (idx === 1) { N.extraUntil = t + YEAR; N.extraRate = 12; } if (idx === 2) { n.energy = Math.max(1, n.energy - 35); n.happy = Math.max(1, (n.happy ?? 70) - 15); } }
       if (P.id === 'doctor') { if (idx === 0) { N.pauseUntil = t + 15; n.energy = 100; fx.noIllness = true; } else { fx.drainMul = (fx.drainMul || 1) * 1.05; fx.tireAdd = (fx.tireAdd || 0) + 0.2; } }
       N.used.push(P.id); N.log.push(`${F.icon} ${F.title}: ${opt.label}`); event(n, `${F.title}: ${opt.label.toLowerCase()}.`, 'info');
     }
@@ -479,8 +479,10 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
   }
 
   // Endless mode: a «year» is 30 s; phases repeat; each year's events come from the run's seed.
-  const REST = 3, BASE_TIRE = 0.5, WORK_TIRE = 8;
-  const productivity = s => LEVELS[s.level].overtime === false ? 1 : 0.6 + 0.4 * Math.min(1, s.energy / 50);
+  const REST = 3, BASE_TIRE = 0.5, WORK_TIRE = 6;
+  // ❤️ Здоровье (s.energy) and 😊 Счастье (s.happy) live on levels with overtime: both low → you earn less, zero → game over.
+  const vitals = s => LEVELS[s.level].overtime !== false;
+  const productivity = s => !vitals(s) ? 1 : (0.6 + 0.4 * Math.min(1, s.energy / 50)) * (0.8 + 0.2 * Math.min(1, (s.happy ?? 70) / 50));
   const YEAR = 30, PHASES = [
     { id: 'boom', name: 'Подъём', icon: '📈', salary: 1.1, drain: 1, swing: 0.08, hint: 'Зарплаты растут, рынок спокойный — время копить.' },
     { id: 'heat', name: 'Перегрев', icon: '🔥', salary: 1, drain: 1.15, swing: 0.15, hint: 'Жизнь дорожает, рынок на пике.' },
@@ -532,9 +534,9 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     good: { name: 'Хорошая жизнь', icon: '🎈', text: 'Исполни три мечты, не отказывай себе в хотелках (в среднем от 50%) и держи в подушке запас на год жизни.' }
   };
   const DREAMS = { party: { icon: '🎉', name: 'Праздник', cost: 300 }, trip: { icon: '✈️', name: 'Путешествие', cost: 600 }, car: { icon: '🚗', name: 'Машина', cost: 1200 } };
-  const FOCUS = { work: { icon: '💼', name: 'Подработка', text: 'Деньги сейчас. Отнимает силы — силу подработки выбирай кнопкой 💪.' },
+  const FOCUS = { work: { icon: '💼', name: 'Подработка', text: 'Деньги сейчас. Отнимает ❤️ здоровье — силу подработки выбирай кнопкой 💪.' },
     study: { icon: '🎓', name: 'Учёба', text: 'Каждые 30 с учёбы — зарплата +4% навсегда (до +40%). Немного утомляет.' },
-    rest: { icon: '😌', name: 'Отдых', text: 'Силы восстанавливаются быстрее. Денег не приносит.' },
+    rest: { icon: '😌', name: 'Отдых', text: 'Здоровье восстанавливается быстрее, счастье растёт. Денег не приносит.' },
     goal: { icon: '🎯', name: 'Личный проект', text: 'Двигает твою цель: удешевляет её или, для свободы, приносит свой доход. Немного утомляет.' } };
   const FOCUS_TIRE = { work: 0, study: 1, rest: -2, goal: 1 };
   const projShare = (L, cap, per) => Math.min(cap, (L.proj || 0) / per);
@@ -562,17 +564,35 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       { label: 'Вложить 400', cost: 400, text: 'Шанс 50%: через 2 года получишь 1800. Или ноль.' },
       { label: 'Отказаться', text: 'Деньги останутся при тебе.' }] },
     promo: { icon: '📈', title: 'Повышение с переработками', text: 'Предлагают должность выше, но работы будет больше.', options: [
-      { label: 'Согласиться', text: 'Зарплата +20%, но силы тают быстрее.' },
+      { label: 'Согласиться', text: 'Зарплата +20%, но здоровье тает быстрее.' },
       { label: 'Отказаться', text: 'Всё как было.' }] },
     parents: { icon: '👵', title: 'Родителям нужен ремонт', text: 'Родители просят помочь с ремонтом.', options: [
       { label: 'Сразу 300', cost: 300, text: 'Одна крупная трата сейчас.' },
       { label: 'Частями', text: 'Год по 12/с к расходам — в сумме больше, зато без удара по запасам.' },
-      { label: 'Отказать', text: 'Денег не тратишь, но переживаешь: силы −35.' }] },
+      { label: 'Отказать', text: 'Денег не тратишь, но переживаешь: здоровье −35, счастье −15.' }] },
     doctor: { icon: '🩺', title: 'Врач советует отдохнуть', text: 'Усталость копится. Врач предлагает перерыв.', options: [
-      { label: 'Отдохнуть', text: '15 с без зарплаты, силы полностью восстановятся, болезни больше не страшны.' },
+      { label: 'Отдохнуть', text: '15 с без зарплаты, здоровье полностью восстановится, болезни больше не страшны.' },
       { label: 'Работать дальше', text: 'Здоровье подорвано: расходы +5%, устаёшь быстрее.' }] }
   };
   const lifeOf = s => (LEVELS[s.level].life && s.life) || null;
+  // «Уровень жизни»: rewarded only when higher spending is carried by the flow, not by the reserve.
+  const LIFESTYLE = [null,
+    { icon: '🥪', name: 'Самое необходимое' },
+    { icon: '🍕', name: 'Маленькие радости', comfort: 0.35 },
+    { icon: '🛋', name: 'Уют', comfort: 0.7 },
+    { icon: '✈️', name: 'Достаток', comfort: 1, free: 0.25 },
+    { icon: '🏖', name: 'Изобилие', comfort: 1, free: 0.6 }];
+  const LS_HOLD = 12;
+  const lifestyleMax = s => activeJars(s.level).includes('investments') ? 5 : 3;
+  function lifestyleCheck(s, r) {
+    const T = LIFESTYLE[s.lifestyle + 1]; if (!T || s.lifestyle >= lifestyleMax(s)) return { tier: null, ok: false, why: '' };
+    const free = nominalDrain(s) > 0 ? (s.balances.investments * yieldOf(s) + sideIncome(s)) / nominalDrain(s) : 0;
+    const why = s.comfort < T.comfort - EPS ? `хотелки ${Math.round(T.comfort * 100)}%`
+      : s.balances.consumption < floatLine(s) || r.unpaid > 0 ? 'Потребление выше красной черты'
+      : (r.actual['savings-consumption'] || 0) > 0.01 ? 'не тратить подушку'
+      : T.free && free < T.free ? `капитал покрывает ${Math.round(T.free * 100)}% расходов` : '';
+    return { tier: s.lifestyle + 1, ok: !why, why };
+  }
   function effMods(s) {
     const L = lifeOf(s); if (!L) return null;
     const cfg = LEVELS[s.level], prof = PROFESSIONS[L.prof] || PROFESSIONS.office, fx = L.fx || {};
@@ -695,7 +715,12 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     // Rest comes from «хотелки»; overtime always costs strength. Levels without overtime keep strength full.
     if (cfg.overtime === false) s.energy = 100;
     else if (off) s.energy = clamp(s.energy + (4 - (L ? Math.max(0, FOCUS_TIRE[L.focus] || 0) : 0)) * dt, 0, 100);
-    else s.energy = clamp(s.energy + (REST * s.comfort - (L ? FOCUS_TIRE[L.focus] || 0 : 0) - (M ? M.baseTire : BASE_TIRE) - WORK_TIRE * (M ? M.workTireMul : 1) * Math.max(0, s.overtime - (M ? M.overtimeFreeTo : 0)) * clamp(s.energy / 10, 0, 1) * sc.overtimeFactor) * dt, 0, 100);
+    else s.energy = clamp(s.energy + (REST * s.comfort - (L ? FOCUS_TIRE[L.focus] || 0 : 0) - (M ? M.baseTire : BASE_TIRE) - WORK_TIRE * (M ? M.workTireMul : 1) * Math.max(0, s.overtime - (M ? M.overtimeFreeTo : 0)) * sc.overtimeFactor
+      - (sc.overtimeFactor === 0 ? 1 : 0)) * dt, 0, 100);
+    if (cfg.overtime !== false) {
+      const hard = activeShocks(s).some(sh => sh.type === 'jobLoss' || sh.type === 'crisis');
+      s.happy = clamp((s.happy ?? 70) + (2.5 * s.comfort - 0.6 + (L && L.focus === 'rest' ? 0.5 : 0) + (off ? 1 : 0) - (hard ? 0.4 : 0)) * dt, 0, 100);
+    }
     return r;
   }
   function previewRates(s) { return advance(clone(s), FIXED_DT); }
@@ -779,7 +804,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     if (L) {
       const M = effMods(s), g = Math.log(1 + LEVELS[s.level].compound) / (4 * YEAR), crosses = t => t0 + EPS < t && t <= t1 + EPS;
       if (!L.pending && t1 + EPS >= L.nextAt) { L.pending = lifeOffer(s, L.offers); L.offers++; s.status = 'paused'; event(s, L.pending.kind === 'fork' ? `Развилка: ${FORKS[L.pending.id].title}.` : 'Можно взять новое улучшение.', 'info'); return; }
-      L.qSum = (L.qSum || 0) + s.comfort * dt; L.eSum = (L.eSum || 0) + s.energy * dt;
+      L.qSum = (L.qSum || 0) + s.comfort * dt; L.eSum = (L.eSum || 0) + s.energy * dt; L.hSum = (L.hSum || 0) + (s.happy ?? 70) * dt;
       if (L.focus === 'study' && (L.eduLvl || 0) < 10) { L.edu = (L.edu || 0) + dt * productivity(s);
         if (L.edu >= 30 - EPS) { L.edu = 0; L.eduLvl = (L.eduLvl || 0) + 1; event(s, `🎓 Учёба дала плоды: зарплата +4% (всего +${L.eduLvl * 4}%).`, 'good'); } }
       if (L.focus === 'goal' && L.goalState === 'build') { const before = L.proj || 0; L.proj = before + dt * productivity(s);
@@ -834,13 +859,15 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
     warn('investments', r.spilledBy.investments > 0.01, av('investments-speculation') ? 'Инвестиции полны: излишек льётся мимо. Подключите перелив в спекуляции или убавьте кран.' : 'Инвестиции полны: излишек льётся мимо. Прикройте вентиль.');
     warn('speculation', r.spilledBy.speculation > 0.01, 'Спекуляции полны: излишек льётся мимо. Прикройте вентиль.');
     warn('float', r.actual['savings-consumption'] > 0.01, 'Страховка из подушки включилась: потребление у красной черты.', 'info');
+    { const L = lifestyleCheck(s, r); s._lsHold = L.ok ? s._lsHold + dt : 0;
+      if (L.ok && s._lsHold >= LS_HOLD - EPS) { s.lifestyle = L.tier; s._lsHold = 0; if (vitals(s)) s.happy = Math.min(100, (s.happy ?? 70) + 15); const T = LIFESTYLE[L.tier]; event(s, `${T.icon} Уровень жизни ${L.tier}: «${T.name}»! Система сама оплачивает такую жизнь.`, 'good'); } }
     const rescued = r.actual['savings-consumption'] * dt;
     if (rescued > 0) { s._resAmt += rescued; s._resGap = 0; }
     else if (s._resAmt > 0 && (s._resGap += dt) >= 2 - EPS) {
       if (s._resAmt >= 15) event(s, `🛟 Подушка спасла: перелила ${Math.round(s._resAmt)} в Потребление. В подушке осталось ${Math.round(s.balances.savings)}.`, 'good');
       s._resAmt = 0; s._resGap = 0;
     }
-    if (s.energy < 10 && s.overtime > 0.05 && !s._warned.energy) { event(s, 'Силы на исходе: зарплата и подработка слабеют. Отдохни — убавь подработку или добавь хотелок.', 'warning'); s._warned.energy = true; }
+    if (vitals(s) && s.energy < 25 && !s._warned.energy) { event(s, '❤️ Здоровье на исходе: зарплата слабеет, а на нуле — выгорание. Убавь подработку 💪, отдохни или добавь хотелок.', 'warning'); s._warned.energy = true; }
     else if (s.energy > 40) s._warned.energy = false;
     if (s.training) {
       s.training.remaining = Math.max(0, s.training.remaining - dt);
@@ -850,8 +877,15 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       }
     }
     if (s.balances.consumption <= EPS) {
-      s.status = 'lost'; s.holdTime = 0; s._accumulator = 0;
+      s.status = 'lost'; s.holdTime = 0; s._accumulator = 0; s.lostBy = 'money';
       event(s, 'Потребление опустело: жить не на что. Поток остановлен.', 'danger'); return;
+    }
+    if (vitals(s)) {
+      warn('happy', s.happy < 25, '😊 Счастье на исходе: жизнь без радостей. Добавь хотелок 🛍 или отдохни.', 'warning');
+      if (s.energy <= EPS || s.happy <= EPS) {
+        const health = s.energy <= EPS; s.status = 'lost'; s.holdTime = 0; s._accumulator = 0; s.lostBy = health ? 'health' : 'happy';
+        event(s, health ? '❤️ Здоровье на нуле: выгорание. Поток остановлен.' : '😊 Счастье на нуле: жизнь без радости потеряла смысл. Поток остановлен.', 'danger'); return;
+      }
     }
     if (LEVELS[s.level].endless) return;
     const gl = goals(s), oldHold = s.holdTime;
@@ -883,7 +917,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       freedom: drain > 0 ? s.balances.investments * yieldOf(s) / drain : 0, freedomGoal: !!cfg.freedomGoal, sustainableOvertime: 0.3,
       ...(() => { const M = effMods(s), P = M ? M.payEvery : cfg.payEvery || 0, base = M ? (M.salary + (s.life.business || 0) + s.salaryLevel * SKILL_STEP) * M.salaryMul * Math.pow(priceLevel(s), M.wageElast) : cfg.salary + s.salaryLevel * SKILL_STEP;
         return { payEvery: P, nextPayIn: P ? P - ((s.time + EPS) % P) : 0, payLump: P ? base * P : 0 }; })(),
-      pricePct: Math.round((priceLevel(s) - 1) * 100), drain, reserveYears: (s.balances.savings + s.balances.consumption) / Math.max(EPS, cfg.expense * priceLevel(s) * ((effMods(s) || {}).drainMul || 1) * YEAR), life: lifeGoalInfo(s), mods: effMods(s), lifeOff: lifePaused(s), realTotal: JARS.reduce((sum, id) => sum + s.balances[id], 0) / priceLevel(s), productivity: productivity(s),
+      pricePct: Math.round((priceLevel(s) - 1) * 100), drain, happy: s.happy ?? 70, vitals: vitals(s), lifestyle: s.lifestyle || 1, lifestyleMax: lifestyleMax(s), lsHold: s._lsHold || 0, lsNext: lifestyleCheck(s, r), reserveYears: (s.balances.savings + s.balances.consumption) / Math.max(EPS, cfg.expense * priceLevel(s) * ((effMods(s) || {}).drainMul || 1) * YEAR), life: lifeGoalInfo(s), mods: effMods(s), lifeOff: lifePaused(s), realTotal: JARS.reduce((sum, id) => sum + s.balances[id], 0) / priceLevel(s), productivity: productivity(s),
       cycle: cfg.endless ? { year: Math.floor((s.time + EPS) / YEAR) + 1, years: Math.floor((s.time + EPS) / YEAR), phase: phaseAt(s, s.time), nextProbs: PHASE_NEXT[phaseAt(s, s.time).id].map(([id, p]) => ({ ...PHASE_BY_ID[id], p })), nextIn: YEAR - ((s.time + EPS) % YEAR), yearLen: YEAR } : null,
       activeShocks: activeShocks(s).map(sh => sh.id), nextShock: cfg.shocks.find(sh => sh.at > s.time + EPS) || null,
       upgradeCost: cost, canUpgrade: editable(s) && cfg.training !== false && !s.training && cost !== null && s.balances.income + EPS >= cost };
@@ -925,8 +959,8 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
         ['info', 'warning', 'good', 'danger', 'training'].includes(e.type)), 'Неверный журнал.');
       assert(Number.isSafeInteger(s._eventId) && s._eventId >= 0 && ['normal', 'low', 'high'].includes(s._incomePhase), 'Неверные метаданные.');
       assert(Number.isSafeInteger(s._marketIndex) && s._marketIndex >= 0, 'Неверные метаданные.');
-      assert(record(s._warned) && Object.keys(fresh._warned).every(k => typeof s._warned[k] === 'boolean'), 'Неверные метаданные.');
-      assert((s.status !== 'lost' || s.balances.consumption === 0) && (s.status !== 'won' || (s.holdTime === HOLD_SECONDS && goals(s).all)), 'Неверный итог игры.');
+      assert(record(s._warned) && Object.keys(fresh._warned).every(k => s._warned[k] === undefined || typeof s._warned[k] === 'boolean'), 'Неверные метаданные.');
+      assert((s.status !== 'lost' || s.balances.consumption === 0 || s.energy === 0 || s.happy === 0) && (s.status !== 'won' || (s.holdTime === HOLD_SECONDS && goals(s).all)), 'Неверный итог игры.');
       const known = Object.fromEntries(Object.keys(fresh).map(k => [k, k === 'rates' ? fresh.rates : s[k]]));
       const n = clone(known);
       n.pipes = PIPES.map((p, i) => ({ ...p, connected: s.pipes[i].connected, opening: s.pipes[i].opening }));
@@ -934,6 +968,8 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
       n._marketIndex = marketIndexAt(n.level, n.time);
       n.rates = zeroRates();
       n.seed = Number.isSafeInteger(s.seed) && s.seed >= 0 ? s.seed : 0;
+      n.lifestyle = Number.isInteger(s.lifestyle) && s.lifestyle >= 1 && s.lifestyle <= 5 ? s.lifestyle : 1; n._lsHold = number(s._lsHold, 0, LS_HOLD) ? s._lsHold : 0;
+      n._warned = { ...fresh._warned, ...s._warned }; n.happy = number(s.happy, 0, 100) ? s.happy : 70; n.lostBy = ['money', 'health', 'happy'].includes(s.lostBy) ? s.lostBy : '';
       n._resAmt = 0; n._resGap = 0; n._yInv = n.totals.investmentIncome; n._yCons = n.totals.consumption;
       if (LEVELS[n.level].life) {
         const L = s.life;
@@ -995,7 +1031,7 @@ button{transition:transform .08s}button:active:not(:disabled){transform:scale(.9
   }
 
   return { VERSION, FIXED_DT, MAX_DT, HOLD_SECONDS, JARS: freeze([...JARS]), LEVELS, PIPES, YIELD, SKILL_STEP, FLOAT_SHARE,
-    activeJars, availablePipes, levelShocks, upcoming, finishEndless, PROFESSIONS, GOALS, UPGRADES, FORKS, DREAMS, FOCUS, setFocus, lifeChoose, LOGGED, describePick, replayBegin, replayRun, lifeGoalAction, lifeGoalInfo, PHASES, YEAR, create, start: create, play, pause, togglePipe, setValve, setSource, upgrade, step, previewRates, metrics, validateSave };
+    activeJars, availablePipes, levelShocks, upcoming, finishEndless, PROFESSIONS, GOALS, UPGRADES, FORKS, DREAMS, FOCUS, LIFESTYLE, LS_HOLD, setFocus, lifeChoose, LOGGED, describePick, replayBegin, replayRun, lifeGoalAction, lifeGoalInfo, PHASES, YEAR, create, start: create, play, pause, togglePipe, setValve, setSource, upgrade, step, previewRates, metrics, validateSave };
 });
 </script><script>(function(){'use strict';
 const RAW=FlowEngine,ALOG='five-jars-actions-v1';let actLog=null;
@@ -1038,7 +1074,7 @@ function tallLayout(){const yo={consumption:0,savings:270,investments:540,specul
 function pickLayout(){const on=E.activeJars(state.level);LAYOUT=isTall()?tallLayout():wideLayout(on);
  ROUTES=Object.fromEntries(Object.entries(LAYOUT.routes).map(([k,v])=>[k,{...v,color:COLORS[k]}]));
  for(const j of JARS){[j.x,j.y]=LAYOUT.jars[j.id];}}
-function widgetMarkup(L){const [bx,by]=L.widget,cx=bx+95;return `<g id="salaryPipe" class="source-auto"><path d="${L.salaryPipe}" class="pipe-shell"/><path d="${L.salaryPipe}" class="pipe-core"/><path d="${L.salaryPipe}" class="pipe-liquid" stroke="#78c9bf"/><path d="${L.salaryPipe}" class="pipe-motion"/></g><g id="workWidget" class="work-widget"><rect id="workBox" x="${bx}" y="${by}" width="190" height="112" rx="12" class="work-bg"/><text x="${cx}" y="${by+22}" text-anchor="middle" class="source-text">ТРУД И ПОДРАБОТКА</text><text x="${cx}" y="${by+42}" text-anchor="middle" class="source-value" id="salaryStream"></text><g id="skillBtn" class="w-btn" role="button" tabindex="0" aria-label="Освоить новый навык"><rect x="${bx+8}" y="${by+52}" width="110" height="40" rx="10"/><text id="skillText" x="${bx+63}" y="${by+72}" text-anchor="middle"></text><title>Освоить новый навык: зарплата вырастет навсегда</title></g><g id="overtimeBtn" class="w-btn" role="button" tabindex="0" aria-label="Подработка"><rect x="${bx+124}" y="${by+52}" width="58" height="40" rx="10"/><text id="overtimeText" x="${bx+153}" y="${by+72}" text-anchor="middle"></text><title>Подработка: нажимай, чтобы выбрать 0 → 30 → 60 → 100%</title></g><rect id="energyBg" x="${bx+8}" y="${by+100}" width="174" height="5" rx="2.5" class="energy-bg"/><rect id="energyFill" x="${bx+8}" y="${by+100}" width="174" height="5" rx="2.5" class="energy-fill"/></g>`;}
+function widgetMarkup(L){const [bx,by]=L.widget,cx=bx+95;return `<g id="salaryPipe" class="source-auto"><path d="${L.salaryPipe}" class="pipe-shell"/><path d="${L.salaryPipe}" class="pipe-core"/><path d="${L.salaryPipe}" class="pipe-liquid" stroke="#78c9bf"/><path d="${L.salaryPipe}" class="pipe-motion"/></g><g id="workWidget" class="work-widget"><rect id="workBox" x="${bx}" y="${by}" width="190" height="112" rx="12" class="work-bg"/><text x="${cx}" y="${by+22}" text-anchor="middle" class="source-text">ТРУД И ПОДРАБОТКА</text><text x="${cx}" y="${by+42}" text-anchor="middle" class="source-value" id="salaryStream"></text><g id="skillBtn" class="w-btn" role="button" tabindex="0" aria-label="Освоить новый навык"><rect x="${bx+8}" y="${by+52}" width="110" height="40" rx="10"/><text id="skillText" x="${bx+63}" y="${by+72}" text-anchor="middle"></text><title>Освоить новый навык: зарплата вырастет навсегда</title></g><g id="overtimeBtn" class="w-btn" role="button" tabindex="0" aria-label="Подработка"><rect x="${bx+124}" y="${by+52}" width="58" height="40" rx="10"/><text id="overtimeText" x="${bx+153}" y="${by+72}" text-anchor="middle"></text><title>Подработка: нажимай, чтобы выбрать 0 → 30 → 60 → 100%</title></g><text id="healthIco" x="${bx+15}" y="${by+103}" text-anchor="middle" class="vital-ico">❤️</text><rect id="energyBg" x="${bx+26}" y="${by+98}" width="156" height="5" rx="2.5" class="energy-bg"/><rect id="energyFill" x="${bx+26}" y="${by+98}" width="156" height="5" rx="2.5" class="energy-fill"/><text id="happyIco" x="${bx+15}" y="${by+113}" text-anchor="middle" class="vital-ico">😊</text><rect id="happyBg" x="${bx+26}" y="${by+108}" width="156" height="5" rx="2.5" class="energy-bg"/><rect id="happyFill" x="${bx+26}" y="${by+108}" width="156" height="5" rx="2.5" class="happy-fill"/><title>❤️ Здоровье и 😊 счастье: если любое упадёт до нуля — игра окончена</title></g>`;}
 
 const PORTS=[{key:'consumption-out',jar:'consumption',dir:'out',x:392,y:185},{key:'income-out',jar:'income',dir:'out',x:204,y:250},{key:'consumption-in',jar:'consumption',dir:'in',x:350,y:176},{key:'savings-in',jar:'savings',dir:'in',x:580,y:176},{key:'investments-in',jar:'investments',dir:'in',x:810,y:176},{key:'speculation-in',jar:'speculation',dir:'in',x:1040,y:176},{key:'savings-out',jar:'savings',dir:'out',x:580,y:347},{key:'investments-out',jar:'investments',dir:'out',x:810,y:347},{key:'speculation-out',jar:'speculation',dir:'out',x:1040,y:347},{key:'consumption-rescue',jar:'consumption',dir:'in',x:423,y:295},{key:'income-in',jar:'income',dir:'in',x:54,y:295}];
 const nf=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0}),fmt=n=>nf.format(n),dec=n=>Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:1}),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),clock=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(Math.floor(t%60)).padStart(2,'0')}`;
@@ -1084,7 +1120,7 @@ function applyLevelView(){const on=E.activeJars(state.level),av=E.availablePipes
  let w=Math.min(1180,JARS.filter(j=>on.includes(j.id)).at(-1).x+150),H=av.includes('speculation-income')?604:av.includes('investments-income')?550:530;if(LAYOUT.tall){w=462;H=Math.max(490,Math.max(...on.map(id=>LAYOUT.jars[id][1]))+440);}scene.setAttribute('viewBox',`0 0 ${w} ${H}`);scene.classList.toggle('tall',LAYOUT.tall);$('#sceneScroll').classList.toggle('tall',LAYOUT.tall);scene.style.setProperty('--sw',(w/1180).toFixed(3));
  const ot=cfg.overtime!==false,tr=cfg.training!==false;
  document.querySelectorAll('label[for=overtime],.overtime-track,#overtimeNote').forEach(el=>el.hidden=!ot);
- $('#train').hidden=true;$('#trainingText').hidden=true;document.querySelector('.energy-hud').hidden=!ot;hide('#skillBtn',!tr);hide('#overtimeBtn',!ot);hide('#energyBg',!ot);hide('#energyFill',!ot);$('#workBox').setAttribute('height',tr||ot?112:54);
+ $('#train').hidden=true;$('#trainingText').hidden=true;document.querySelector('.energy-hud').hidden=!ot;hide('#skillBtn',!tr);hide('#overtimeBtn',!ot);hide('#energyBg',!ot);hide('#energyFill',!ot);hide('#happyBg',!ot);hide('#happyFill',!ot);hide('#healthIco',!ot);hide('#happyIco',!ot);$('#workBox').setAttribute('height',ot?120:tr?112:54);
  if(!avail(selected))selected='income-consumption';}
 function buildScene(){pickLayout();const L=LAYOUT;scene.innerHTML=`<defs><pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#537a7c" opacity=".25"/></pattern></defs><rect width="1200" height="1300" fill="url(#grid)"/>${widgetMarkup(L)}<g id="yieldPipe" class="source-auto"><path d="${L.yieldPath}" fill="none" stroke="#416260" stroke-width="5"/><path class="pipe-motion" d="${L.yieldPath}" stroke="#92d5be"/><text x="${L.yieldLabel[0]}" y="${L.yieldLabel[1]}" text-anchor="middle" class="source-text" id="yieldLabel">КАПИТАЛ СОЗДАЁТ ОБРАТНЫЙ ПОТОК</text></g><g id="incomeOverflow" class="source-auto dry"><path class="pipe-shell" d="${L.auto.d}"/><path class="pipe-liquid" stroke="#e4be76" d="${L.auto.d}"/><path class="pipe-motion" d="${L.auto.d}"/><text id="incomeOverflowLabel" class="pipe-rate" x="${L.auto.label[0]}" y="${L.auto.label[1]}"></text></g>${state.pipes.map(pipeMarkup).join('')}<g id="drainPipe" class="source-auto"><path class="pipe-shell" d="${L.drain.d}"/><path class="pipe-core" d="${L.drain.d}"/><path class="pipe-liquid" stroke="#d7ac6a" d="${L.drain.d}"/><path class="pipe-motion" d="${L.drain.d}"/><path d="${L.drain.arrow}" fill="none" stroke="#d7ac6a" stroke-width="3"/><text class="note-text" id="drainLabel" x="${L.drain.label[0]}" y="${L.drain.label[1]}" text-anchor="${L.drain.label[2]}">РАСХОДЫ</text></g><g id="comfortBtn" class="w-btn" role="button" tabindex="0" aria-label="Хотелки: дополнительные траты"><rect x="${L.comfort[0]-62}" y="${L.comfort[1]-18}" width="124" height="36" rx="10"/><text id="comfortText" x="${L.comfort[0]}" y="${L.comfort[1]}" text-anchor="middle"></text><title>Хотелки — траты сверх необходимого. Нажимай: 0 → 35 → 70 → 100%</title></g>${JARS.map(jarMarkup).join('')}${state.pipes.map(valveMarkup).join('')}${PORTS.map(p=>`<g class="port" id="port-${p.key}" data-port="${p.key}" transform="translate(${p.x} ${p.y})" role="button" tabindex="0" aria-label="${p.dir==='out'?'Выход':'Вход'} ${NAMES[p.jar]}${p.key==='consumption-rescue'?' из подушки':''}"><circle r="17" fill="transparent"/><circle class="port-ring" r="9"/><circle class="port-core" r="3"/><path d="${p.dir==='out'?'M-4 0 H4 M1-3 L4 0 L1 3':'M-3-3 L0 0 L3-3 M0 0 V4'}" fill="none" stroke="#16373c" stroke-width="1.6"/><title>${p.dir==='out'?'Начни соединение здесь':'Подключи входящую трубу'}</title></g>`).join('')}${state.pipes.map(switchMarkup).join('')}<path id="ghost" class="ghost-pipe" d=""/><text id="returnNote" class="note-text" x="872" y="456">← ВОЗВРАТ КАПИТАЛА · СНИЗУ</text>`;
 $('#pipeSelect').innerHTML=E.PIPES.filter(p=>avail(p.id)).map(p=>`<option value="${p.id}">${p.kind==='overflow'?'Перелив: ':p.kind==='float'?'Страховка: ':''}${NAMES[p.from]} → ${NAMES[p.to]}</option>`).join('');$('#routes').innerHTML=E.PIPES.filter(p=>avail(p.id)).map(p=>`<button type="button" class="route-toggle" id="route-toggle-${p.id}" data-toggle="${p.id}" aria-label="Труба ${NAMES[p.from]} → ${NAMES[p.to]}" aria-pressed="false"><span>${p.kind==='overflow'?'<small>Перелив</small>':p.kind==='float'?'<small>Автостраховка</small>':''}${NAMES[p.from]} → ${NAMES[p.to]}</span><b class="route-action"></b></button>`).join('');applyLevelView();update();}
@@ -1101,8 +1137,8 @@ function update(){
  $('#targetCount').innerHTML=`${m.goalsMet} <em>из ${m.goalsTotal}</em>`;$('#goalTitle').textContent=goalText(m);
  $('#holdText').textContent=state.holdTime>0?`Держим: ${dec(state.holdTime)} / 10 с`:!ended&&m.goalsAfter>state.time?`Цели засчитываются с ${clock(m.goalsAfter)}`:'Удержи все цели 10 секунд';
  $('#goalProgress').style.width=state.holdTime/10*100+'%';
- $('#energy').innerHTML=`${fmt(state.energy)}<em>%</em>`;$('#energyBar').style.width=state.energy+'%';
- $('#statusText').textContent=state.status==='won'?'Все цели удержаны':state.status==='lost'?'Потребление опустело':running?(shocks.length?(shocks.every(sh=>sh.type==='bonus')?'Премия!':'Система переживает шок'):critical?'Потребление на исходе':'Поток идёт'):'Пауза · настройка системы';
+ $('#energy').innerHTML=`${fmt(state.energy)}<em>%</em> · ${fmt(state.happy??70)}<em>%</em>`;$('#energyBar').style.width=state.energy+'%';$('#happyBar').style.width=(state.happy??70)+'%';
+ $('#statusText').textContent=state.status==='won'?'Все цели удержаны':state.status==='lost'?(state.lostBy==='health'?'Выгорание: здоровье на нуле':state.lostBy==='happy'?'Счастье на нуле':'Потребление опустело'):running?(shocks.length?(shocks.every(sh=>sh.type==='bonus')?'Премия!':'Система переживает шок'):critical?'Потребление на исходе':'Поток идёт'):'Пауза · настройка системы';
  $('#statusDot').className='status-dot '+(critical||state.status==='lost'?'danger':running?'running':'');
  $('#play').textContent=running?'Ⅱ Пауза':ended?'↻ Новая система':state.status==='ready'?'▶ Запустить поток':'▶ Продолжить поток';$('#speed').disabled=ended;
  $('#shockBanner').hidden=!shocks.length;$('#shockBanner').classList.toggle('good',shocks.length>0&&shocks.every(sh=>sh.type==='bonus'));$('#shockName').textContent=shocks.map(sh=>sh.title+(sh.type==='bonus'?' · раскладывай по кувшинам!':sh.type==='crisis'?' · заработок остановлен':sh.type==='illness'?' · расходы выросли, подработка остановлена':' · дополнительные расходы')).join(' / ');
@@ -1178,7 +1214,7 @@ function update(){
  $('#jar-investments').classList.toggle('free',m.freedom>=1);
  renderLifeBar(m);
  if($('#comfortText')){$('#comfortText').textContent=`🛍 хотелки ${Math.round(state.comfort*100)}%`;$('#comfortBtn').classList.toggle('warn',state.comfort>.5);}
- if($('#skillText')){$('#skillText').textContent=state.salaryLevel>=3?'🎓 максимум':state.training?`🎓 ещё ${Math.ceil(state.training.remaining)} с`:`🎓 навык ${fmt(m.upgradeCost)}`;$('#skillBtn').classList.toggle('ready',m.canUpgrade);$('#skillBtn').classList.toggle('busy',!!state.training);$('#overtimeText').textContent=`💪 ${Math.round(state.overtime*100)}%`;$('#overtimeBtn').classList.toggle('warn',state.overtime>.3);$('#energyFill').setAttribute('width',Math.max(0,174*state.energy/100));$('#energyFill').classList.toggle('low',state.energy<35);}
+ if($('#skillText')){$('#skillText').textContent=state.salaryLevel>=3?'🎓 максимум':state.training?`🎓 ещё ${Math.ceil(state.training.remaining)} с`:`🎓 навык ${fmt(m.upgradeCost)}`;$('#skillBtn').classList.toggle('ready',m.canUpgrade);$('#skillBtn').classList.toggle('busy',!!state.training);$('#overtimeText').textContent=`💪 ${Math.round(state.overtime*100)}%`;$('#overtimeBtn').classList.toggle('warn',state.overtime>.3);$('#energyFill').setAttribute('width',Math.max(0,156*state.energy/100));$('#energyFill').classList.toggle('low',state.energy<35);$('#happyFill').setAttribute('width',Math.max(0,156*(state.happy??70)/100));$('#happyFill').classList.toggle('low',(state.happy??70)<35);}
  afterUpdate(m,r);
 }
 function result(){
@@ -1188,14 +1224,14 @@ function result(){
  const rate=rateGame(),cfgL=E.LEVELS[state.level],next=nextLevel();
  if(won){progress.stars[state.level]=Math.max(progress.stars[state.level]||0,rate.stars);saveProgress();if(state.level==='first')award('tutorial');if(state.level==='skills')award('half');if(t.liquidationLoss===0)award('cool');if(rate.lossPct<.03)award('clean');if(rate.stars===3)award('three');if(state.level==='hard')award('hard');}
  const starsHtml=won?`<div class="star-row" aria-label="Звёзд: ${rate.stars} из 3">${[0,1,2].map(i=>`<span class="big-star ${i<rate.stars?'on':''}" style="animation-delay:${.2+i*.35}s">★</span>`).join('')}</div><ul class="star-crit">${rate.crit.map(c=>`<li class="${c.ok?'ok':''}">${c.ok?'★':'☆'} ${c.label}</li>`).join('')}</ul>`:`<div class="result-icon">∅</div>`;
- const title=won?`Уровень ${LEVEL_META[state.level].n} пройден!`:'Поток остановился';
- const lead=won?`<b>Что ты узнал:</b> ${LEARNED[state.level]||''}`:'Расходы продолжались, а подпитки не хватило.';
- showModal(title,`<div class="result-copy">${starsHtml}<h3>${won?`${cfgL.icon} ${esc(cfgL.title)}`:'Кувшин потребления опустел.'}</h3><p>${lead}</p>${!won&&shockNames?`<p><b>В момент остановки: ${esc(shockNames)}.</b> Запаса и настроенного притока не хватило, чтобы пережить этот шок.</p>`:''}${!won?episode()+`<div class="coach-tip"><div class="coach-face">${DROP}</div><p><b>Совет Капли:</b> ${loseTip()}</p></div>`:''}</div><div class="result-stats"><div><b>${clock(Math.round(state.time))}</b><span>Время в игре</span></div><div><b>${fmt(m.total)}</b><span>Осталось в кувшинах</span></div><div><b>${fmt(t.investmentIncome)}</b><span>Принёс капитал</span></div></div><details class="ledger-details"><summary>Подробный отчёт</summary><dl class="result-ledger"><div><dt>Проедено сверх расходов</dt><dd>−${dec(t.eaten)}</dd></div><div><dt>Пролито мимо</dt><dd>−${dec(t.spilled)}</dd></div><div><dt>Потери при продаже</dt><dd>−${dec(t.liquidationLoss)}</dd></div><div><dt>Допрасходы шоков</dt><dd>−${dec(t.shockCost)}</dd></div><div><dt>Результат рынка спекуляций</dt><dd>${signed(t.marketResult)}</dd></div><div><dt>Переоценка при кризисе и восстановлении</dt><dd>${signed(t.revaluation)}</dd></div></dl><div class="modal-copy"><p>Капитал покрывает <b>сейчас ${dec(m.freedom*100)}%</b> обычных расходов. Сценарий и доходность условны. Восстановление инвестиций — правило игры, а не обещание рынка.</p></div></details><div class="modal-actions"><button data-action="close">Посмотреть схему</button><button data-action="export">Сохранить результат</button><button data-action="retry">↻ Ещё раз</button>${won&&next?`<button class="primary" data-action="next">Дальше: ${LEVEL_META[next].name} →</button>`:'<button class="primary" data-action="welcome">Выбрать уровень →</button>'}</div>`,'result');
+ const vl=state.lostBy==='health'||state.lostBy==='happy',title=won?`Уровень ${LEVEL_META[state.level].n} пройден!`:state.lostBy==='health'?'Выгорание':state.lostBy==='happy'?'Жизнь без радости':'Поток остановился';
+ const lead=won?`<b>Что ты узнал:</b> ${LEARNED[state.level]||''}`:vl?'Деньги — не единственный запас: здоровье и счастье тоже нужно пополнять.':'Расходы продолжались, а подпитки не хватило.';
+ showModal(title,`<div class="result-copy">${starsHtml}<h3>${won?`${cfgL.icon} ${esc(cfgL.title)}`:state.lostBy==='health'?'Здоровье на нуле.':state.lostBy==='happy'?'Счастье на нуле.':'Кувшин потребления опустел.'}</h3><p>${lead}</p>${!won&&shockNames?`<p><b>В момент остановки: ${esc(shockNames)}.</b> Запаса и настроенного притока не хватило, чтобы пережить этот шок.</p>`:''}${!won?episode()+`<div class="coach-tip"><div class="coach-face">${DROP}</div><p><b>Совет Капли:</b> ${loseTip()}</p></div>`:''}</div><div class="result-stats"><div><b>${clock(Math.round(state.time))}</b><span>Время в игре</span></div><div><b>${fmt(m.total)}</b><span>Осталось в кувшинах</span></div><div><b>${fmt(t.investmentIncome)}</b><span>Принёс капитал</span></div></div><details class="ledger-details"><summary>Подробный отчёт</summary><dl class="result-ledger"><div><dt>Проедено сверх расходов</dt><dd>−${dec(t.eaten)}</dd></div><div><dt>Пролито мимо</dt><dd>−${dec(t.spilled)}</dd></div><div><dt>Потери при продаже</dt><dd>−${dec(t.liquidationLoss)}</dd></div><div><dt>Допрасходы шоков</dt><dd>−${dec(t.shockCost)}</dd></div><div><dt>Результат рынка спекуляций</dt><dd>${signed(t.marketResult)}</dd></div><div><dt>Переоценка при кризисе и восстановлении</dt><dd>${signed(t.revaluation)}</dd></div></dl><div class="modal-copy"><p>Капитал покрывает <b>сейчас ${dec(m.freedom*100)}%</b> обычных расходов. Сценарий и доходность условны. Восстановление инвестиций — правило игры, а не обещание рынка.</p></div></details><div class="modal-actions"><button data-action="close">Посмотреть схему</button><button data-action="export">Сохранить результат</button><button data-action="retry">↻ Ещё раз</button>${won&&next?`<button class="primary" data-action="next">Дальше: ${LEVEL_META[next].name} →</button>`:'<button class="primary" data-action="welcome">Выбрать уровень →</button>'}</div>`,'result');
 }
 function run(ts){if(!lastFrame)lastFrame=ts;const delta=Math.min(.25,Math.max(0,(ts-lastFrame)/1000));lastFrame=ts;if(state.status==='running'&&!document.hidden&&!modal.open){state=E.step(state,delta*speed);if(ts-lastPaint>32||state.status!=='running'){update();lastPaint=ts;}if(ts-lastSave>2000){save();lastSave=ts;}if(['won','lost'].includes(state.status)){update();finish();}}requestAnimationFrame(run);}
 function widgetAction(id){if(['won','lost'].includes(state.status))return;
  if(id==='skillBtn'){const m=E.metrics(state);if(m.canUpgrade){mutate(E.upgrade);sfx('badge');haptic(20);notify('🎓 Учёба началась: через 10 секунд зарплата вырастет навсегда.');}else notify(state.salaryLevel>=3?'Все навыки освоены.':state.training?'Учёба уже идёт.':`Нужно ${fmt(m.upgradeCost)} монет в Доходах. Выключи часть кранов — деньги соберутся.`);return;}
- if(id==='comfortBtn'){const v=[0,.35,.7,1].find(x=>x>state.comfort+.01)??0;state=E.setSource(state,'comfort',v);sfx('up');haptic(8);update();save();notify(v===0?'🛍 Хотелок нет — тратится только необходимое.':`🛍 Хотелки ${Math.round(v*100)}%: тратишь больше, зато быстрее восстанавливаешь силы.`);return;}
+ if(id==='comfortBtn'){const v=[0,.35,.7,1].find(x=>x>state.comfort+.01)??0;state=E.setSource(state,'comfort',v);sfx('up');haptic(8);update();save();notify(v===0?(E.LEVELS[state.level].overtime!==false?'🛍 Хотелок нет — только необходимое. Но без радостей тает 😊 счастье.':'🛍 Хотелок нет — тратится только необходимое.'):`🛍 Хотелки ${Math.round(v*100)}%: тратишь больше, зато ${E.LEVELS[state.level].overtime!==false?'восстанавливаешь ❤️ здоровье и растёт 😊 счастье':'быстрее восстанавливаешь силы'}.`);return;}
  const steps=[0,.3,.6,1],v=steps.find(x=>x>state.overtime+.01)??0;state=E.setSource(state,'overtime',v);sfx(v>state.overtime?'up':'down');haptic(8);update();save();}
 function stepValve(id,dir){if(['won','lost'].includes(state.status))return;const p=state.pipes.find(q=>q.id===id);if(!p)return;selected=id;
  const cur=p.connected?p.opening:0,v=dir>0?Math.min(1,(Math.floor(cur*4+1e-6)+1)/4):Math.max(0,(Math.ceil(cur*4-1e-6)-1)/4);
@@ -1239,6 +1275,7 @@ const JAR_INFO={
  investments:['🌱','Инвестиции','Деньги, которые работают. В игре каждую секунду они приносят 0,1% своей суммы обратно в Доходы — это «обратный поток» по верхней трубе. Чем больше кувшин, тем сильнее поток. В кризис кувшин может просесть, но если не продавать на дне — он восстановится (так устроены правила игры, в жизни гарантий нет).'],
  speculation:['🎢','Спекуляции','Рискованные деньги. Рынок то поднимает, то опускает этот кувшин. Сюда стоит лить только излишки — то, что не жалко потерять.']};
 const BADGES=[
+ {id:'ls3',icon:'🛋',title:'Уютная жизнь',text:'Подними уровень жизни до «Уюта» так, чтобы система сама его оплачивала.'},{id:'ls5',icon:'👑',title:'Изобилие',text:'Высший уровень жизни: хотелки 100%, и капитал покрывает больше половины расходов.'},
  {id:'tutorial',icon:'💧',title:'Первая зарплата',text:'Пройди первый уровень.'},{id:'half',icon:'🧭',title:'Полпути',text:'Пройди уровень «Учись и расти».'},
  {id:'cascade',icon:'🌊',title:'Каскад',text:'Включи все три перелива.'},
  {id:'safety',icon:'🛟',title:'Подушка спасла',text:'Страховка из подушки подкормила Потребление.'},
@@ -1316,7 +1353,7 @@ const LESSONS={
   FINAL('Четыре цели: три кувшина и постоянный доход. Продержи их 10 секунд.','Все цели — 10 секунд')],
  skills:[{title:'Зарплаты не хватает',text:'Цель постоянного дохода теперь <b>выше зарплаты</b>. Одними инвестициями её не догнать — нужно учиться!',target:['#targetLabel-income'],next:'Как?'},
   {title:'Освой навык',text:'Кнопка <b>🎓 навык</b> на табличке «Труд и подработка» стоит денег из Доходов. Через 10 секунд зарплата вырастет <b>навсегда</b>. Чтобы накопить, закрой «−» краны в Сбережения и Инвестиции — деньги соберутся в Доходах.',target:['#skillBtn','#jar-income'],done:s=>!!s.training||s.salaryLevel>0,doing:'Накопи и нажми «Освоить новый навык»'},
-  {title:'Подработка',text:'Кнопка <b>💪</b> — подработка: нажимай, чтобы выбрать 0 → 30 → 60 → 100%. Подработка всегда отнимает силы (полоска под кнопками), а <b>🛍 хотелки — это отдых</b>, они силы возвращают. Когда сил меньше половины, падает и основная зарплата. Включай подработку, когда деньги нужны прямо сейчас.',target:['#overtimeBtn'],next:'Понятно'},
+  {title:'Здоровье и счастье',text:'Кнопка <b>💪</b> — подработка: 0 → 30 → 60 → 100%. Она отнимает <b>❤️ здоровье</b> (красная полоска), а <b>🛍 хотелки</b> — это отдых и радость: возвращают здоровье и растят <b>😊 счастье</b> (жёлтая полоска). Хотелок меньше 25% — счастье тает. Если любая полоска дойдёт до нуля — игра окончена. Экономить на всём нельзя, работать без отдыха — тоже.',target:['#overtimeBtn','#comfortBtn'],next:'Понятно'},
   FINAL('Осторожно: скоро сломается телефон — будет лишний расход. Страховка поможет. Выполни все цели и продержи 10 секунд.','Все цели — 10 секунд')],
  crisis:[{title:'Кризис',text:'Полторы минуты всё спокойно, а потом — <b>кризис</b>: работы нет 35 секунд, а инвестиции падают на 20%. Позже рынок восстановится.',target:['#jar-investments'],next:'Страшно…'},
   {title:'Продавать или ждать?',text:'Появилась труба <b>«Продажа инвестиций»</b>: она превращает инвестиции обратно в деньги. Но при продаже теряется 10%, а проданное уже не восстановится и не принесёт доход. <b>Лучшая защита — полная подушка</b>, а не продажа на дне.',target:['#chip-investments-income','#scene-toggle-investments-income'],select:'investments-income',next:'Запомню'},
@@ -1357,7 +1394,8 @@ function hintFor(m,r){const c=id=>con(state,id),low=state.balances.consumption<m
  if(r.spilledBy.investments>.01&&avail('investments-speculation')&&!c('investments-speculation'))return['spillI','Инвестиции льются мимо','Включи перелив <b>Инвестиции → Спекуляции</b> или убавь кран в Инвестиции.',['#scene-toggle-investments-speculation']];
  if(m.goals.income===false&&m.canUpgrade)return['train','Пора учиться!','Цель постоянного дохода выше зарплаты. Денег в Доходах хватает на обучение — нажми <b>🎓 навык</b> на табличке «Труд и подработка». Через 10 секунд зарплата вырастет навсегда.',['#skillBtn']];
  if(m.training&&m.goals.income===false&&!state.training&&state.salaryLevel<3&&m.upgradeCost&&state.time>40)return['saveTrain','Копи на новый навык',`Без навыков цель дохода не взять. Обучение стоит <b>${fmt(m.upgradeCost)}</b> ед., а в Доходах <b>${fmt(state.balances.income)}</b>. Закрой «−» краны в Инвестиции и Спекуляции — деньги начнут копиться в Доходах.`,['#jar-income','#skillBtn']];
- if(m.overtime&&state.overtime>0&&state.energy<50)return['tired','Ты выдыхаешься','Сил меньше половины — зарплата уже падает. Выключи подработку <b>💪</b> или добавь <b>🛍 хотелок</b>: это отдых.',['#overtimeBtn']];
+ if(m.overtime&&state.overtime>0&&state.energy<50)return['tired','Ты выдыхаешься','<b>❤️ Здоровье</b> меньше половины — зарплата уже падает, а на нуле будет выгорание. Выключи подработку <b>💪</b> или добавь <b>🛍 хотелок</b>: это отдых.',['#overtimeBtn']];
+ if(m.vitals&&state.happy<40&&state.comfort<.3)return['sad','Жизнь без радостей','<b>😊 Счастье</b> тает: хотелок меньше 25%. На нуле игра окончится. Добавь <b>🛍 хотелки</b> — немного радости нужно каждому.',['#comfortBtn']];
  return null;}
 function hintTick(m,r){const now=performance.now();
  if(hint.key==='mission'){if(state.status==='running'&&state.time>6){hint.key=null;coachHide();}return;}
@@ -1369,17 +1407,22 @@ let eatWarned=false;
 function popText(jarId,text){const j=JARS.find(j=>j.id===jarId);if(!j)return;const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',j.x);t.setAttribute('y',j.y+215);t.setAttribute('class','pop-text');t.textContent=text;scene.appendChild(t);setTimeout(()=>t.remove(),1400);}
 const GOAL_ICON={income:'💰',consumption:'🍕',savings:'🛟',investments:'🌱',speculation:'🎢'};
 function soonChips(){return E.upcoming(state,15).slice(0,2).map(sh=>{const good=sh.type==='bonus',sec=Math.max(1,Math.ceil(sh.at-state.time));return `<span class="goal-chip soon ${good?'good':'bad'}" title="${esc(sh.title)} через ${sec} с"><i aria-hidden="true">${good?'💵':'⚠'}</i><b>${esc(sh.title)} · ${sec} с</b></span>`;}).join('');}
+function lifestyleChip(m){const T=E.LIFESTYLE[m.lifestyle],N=m.lsNext,hold=m.lsHold,max=m.lifestyle>=m.lifestyleMax,NT=N.tier&&E.LIFESTYLE[N.tier];
+ return `<span class="goal-chip ls ${hold>0?'active':''}" title="Уровень жизни ${m.lifestyle}: ${T.name}.${max?' Это максимум здесь.':` Дальше — ${NT.icon} ${NT.name}: ${N.why?'нужно '+N.why:'держи ещё '+Math.ceil(E.LS_HOLD-hold)+' с'}.`} Уровень растёт, только когда система сама оплачивает такую жизнь."><i aria-hidden="true">${T.icon}</i><b>${hold>0?`${NT.icon} через ${Math.ceil(E.LS_HOLD-hold)} с`:esc(T.name)}</b><u><s style="width:${Math.round(hold/E.LS_HOLD*100)}%"></s></u></span>`;}
 function renderTray(m){const tray=$('#goalTray');if(!tray)return;
- if(m.cycle){const c=m.cycle,rec=progress.endless,html=`<span class="goal-chip phase ph-${c.phase.id}" title="${c.phase.hint}"><i aria-hidden="true">${c.phase.icon}</i><b>Год ${c.year} · ${c.phase.name}</b><u><s style="width:${Math.round((1-c.nextIn/c.yearLen)*100)}%"></s></u></span><span class="goal-chip" title="Какая фаза вероятна дальше"><i aria-hidden="true">⏭</i><b>${Math.max(1,Math.ceil(c.nextIn))} с: ${c.nextProbs.map(p=>`${p.icon}${Math.round(p.p*100)}%`).join(' ')}</b></span><span class="goal-chip" title="Капитал: номинально ${fmt(m.total)}, в ценах начала игры ${fmt(m.realTotal)}"><i aria-hidden="true">💰</i><b>${fmt(m.total)} · реально ${fmt(m.realTotal)}</b></span><span class="goal-chip" title="Запас прочности: Потребление и подушка покроют обязательные расходы на ${dec(m.reserveYears)} года"><i aria-hidden="true">🛡</i><b>${dec(m.reserveYears)} г.</b></span><span class="goal-chip" title="Финансовая свобода: доход капитала покрывает ${Math.round(m.freedom*100)}% расходов"><i aria-hidden="true">🏖</i><b>${Math.round(m.freedom*100)}%</b><u><s style="width:${Math.min(100,Math.round(m.freedom*100))}%"></s></u></span><span class="goal-chip" title="Цены выросли на ${m.pricePct}%"><i aria-hidden="true">🎈</i><b>+${m.pricePct}%</b></span>${rec&&!state.life?`<span class="goal-chip" title="Рекорд"><i aria-hidden="true">🏆</i><b>${rec.years} ${yearsWord(rec.years)}</b></span>`:''}<span class="goal-chip code" title="Код сценария — дай его другим, у них будут те же события"><i aria-hidden="true">🔑</i><b>${seedCode(state.seed)}</b></span>${m.freedom>=1&&!builtOffered&&!state.life?`<span class="goal-chip hold active"><i aria-hidden="true">🏗</i><b>свобода: ${dec(freeHold)} / 10 с</b></span>`:''}${soonChips()}`;if(tray._html!==html){tray.innerHTML=html;tray._html=html;}return;}const ended=['won','lost'].includes(state.status),items=[];
+ if(m.cycle){const c=m.cycle,rec=progress.endless,html=`<span class="goal-chip phase ph-${c.phase.id}" title="${c.phase.hint}"><i aria-hidden="true">${c.phase.icon}</i><b>Год ${c.year} · ${c.phase.name}</b><u><s style="width:${Math.round((1-c.nextIn/c.yearLen)*100)}%"></s></u></span><span class="goal-chip" title="Какая фаза вероятна дальше"><i aria-hidden="true">⏭</i><b>${Math.max(1,Math.ceil(c.nextIn))} с: ${c.nextProbs.map(p=>`${p.icon}${Math.round(p.p*100)}%`).join(' ')}</b></span><span class="goal-chip" title="Капитал: номинально ${fmt(m.total)}, в ценах начала игры ${fmt(m.realTotal)}"><i aria-hidden="true">💰</i><b>${fmt(m.total)} · реально ${fmt(m.realTotal)}</b></span>${lifestyleChip(m)}<span class="goal-chip" title="Запас прочности: Потребление и подушка покроют обязательные расходы на ${dec(m.reserveYears)} года"><i aria-hidden="true">🛡</i><b>${dec(m.reserveYears)} г.</b></span><span class="goal-chip" title="Финансовая свобода: доход капитала покрывает ${Math.round(m.freedom*100)}% расходов"><i aria-hidden="true">🏖</i><b>${Math.round(m.freedom*100)}%</b><u><s style="width:${Math.min(100,Math.round(m.freedom*100))}%"></s></u></span><span class="goal-chip" title="Цены выросли на ${m.pricePct}%"><i aria-hidden="true">🎈</i><b>+${m.pricePct}%</b></span>${rec&&!state.life?`<span class="goal-chip" title="Рекорд"><i aria-hidden="true">🏆</i><b>${rec.years} ${yearsWord(rec.years)}</b></span>`:''}<span class="goal-chip code" title="Код сценария — дай его другим, у них будут те же события"><i aria-hidden="true">🔑</i><b>${seedCode(state.seed)}</b></span>${m.freedom>=1&&!builtOffered&&!state.life?`<span class="goal-chip hold active"><i aria-hidden="true">🏗</i><b>свобода: ${dec(freeHold)} / 10 с</b></span>`:''}${soonChips()}`;if(tray._html!==html){tray.innerHTML=html;tray._html=html;}return;}const ended=['won','lost'].includes(state.status),items=[];
  for(const id of m.jars.slice(1)){const b=state.balances[id],t=state.targets[id];items.push({icon:GOAL_ICON[id],label:`${NAMES[id]}: ${fmt(b)} из ${fmt(t)}`,val:`${fmt(b)}/${fmt(t)}`,frac:t?Math.min(1,b/t):1,ok:m.goals[id]});}
  if(m.flowTarget!=null)items.push({icon:GOAL_ICON.income,label:`Постоянный доход: ${dec(m.incomeFlow)} из ${m.flowTarget} в секунду`,val:`${dec(m.incomeFlow)}/${dec(m.flowTarget)}/с`,frac:Math.min(1,m.incomeFlow/m.flowTarget),ok:m.goals.income});
  if(m.freedomGoal)items.push({icon:'🏖',label:`Финансовая свобода: капитал покрывает ${Math.round(m.freedom*100)}% расходов`,val:`${Math.round(m.freedom*100)}%`,frac:Math.min(1,m.freedom),ok:m.goals.freedom});
  const wait=!ended&&m.goalsAfter>state.time,hold=state.holdTime>0;
  let html=items.map(g=>`<span class="goal-chip ${g.ok?'ok':''}" title="${g.label}" aria-label="${g.label}${g.ok?', выполнено':''}"><i aria-hidden="true">${g.ok?'✓':g.icon}</i><b>${g.val}</b><u><s style="width:${Math.round(g.frac*100)}%"></s></u></span>`).join('')+`<span class="goal-chip hold ${hold?'active':''}" title="Все цели нужно удержать 10 секунд"><i aria-hidden="true">⏱</i><b>${hold?`${dec(state.holdTime)} / 10 с`:wait?`с ${clock(m.goalsAfter)}`:'держи 10 с'}</b><u><s style="width:${Math.round(state.holdTime*10)}%"></s></u></span>`;
- html+=soonChips();
+ html+=lifestyleChip(m)+soonChips();
  if(tray._html!==html){tray.innerHTML=html;tray._html=html;}}
 let bonusTrack=null,lastPay=null,wasFree=false,peakWorth=0,peakReal=0,samples=[],lastSampleT=-1,freeHold=0,lastFreeT=null,builtOffered=false;
+let lastLs=null;
 function afterUpdate(m,r){const running=state.status==='running';
+ if(lastLs===null||m.lifestyle<lastLs)lastLs=m.lifestyle;
+ if(m.lifestyle>lastLs){lastLs=m.lifestyle;const T=E.LIFESTYLE[m.lifestyle];confetti();sfx('win');haptic(30);popText('consumption',`${T.icon} ${T.name}!`);notify(`${T.icon} Новый уровень жизни: «${T.name}»!${m.vitals?' 😊 Счастье +15.':''}`);progress.lsBest=Math.max(progress.lsBest||1,m.lifestyle);saveProgress();if(m.lifestyle>=3)award('ls3');if(m.lifestyle>=5)award('ls5');}
  {const on=m.activeShocks.includes('bonus'),lost=state.totals.eaten+state.totals.spilled;if(on&&!bonusTrack)bonusTrack={lost};if(!on&&bonusTrack){if(state.status!=='lost'&&lost-bonusTrack.lost<5)award('bonus');bonusTrack=null;}}
  if(m.payEvery){const pi=Math.floor((state.time+1e-6)/m.payEvery);if(lastPay!==null&&pi>lastPay&&running){popText('income',`+${fmt(m.payLump)}`);sfx('up');haptic(15);}lastPay=pi;}
  if(running&&state.time-lastSampleT>=.5){lastSampleT=state.time;samples.push({t:state.time,c:state.balances.consumption,s:state.balances.savings,net:r.incomeOverflow+(r.actual['income-consumption']||0)+(r.actual['savings-consumption']||0)-r.consumption-r.eaten,sh:m.activeShocks.slice()});if(samples.length>400)samples.shift();}
@@ -1434,7 +1477,10 @@ $('#badges').onclick=openBadges;syncSoundButton();
 
 /* Итог партии: звёзды, значки, совет. */
 function finish(){if(state.status==='won'){const s0=state;sfx('win');haptic([30,60,30,60,80]);confetti();setTimeout(()=>{if(state===s0)result();},1500);}else{sfx('lose');haptic(200);result();}}
-function episode(){if(samples.length<3)return '';let i=samples.length-1;while(i>0&&samples[i-1].net<0)i--;const a=samples[i],z=samples[samples.length-1],d=z.t-a.t;if(d<1.5)return '';
+function vitalsEpisode(){const ot=Math.round(state.overtime*100),c=Math.round(state.comfort*100);
+ return state.lostBy==='health'?`<div class="episode"><b>❤️ Выгорание.</b> Здоровье упало до нуля: подработка ${ot}%, хотелки ${c}%. Работа отнимала больше, чем возвращал отдых. Когда здоровье ниже половины — убавляй подработку 💪 или добавляй хотелок 🛍.</div>`
+  :`<div class="episode"><b>😊 Жизнь без радости.</b> Счастье упало до нуля: хотелки ${c}%. Когда их меньше 25%, счастье только тает, сколько ни копи. Экономить можно, но не на всём.</div>`;}
+function episode(){if(state.lostBy==='health'||state.lostBy==='happy')return vitalsEpisode();if(samples.length<3)return '';let i=samples.length-1;while(i>0&&samples[i-1].net<0)i--;const a=samples[i],z=samples[samples.length-1],d=z.t-a.t;if(d<1.5)return '';
  const seg=samples.slice(i),avg=seg.reduce((x,p)=>x+p.net,0)/seg.length,ids=[...new Set(seg.flatMap(p=>p.sh))],titles=E.levelShocks(state).filter(sh=>ids.includes(sh.id)).map(sh=>sh.title);
  return `<div class="episode"><b>📉 Решающий эпизод.</b> Последние ${Math.round(d)} с расход был больше притока — в среднем на ${dec(-avg)}/с${titles.length?` (${esc([...new Set(titles)].join(', '))})`:''}. На старте в Потреблении было ${fmt(a.c)}, в подушке ${fmt(a.s)} — этого хватило на ${Math.round(d)} с.</div>`;}
 function offerBuilt(){const m=E.metrics(state);showModal('🏗 Система построена!',`<div class="result-copy"><div class="big-years">🏖</div><h3>Капитал сам оплачивает жизнь</h3><p>Год ${m.cycle.year}: доход от капитала покрывает ${Math.round(m.freedom*100)}% расходов уже 10 секунд. Можно завершить партию победой — или играть дальше и проверить, выдержит ли система следующие рецессии.</p></div><div class="modal-actions"><button data-action="continueBuilt">Играть дальше</button><button class="primary" data-action="finishBuilt">Завершить победой</button></div>`,'built');}
@@ -1460,7 +1506,7 @@ function renderLifeBar(m){const bar=$('#lifeBar');if(!bar)return;const L=state.l
  if(L.goal==='good'){const done=I.dreams.filter(d=>d.done).length;prog=`Мечты ${done}/3 · хотелки в среднем ${Math.round(I.avgComfort*100)}% (нужно 50) · запас ${fmt(I.have)}/${fmt(I.reserve)}${I.hold>0?` · держим ${dec(I.hold)}/10 с`:''}`;
   act=I.dreams.filter(d=>!d.done).map(d=>`<button class="life-act" data-life-act="${d.id}" title="${esc(d.name)}: платишь из Доходов, затем из подушки, затем продаёшь инвестиции (−10%)" ${I.cash>=d.price&&!ended?'':'disabled'}>${d.icon} ${fmt(d.price)}</button>`).join('');}
  const frac=I.state==='active'?1-I.left/(L.goal==='house'?180:90):L.goal==='good'?(I.dreams.filter(d=>d.done).length+Math.min(1,I.avgComfort/.5)+Math.min(1,I.have/Math.max(1e-9,I.reserve)))/5:Math.min(1,I.have/Math.max(1e-9,I.need));
- const F=E.FOCUS,fs=L.focus||'rest',fstat=fs==='study'?`+${(L.eduLvl||0)*4}% · ${Math.floor(L.edu||0)}/30 с`:fs==='goal'?(L.goalState!=='build'?'цель уже в пути':L.goal==='freedom'?`проект ${dec(I.side||0)}/с`:`цель −${Math.round((L.goal==='sabbatical'?Math.min(.25,(L.proj||0)/400):Math.min(.2,(L.proj||0)/500))*100)}%`):fs==='work'?`💪 ${Math.round(state.overtime*100)}%`:'силы +';
+ const F=E.FOCUS,fs=L.focus||'rest',fstat=fs==='study'?`+${(L.eduLvl||0)*4}% · ${Math.floor(L.edu||0)}/30 с`:fs==='goal'?(L.goalState!=='build'?'цель уже в пути':L.goal==='freedom'?`проект ${dec(I.side||0)}/с`:`цель −${Math.round((L.goal==='sabbatical'?Math.min(.25,(L.proj||0)/400):Math.min(.2,(L.proj||0)/500))*100)}%`):fs==='work'?`💪 ${Math.round(state.overtime*100)}%`:'❤️ +';
  const focus=`<span class="lb-focus" role="group" aria-label="Свободное время"><em>Время:</em>${Object.entries(F).map(([id,f])=>`<button data-focus="${id}" class="${fs===id?'on':''}" aria-pressed="${fs===id}" title="${esc(f.name+': '+f.text)}">${f.icon}</button>`).join('')}<span class="lb-fstat">${F[fs].name} · ${fstat}</span></span>`;
  const projects=(L.projects||[]).filter(p=>!p.done).map(p=>`<span class="lb-chip" title="${esc(p.title)}">⏳ ${esc(p.title)} · ${Math.max(0,Math.ceil(p.at-state.time))} с</span>`).join('');
  const slots=[0,1,2].map(i=>{const id=L.slots[i];return id?`<span class="lb-slot" title="${esc(E.UPGRADES[id].name+': '+E.UPGRADES[id].text)}">${E.UPGRADES[id].icon}</span>`:'<span class="lb-slot empty" title="Пустой слот">·</span>';}).join('');
@@ -1469,7 +1515,7 @@ function renderLifeBar(m){const bar=$('#lifeBar');if(!bar)return;const L=state.l
 document.addEventListener('click',e=>{const fb=e.target.closest('[data-focus]');if(fb){const f=fb.dataset.focus,n=E.setFocus(state,f);if(n!==state){state=n;sfx('step');haptic(8);save();update();notify(`${E.FOCUS[f].icon} ${E.FOCUS[f].name}: ${E.FOCUS[f].text}`);}return;}
  const b=e.target.closest('[data-life-act]');if(!b)return;const n=E.lifeGoalAction(state,b.dataset.lifeAct);if(n===state){notify('Пока не хватает — смотри прогресс цели.');return;}state=n;sfx('badge');confetti();save();update();});
 const RULES='3.3';
-function qualityLine(){const L=state.life,t=Math.max(1,state.time);return `Качество жизни: хотелки в среднем <b>${Math.round((L.qSum||0)/t*100)}%</b>, силы в среднем <b>${Math.round((L.eSum||0)/t)}%</b>${L.eduLvl?` · учёба дала +${L.eduLvl*4}% к зарплате`:''}${(L.dreams||[]).length?` · мечты: ${L.dreams.map(id=>E.DREAMS[id].icon).join(' ')}`:''}.`;}
+function qualityLine(){const L=state.life,t=Math.max(1,state.time);return `Качество жизни: хотелки в среднем <b>${Math.round((L.qSum||0)/t*100)}%</b>, здоровье в среднем <b>${Math.round((L.eSum||0)/t)}%</b>, счастье <b>${Math.round((L.hSum||0)/t)}%</b>${L.eduLvl?` · учёба дала +${L.eduLvl*4}% к зарплате`:''}${(L.dreams||[]).length?` · мечты: ${L.dreams.map(id=>E.DREAMS[id].icon).join(' ')}`:''}.`;}
 function resultText(){const m=E.metrics(state),years=Math.floor(state.time/E.YEAR),won=state.status==='won',L=state.life,lines=[];
  if(L){const G=E.GOALS[L.goal],pr=E.PROFESSIONS[L.prof];lines.push(`Пять кувшинов · Жизненный путь (правила ${RULES})`,`Код: ${seedCode(state.seed)} · ${pr.icon} ${pr.name} · ${G.icon} ${G.name}`,won?`Итог: цель достигнута за ${years} ${yearsWord(years)}`:`Итог: цель не достигнута, прожито ${years} ${yearsWord(years)}`,`Пик капитала (в ценах начала): ${fmt(Math.max(peakReal,m.realTotal))} · свобода ${Math.round(m.freedom*100)}%`,qualityLine().replace(/<[^>]+>/g,''),`Решения: ${L.log.length?L.log.join('; '):'—'}`);if(wiSummary)lines.push(wiSummary);}
  else lines.push(`Пять кувшинов · Экономический цикл (правила ${RULES})`,`Код: ${seedCode(state.seed)}`,won?`Итог: система построена за ${years} ${yearsWord(years)}`:`Итог: продержался ${years} ${yearsWord(years)}`,`Пик капитала (в ценах начала): ${fmt(Math.max(peakReal,m.realTotal))} · свобода ${Math.round(m.freedom*100)}% · цены +${m.pricePct}%`);
@@ -1525,7 +1571,7 @@ function rateGame(){const t=state.totals,earned=t.salary+t.overtime+t.investment
  const noEat=E.LEVELS[state.level].challenge==='noEat';
  const crit=[{ok:won,label:'Победа: все цели удержаны'},noEat?{ok:won&&t.eaten<.5,label:`Ни одной проеденной монеты: проедено ${fmt(t.eaten)}`}:{ok:won&&lossPct<=.1,label:`Бережливость: потеряно ${Math.round(lossPct*100)}% заработанного (норма ≤ 10%)`},{ok:won&&state.time<=par,label:noEat?`Без срывов: победа к ${clock(Math.round(state.time))} (норма ≤ ${clock(par)})`:`Скорость: ${clock(Math.round(state.time))} (норма ≤ ${clock(par)})`}];
  return{crit,stars:crit.filter(c=>c.ok).length,lossPct};}
-function loseTip(){const t=state.totals;if(!avail('savings-consumption'))return'Следи за краном «Доходы → Потребление»: приток должен быть больше расхода, пока кувшин не наполнится.';if(!con(state,'savings-consumption'))return'Включай страховку «Сбережения → Потребление» заранее — она сама подкормит кувшин жизни у красной черты.';
+function loseTip(){if(state.lostBy==='health')return'Подработка — спринт, а не марафон. Включай её, когда деньги нужны прямо сейчас, и выключай, пока ❤️ не упало ниже половины.';if(state.lostBy==='happy')return'Хотелки — не только утечка. Держи их хотя бы на 35%: так 😊 счастье растёт, а расходы остаются под контролем.';const t=state.totals;if(!avail('savings-consumption'))return'Следи за краном «Доходы → Потребление»: приток должен быть больше расхода, пока кувшин не наполнится.';if(!con(state,'savings-consumption'))return'Включай страховку «Сбережения → Потребление» заранее — она сама подкормит кувшин жизни у красной черты.';
  if(state.balances.savings<1)return'Подушка была пустой. Сначала наполни Сбережения — потом лей в инвестиции.';
  if(t.liquidationLoss>0)return'Продажа капитала на дне кризиса стоит денег и уменьшает будущий доход. Лучше держать подушку побольше.';
  return'Нажми «+» на трубе в Потребление или убавь дополнительное потребление, когда начинается шок.';}
