@@ -1057,7 +1057,7 @@ function afterUpdate(m,r){const running=state.status==='running';
  if(E.LEVELS[state.level].challenge==='noEat'&&!['won','lost'].includes(state.status)){const e=state.totals.eaten;$('#holdText').textContent+=` · проедено: ${fmt(e)}`;
   if(e>=.5&&!eatWarned){eatWarned=true;sfx('alert');notify('🍕 Монеты проедаются — звезда «Ни одной монеты» потеряна. Закрой кран «−»!');}if(e<.5)eatWarned=false;}
  if(!prevGoals)prevGoals={...m.goals};
- for(const id in m.goals)if(m.goals[id]&&!prevGoals[id]&&running){sfx('goal');haptic(30);popText(id,id==='income'?'✓ Доход!':'✓ Цель!');const g=$('#jar-'+id);g.classList.remove('jar-pop');g.getBoundingClientRect();g.classList.add('jar-pop');}
+ for(const id in m.goals)if(m.goals[id]&&!prevGoals[id]&&running){sfx('goal');haptic(30);const jid=id==='freedom'?'investments':id;popText(jid,id==='income'?'✓ Доход!':id==='freedom'?'🏖 Свобода!':'✓ Цель!');const g=$('#jar-'+jid);if(g){g.classList.remove('jar-pop');g.getBoundingClientRect();g.classList.add('jar-pop');}}
  prevGoals={...m.goals};
  for(const ev of state.events)if(ev.id>lastEventSeen){if(ev.type==='danger'&&state.status!=='lost')sfx('alert');if(ev.type==='good'&&ev.text.startsWith('Премия:')){sfx('badge');haptic([20,40,20]);}}lastEventSeen=state._eventId;
  if(!['ready'].includes(state.status)){
