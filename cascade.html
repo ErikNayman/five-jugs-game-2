@@ -1,0 +1,553 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b31"><title>Пять кувшинов · Каскад</title><style>:root{color-scheme:dark;--bg:#10282e;--panel:#17343b;--deep:#0a2026;--line:#315057;--text:#f0eee1;--muted:#9bb2b0;--mint:#97d6bd;--brass:#dcb275;--danger:#f39b75;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg);font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,input,[role=button],[role=slider]{-webkit-tap-highlight-color:transparent}button{cursor:pointer;border:0;color:inherit}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid #efc481;outline-offset:5px}a{color:var(--mint)}h1,h2,h3,p{margin:0}h1{font:400 clamp(23px,2.3vw,34px)/1.2 Georgia,serif;letter-spacing:-.5px}h2{font-size:19px;letter-spacing:-.3px;font-weight:550}p{line-height:1.6}.header{max-width:1480px;margin:auto;padding:23px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none;font:24px Georgia,serif}.brand small{display:block;font:11px ui-sans-serif,sans-serif;letter-spacing:2px;color:var(--muted);margin-top:6px}.brand-icon{width:34px;height:41px;display:grid;place-items:center;border:1px solid var(--brass);color:var(--brass);border-radius:6px 6px 15px 15px;font-size:29px}.header-actions{display:flex;gap:22px}.quiet{background:transparent;padding:8px 0;font-size:12px;color:var(--muted);min-height:36px}.quiet:hover{color:var(--text)}main{max-width:1480px;margin:auto;padding:30px 36px 0}.intro-line{display:flex;justify-content:space-between;align-items:center;gap:25px;margin-bottom:24px}.eyebrow{display:block;text-transform:uppercase;font-size:12px;letter-spacing:1.8px;color:var(--muted);font-weight:600;margin-bottom:9px}.game-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}.play{min-height:45px;min-width:174px;background:var(--mint);color:#12372e;border-radius:8px;padding:11px 22px;font-size:13px;font-weight:700;transition:background .2s}.play:hover{background:#b4e6cb}.small-button{height:44px;width:44px;border:1px solid var(--line);border-radius:8px;background:transparent;font-size:12px;color:var(--muted)}.hud{display:grid;grid-template-columns:.75fr 1fr 1fr 1fr .75fr;gap:20px;margin-bottom:22px;padding:15px 0;border-top:1px solid #27434a;border-bottom:1px solid #27434a}.hud>div{border-right:1px solid #2d4a51;padding-right:18px;min-width:0}.hud>div:last-child{border:0}.hud-label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}.hud strong{font:500 25px/1.1 ui-sans-serif,sans-serif;letter-spacing:-.6px;font-variant-numeric:tabular-nums}.hud strong em{font-size:12px;font-style:normal;color:var(--muted);font-weight:400;margin-left:2px}.hud small{display:block;font-size:12px;color:var(--muted);margin-top:8px;min-height:13px}.energy-track{margin-top:12px;max-width:140px;height:4px;background:#28464b;border-radius:10px;overflow:hidden}.energy-track i{display:block;background:var(--mint);height:100%;width:100%;transition:width .2s}.workbench{border:1px solid #3a5860;background:#122f36;border-radius:15px;overflow:hidden;position:relative;box-shadow:0 18px 60px #06171d25}.bench-top{display:flex;gap:18px;align-items:center;justify-content:space-between;padding:9px 20px;background:#16363e;border-bottom:1px solid #2e5059;color:var(--muted);font-size:12px}.bench-top b{font-weight:500;color:#d2ded8}.bench-top>span:first-child{white-space:nowrap}.status-dot{display:inline-block;width:6px;height:6px;background:#84999a;border-radius:50%;margin-right:8px}.status-dot.running{background:var(--mint);box-shadow:0 0 9px #94d5bda0}.status-dot.danger{background:var(--danger);box-shadow:0 0 9px #ed866da0}.bench-top .quiet{font-size:22px;padding:0;line-height:1;min-height:28px}.scene-scroll{overflow:auto;scrollbar-width:thin;scrollbar-color:#52716e #18373f}#scene{display:block;width:100%;min-width:800px;user-select:none;-webkit-user-select:none;touch-action:pan-x pan-y}#scene text{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.bench-bottom{padding:8px 20px;display:flex;align-items:center;gap:23px;min-height:37px;border-top:1px solid #2e5059;font-size:12px;color:var(--muted)}.bench-bottom>span{display:flex;gap:7px;align-items:center}.legend-line{height:0;width:17px;border-top:1px dashed var(--brass)}.legend-port{width:7px;height:7px;border:1.5px solid var(--mint);border-radius:50%}.pipe-hit{fill:none;stroke:transparent;stroke-width:25;cursor:pointer;pointer-events:stroke}.pipe-shell{fill:none;stroke:#415d62;stroke-width:13;stroke-linecap:round;stroke-linejoin:round}.pipe-core{fill:none;stroke:#0b222a;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}.pipe-liquid{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;opacity:.86}.pipe-motion{fill:none;stroke:#edfff2;stroke-width:2;stroke-dasharray:3 21;stroke-linecap:round;opacity:.55;animation:flow 1.2s linear infinite}.pipe-group.disconnected .pipe-shell{stroke:#718c8e;stroke-width:2;stroke-dasharray:4 8;opacity:.25}.pipe-group.disconnected .pipe-core,.pipe-group.disconnected .pipe-liquid,.pipe-group.disconnected .pipe-motion{display:none}.pipe-group.selected .pipe-shell{stroke:#aab7a6;filter:drop-shadow(0 0 3px #bfd6b52b)}.pipe-group.selected.disconnected .pipe-shell{opacity:.7;stroke:#d6b57a}.pipe-group.dry .pipe-liquid,.pipe-group.dry .pipe-motion{opacity:0}.is-paused .pipe-motion{animation-play-state:paused}.port{cursor:crosshair;touch-action:none}.port .port-ring{fill:#10282e;stroke:#91b4b0;stroke-width:2}.port .port-core{fill:#b0cebe}.port:hover .port-ring,.port:focus .port-ring{stroke:#fff2c2;stroke-width:3}.port.compatible .port-ring{stroke:var(--mint);filter:drop-shadow(0 0 5px #9cdbc389)}.port.pending .port-ring{stroke:var(--brass);stroke-width:3}.port-label{font-size:12px;fill:#789d9e;pointer-events:none}.valve{cursor:grab;touch-action:none}.valve:active{cursor:grabbing}.valve .wheel-outer{fill:#17333a;stroke:#b39770;stroke-width:3;filter:drop-shadow(0 3px 3px #04151c80)}.valve.disconnected{opacity:.5}.valve.selected .wheel-outer{stroke:#f1cb91;filter:drop-shadow(0 0 7px #e0bc6c50)}.wheel-spoke{stroke:#d2b182;stroke-width:4;stroke-linecap:round}.wheel-hub{fill:#dbc296;stroke:#715d43;stroke-width:1.4}.valve-value{font-size:12px;fill:#d4c7a7;text-anchor:middle;font-variant-numeric:tabular-nums;pointer-events:none}.pipe-rate{font-size:12px;fill:#a9c6c0;text-anchor:middle;pointer-events:none}.jar-title{fill:#eaece0;font-size:14px;text-anchor:middle;font-weight:600}.jar-value{fill:white;font-size:24px;font-weight:650;text-anchor:middle;font-variant-numeric:tabular-nums;letter-spacing:-.6px}.jar-unit{fill:#c1d6cb;font-size:12px;text-anchor:middle;letter-spacing:1px}.jar-target-label{fill:#aec2b9;font-size:12px;text-anchor:middle}.jar-target-mark{stroke:#f6d695;stroke-width:1.4;stroke-dasharray:4 4;opacity:.9}.jar-status{fill:#91b6ae;font-size:12px;text-anchor:middle}.jar-check{fill:var(--mint);font-size:12px;text-anchor:middle}.jar-reached .jar-outline{stroke:#abe0bd!important;stroke-opacity:.8!important}.jar-critical .jar-outline{stroke:#ff9d7b!important;stroke-width:3!important}.jar-critical .jar-value{fill:#ffb89e}.source-text{fill:#b1c8c4;font-size:12px}.source-value{fill:#e3eadd;font-size:12px;font-weight:600}.note-text{font-size:12px;fill:#82a5a4}.ghost-pipe{fill:none;stroke:#e6c083;stroke-width:5;stroke-dasharray:5 6;pointer-events:none;opacity:.8}.control-deck{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;margin-top:20px}.valve-panel,.source-panel{border:1px solid var(--line);background:#18363d;border-radius:12px;padding:22px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-heading .eyebrow{margin-bottom:10px}.panel-heading>span:last-child:not(.eyebrow){font-size:12px;color:var(--muted)}.badge{font-size:12px!important;letter-spacing:1px;color:var(--mint)!important}.dial-row{display:flex;align-items:center;gap:24px;margin-top:22px}.dial-readout{width:64px;flex-shrink:0}.dial-readout span{font-size:34px;color:var(--brass);font-weight:400;font-variant-numeric:tabular-nums}.dial-readout small{display:block;color:var(--muted);font-size:12px}.slider-wrap{flex:1;min-width:80px}.slider-wrap label{display:flex;justify-content:space-between;gap:10px;font-size:12px}.slider-wrap label span{font-size:12px;color:var(--muted)}input[type=range]{width:100%;appearance:none;height:6px;border-radius:5px;background:#34565c;cursor:ew-resize;display:block;margin:17px 0;accent-color:var(--brass)}input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;background:var(--brass);border:3px solid #18363d;border-radius:50%;box-shadow:0 0 0 1px #d6b37c}input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--brass);border:3px solid #18363d;border-radius:50%;box-shadow:0 0 0 1px #d6b37c}.slider-caption{display:flex;justify-content:space-between;gap:15px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.connect-button{padding:10px 12px;border:1px solid #557278;background:transparent;border-radius:7px;color:var(--mint);font-size:12px;min-height:40px;max-width:130px}.connect-button:hover{border-color:var(--mint)}.panel-note{font-size:12px;color:var(--muted);margin-top:18px;min-height:18px}.route-shortcuts{display:flex;flex-wrap:wrap;gap:6px;margin-top:15px}.route-shortcuts button{padding:6px 9px;border-radius:5px;background:#24454b;color:#b4c8bd;font-size:12px;border:1px solid transparent}.route-shortcuts button.selected{border-color:#b4ba8c;background:#314c4c;color:#e3d8b6}.source-panel{padding:22px 24px}.source-label{display:flex;justify-content:space-between;font-size:12px;margin-top:7px;color:#cedbd2}.source-label b{font-weight:400;color:var(--brass);font-variant-numeric:tabular-nums}.source-panel input{margin:13px 0}.source-panel p{font-size:12px;color:var(--muted);margin-bottom:13px}.training-button{display:flex;justify-content:space-between;gap:15px;align-items:center;width:100%;text-align:left;padding:11px 13px;background:#294b48;color:#e8ddbe;border:1px solid #577266;border-radius:6px;font-size:12px}.source-panel #trainingText{margin:7px 0 0}.bottom-strip{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;margin:20px 0 27px}.live-event{display:flex;gap:15px;padding:7px 0}.event-symbol{color:var(--brass);font-size:23px;line-height:1}.live-event p{font-size:12px;color:#b7c7bc}.live-event .eyebrow{margin-bottom:5px}.goal-block{border-left:1px solid var(--line);padding:6px 24px}.goal-block b{font-size:12px;font-weight:550;display:block}.goal-block span{display:block;font-size:12px;line-height:1.6;color:var(--muted);margin-top:6px}.goal-track{height:4px;background:#2c4c50;border-radius:4px;margin-top:12px;overflow:hidden}.goal-track i{display:block;background:var(--mint);height:100%;width:0;transition:width .1s linear}footer{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:1px solid var(--line);padding:12px 0 16px;color:#839e9d;font-size:12px}footer .quiet{font-size:12px}dialog{background:#17343b;border:1px solid #547277;border-radius:16px;color:var(--text);width:min(740px,calc(100% - 30px));max-height:90vh;padding:28px;box-shadow:0 40px 120px #04141acc}dialog::backdrop{background:#04171dc7;backdrop-filter:blur(7px)}.modal-top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:19px}.modal-top h2{font:27px Georgia,serif}.close{background:none;font-size:27px;color:var(--muted);width:32px;height:32px}.modal-copy p,.modal-copy li{font-size:13px;color:#b6cbc5;line-height:1.75}.modal-copy p{margin-bottom:15px}.modal-copy ol,.modal-copy ul{padding-left:22px}.modal-copy h3{font-size:15px;margin:20px 0 10px}.modal-copy b{color:var(--text);font-weight:550}.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.level-choice{border:1px solid #45676a;background:#1a3b42;text-align:left;padding:18px 14px;border-radius:10px;min-height:154px}.level-choice.selected{border-color:var(--brass);background:#29443e}.level-choice .stars{font-size:12px;color:var(--brass);letter-spacing:3px}.level-choice h3{font-size:15px;margin:15px 0 9px}.level-choice p{font-size:12px;color:var(--muted);line-height:1.6}.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:23px}.modal-actions button,.modal-actions a{min-height:42px;padding:11px 18px;border-radius:7px;background:#29494e;color:#dce7dc;font-size:12px;text-decoration:none}.modal-actions .primary{background:var(--mint);color:#13382d;font-weight:650}.welcome-tip{background:#203f44;border-radius:8px;padding:13px 15px;font-size:12px;line-height:1.7;color:#c0d5ca}.result-icon{width:64px;height:64px;border:1px solid var(--brass);border-radius:50%;color:var(--brass);display:grid;place-items:center;font:33px Georgia,serif;margin:10px auto 20px}.result-copy{text-align:center}.result-copy h3{font:31px Georgia,serif;margin-bottom:15px}.result-copy p{font-size:13px;color:#b5c9bf;line-height:1.7}.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:23px 0}.result-stats div{background:#204048;padding:15px;border-radius:8px;text-align:center}.result-stats b{display:block;font-size:21px;color:var(--brass);font-weight:500}.result-stats span{font-size:12px;color:var(--muted);display:block;margin-top:8px}.toast{pointer-events:none}#toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,14px);opacity:0;pointer-events:none;transition:all .2s;z-index:30;max-width:min(540px,90%);padding:13px 20px;border-radius:9px;background:#e3dab8;color:#203e3b;font-size:12px;box-shadow:0 8px 40px #062228aa}#toast.visible{opacity:1;transform:translate(-50%,0)}.source-auto .pipe-motion{stroke-dasharray:3 17}.critical-label{fill:#ffc3a5!important}.flow-hold{fill:#bed5c5;font-size:12px}.is-paused .liquid-wave{animation-play-state:paused}#scene .liquid-wave{animation:wave 3s ease-in-out infinite;transform-origin:center}@keyframes flow{to{stroke-dashoffset:-48}}@keyframes wave{50%{transform:translateY(1.5px)}}@media(max-width:1050px){.header{padding:20px 24px}main{padding:25px 24px 0}.intro-line{align-items:end}.hud{gap:15px}.hud strong{font-size:22px}.dial-row{gap:15px}.connect-button{max-width:110px}.slider-wrap label span{display:none}.valve-panel,.source-panel{padding:19px}.control-deck{grid-template-columns:1.4fr 1fr}.panel-heading>span:last-child:not(.eyebrow){font-size:12px}.bottom-strip{grid-template-columns:1.4fr 1fr}.bench-hint{font-size:12px}.header-actions{gap:16px}}@media(max-width:730px){.header{padding:16px 17px}.brand{font-size:20px;gap:10px}.brand small{font-size:12px;letter-spacing:1px}.brand-icon{width:28px;height:34px;font-size:24px}.header-actions{gap:14px}.header-actions .quiet{font-size:12px}#new{display:none}main{padding:23px 17px 0}.intro-line{display:block;margin-bottom:18px}h1{font-size:27px;max-width:390px}.game-controls{margin-top:20px;justify-content:space-between}.play{flex:1}.hud{grid-template-columns:1fr 1fr;gap:17px 20px;padding:17px 0}.hud>div{border:0;padding:0}.hud>div:first-child{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.hud>div:first-child .hud-label{margin:0}.hud>div:first-child strong{font-size:16px}.hud>div:first-child small{margin:0;margin-left:auto}.hud .energy-hud{display:none}.hud strong{font-size:24px}.hud-label{font-size:12px}.bench-top{padding:9px 12px}.bench-hint{display:none}#scene{min-width:870px}.scene-scroll{max-height:500px}.bench-bottom{padding:9px 12px;gap:15px;flex-wrap:wrap;font-size:12px}.bench-bottom>span:last-of-type{display:none}.control-deck,.bottom-strip{grid-template-columns:1fr;gap:13px}.valve-panel,.source-panel{padding:19px 17px}.valve-panel h2{font-size:19px}.dial-row{gap:14px}.dial-readout{width:46px}.dial-readout span{font-size:29px}.connect-button{font-size:12px;max-width:94px;padding:9px}.slider-wrap label{font-size:12px}.slider-caption{font-size:12px;gap:5px}.route-shortcuts button{padding:8px 9px;font-size:12px}.panel-note{font-size:12px}.source-panel .source-label{font-size:12px}.source-panel p{font-size:12px}.source-panel input{margin:18px 0}.training-button{font-size:12px;padding:13px}.bottom-strip{margin-top:19px}.goal-block{border-left:0;border-top:1px solid var(--line);padding:16px 0 0}.goal-block span{font-size:12px}footer{flex-wrap:wrap;gap:2px 14px;font-size:12px}footer>span:first-child{width:100%}.levels{grid-template-columns:1fr;gap:9px;margin:15px 0}.level-choice{min-height:0;padding:14px;display:grid;grid-template-columns:32px 1fr;gap:0 8px}.level-choice .stars{grid-row:1/3;align-self:center;letter-spacing:0;font-size:12px}.level-choice h3{margin:0 0 5px;font-size:14px}.level-choice p{font-size:12px}dialog{padding:22px 20px}.modal-top h2{font-size:24px}.modal-copy p,.modal-copy li{font-size:12px}.result-stats{gap:7px}.result-stats div{padding:12px 7px}.result-stats b{font-size:18px}.result-stats span{font-size:12px}}@media(prefers-reduced-motion:reduce){.pipe-motion{animation-duration:4s!important}.liquid-wave{animation:none!important}*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Keep the complete pipe network visible on a laptop screen. */
+@media(min-width:731px){.header{padding:12px 28px}.brand{font-size:21px}.brand-icon{height:34px;width:29px;font-size:24px}.brand small{font-size:12px;margin-top:4px}main{padding:16px 28px 0}.intro-line{margin-bottom:14px}h1{font-size:25px}.intro-line .eyebrow{font-size:12px;margin-bottom:6px}.hud{padding:10px 0;margin-bottom:14px}.hud-label{margin-bottom:4px}.hud strong{font-size:23px}.hud small{margin-top:5px}.bench-top{padding:5px 17px}.bench-bottom{padding:4px 17px;min-height:28px}#scene{min-width:0;height:clamp(360px,calc(100dvh - 290px),650px)}.intro-line{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}}
+html:fullscreen{overflow:auto;background:var(--bg)}
+
+@media(max-width:730px){main{padding-bottom:90px}.game-controls{position:fixed;left:12px;right:12px;bottom:12px;z-index:15;margin:0;padding:9px;background:#10282ef5;border:1px solid #46646a;border-radius:12px;box-shadow:0 5px 24px #04171d80}.game-controls .play{min-width:0}.game-controls .small-button{flex-shrink:0}#toast{bottom:90px}}
+
+/* Explicit one-click pipe connections, on the diagram and below it. */
+ .scene-switch{cursor:pointer;touch-action:manipulation}.switch-bg{fill:#254a51;stroke:#b4d1c6;stroke-width:1}.switch-label{fill:#f0eee1;font-size:12px;font-weight:650;pointer-events:none}.scene-switch:hover .switch-bg{fill:#365f65}.scene-switch.connected .switch-bg{fill:#97d6bd;stroke:#97d6bd}.scene-switch.connected .switch-label{fill:#12372e}.scene-switch.connected:hover .switch-bg{fill:#b4e6cb}.scene-switch:focus-visible{outline:2px solid #efc481;outline-offset:2px}.scene-switch[aria-disabled=true]{opacity:.5;cursor:default}.route-hint{font-size:12px;color:var(--muted);margin-top:20px;line-height:1.6}.route-shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.route-shortcuts .route-toggle{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;min-height:48px;padding:10px;border:1px solid #496b70;background:#17353d}.route-toggle>span{font-size:12px;line-height:1.5}.route-action{font-size:12px;font-weight:550;color:#c6e2d7;white-space:nowrap}.route-shortcuts .route-toggle.connected{border-color:#7cb8a0;background:#254b45}.route-toggle.connected .route-action{color:#b9ebd3}.route-shortcuts .route-toggle.selected{box-shadow:0 0 0 1px #dcb275}.route-shortcuts .route-toggle:hover{border-color:#d9c594}@media(max-width:1050px){.route-shortcuts{grid-template-columns:1fr}.route-toggle>span,.route-action{font-size:12px}.route-shortcuts .route-toggle{min-height:46px}}
+
+/* Fullscreen is requested on html so pause and all controls stay available. */
+html:fullscreen main{max-width:1600px}html:fullscreen .workbench{box-shadow:none}html:fullscreen .scene-scroll{background:#122f36}
+@media(min-width:731px){html:fullscreen #scene{height:clamp(420px,calc(100dvh - 290px),800px)}}
+.pipe-picker{display:none}.source-label{flex-wrap:wrap;gap:5px}.panel-heading{flex-wrap:wrap}.badge{font-size:12px!important}.bench-bottom{flex-wrap:wrap}.jar-unit{font-size:11px;letter-spacing:.2px}.source-text{font-size:11px}.jar-check{font-size:12px}.jar-title{font-size:16px}.pipe-rate{font-size:12px;paint-order:stroke;stroke:#122f36;stroke-width:3px}.valve-value{font-size:12px}.header-actions .quiet{min-height:44px}.pipe-picker label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}.pipe-picker select{width:100%;height:44px;border:1px solid #678b87;border-radius:7px;background:#102b32;color:var(--text);padding:8px 10px;font-size:14px}
+@media(max-width:730px){.brand small{display:none}.header-actions{gap:12px}.header-actions .quiet{font-size:12px}.brand{font-size:20px}.header{gap:10px}.pipe-picker{display:block}#pipeTitle{display:none}.slider-wrap label{font-size:12px}.dial-row{flex-wrap:wrap}.slider-wrap{min-width:120px}.dial-row .connect-button{max-width:none;min-height:44px}.bench-bottom{font-size:12px}.source-panel .source-label{font-size:13px}.route-toggle>span,.route-action{font-size:12px}.hud small{font-size:12px}.header-actions{flex-shrink:0}.bench-hint{display:none}footer{font-size:11px}footer .quiet{font-size:11px}.brand small{display:none}}
+
+/* Cascade controls and teaching cues. */
+[hidden]{display:none!important}.valve-controls{display:flex;align-items:center;gap:18px;flex:1;min-width:0}.slider-wrap b{font-weight:500}.overflow-explanation{flex:1;font-size:14px;color:var(--mint)}.dial-row>.connect-button{flex-shrink:0}.float-line{stroke:#ff987c;stroke-width:2;stroke-dasharray:5 3}.float-label{fill:#ffd0bd;font-size:9px;text-anchor:middle;paint-order:stroke;stroke:#633f33;stroke-width:2px}.legend-line.red{background:#ff987c}.shock-banner{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:12px 17px;margin-bottom:12px;border:1px solid #b57150;background:#54382e;color:#ffdec0;border-radius:8px;font-size:14px}.shock-banner b{white-space:nowrap}.spill-drops{fill:#f39b75;animation:dripping .9s linear infinite}.is-paused .spill-drops{animation-play-state:paused}.loss-note{fill:#ffae89!important}.jar-check{paint-order:stroke;stroke:#17343b;stroke-width:3px}.source-auto.dry .pipe-motion{display:none}.source-auto.dry .pipe-liquid{opacity:.2}.overflow-switch .switch-bg{stroke-width:1.5}.overflow-switch.selected .switch-bg{stroke:#efc481;stroke-width:2}.overflow-rate{font-size:11px}.route-toggle small{display:block;color:var(--muted);font-size:11px;margin-bottom:2px}.overtime-track{position:relative;padding-bottom:20px}.overtime-track input{width:100%}.sustainable-mark{position:absolute;left:30%;top:20px;font-size:11px;color:var(--mint);transform:translateX(-50%)}.sustainable-mark:before{content:'';display:block;margin:auto;width:1px;height:7px;background:var(--mint)}.result-ledger{margin:22px 0;font-size:14px}.result-ledger div{display:flex;justify-content:space-between;gap:20px;padding:8px 0;border-bottom:1px solid var(--line)}.result-ledger dt{color:var(--muted)}.result-ledger dd{margin:0;white-space:nowrap;font-variant-numeric:tabular-nums}.bench-bottom .legend-line{flex-shrink:0}.jar-target-label{font-size:12px}.jar-check{font-size:11px}.slider-caption{margin:8px 0 12px;display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted)}.connect-button{min-height:44px}
+@keyframes dripping{from{transform:translateY(0);opacity:.8}to{transform:translateY(10px);opacity:.25}}
+@media(max-width:730px){.valve-controls{width:100%;flex-basis:100%;gap:12px}.shock-banner{font-size:12px}.shock-banner b{font-size:12px}.dial-row .overflow-explanation{flex-basis:100%}.sustainable-mark{top:23px}.result-ledger{font-size:12px}.result-ledger div{gap:10px}.result-stats{grid-template-columns:repeat(3,1fr)}}
+@media(prefers-reduced-motion:reduce){.spill-drops{animation:none}}
+.legend-line.red{border-top-color:#ff987c;background:none}
+@media(max-width:730px){.header{flex-wrap:wrap}.brand{white-space:nowrap}.header-actions{width:100%;justify-content:space-between;gap:8px}.hud .energy-hud{display:block}.valve-controls .slider-wrap{min-width:0}.valve-controls label{line-height:1.5}.valve-controls input{min-width:0}.energy-track{margin-top:9px}}
+@media(max-width:730px){#new{display:block}}
+</style></head><body>
+<header class="header"><a href="#" class="brand" id="home"><span class="brand-icon">5</span><span>Пять кувшинов<small>КАСКАД · ЛАБОРАТОРИЯ ПОТОКА</small></span></a><div class="header-actions"><button class="quiet" id="help">Как устроено</button><button class="quiet" id="save">Сохранить</button><button class="quiet" id="new">Новая игра</button></div></header>
+<main><div class="intro-line"><div><div class="eyebrow">Соединяй трубы. Сохраняй переливы.</div><h1>Дай деньгам правильное направление.</h1></div><div class="game-controls"><button id="speed" class="small-button" aria-label="Скорость игры">×1</button><button id="play" class="play">▶ Запустить поток</button></div></div>
+<section class="hud" aria-label="Состояние системы"><div><span class="hud-label">Время</span><strong id="time">00:00</strong><small id="levelLabel">Первый поток</small></div><div><span class="hud-label">Приходит в систему</span><strong id="inRate">0 <em>ед./с</em></strong><small id="sourceLabel">Труд + капитал</small></div><div><span class="hud-label">Уходит на жизнь</span><strong id="outRate">0 <em>ед./с</em></strong><small id="runway">Потребление под защитой</small></div><div><span class="hud-label">Пять целей</span><strong id="targetCount">0 <em>из 5</em></strong><small id="holdText">Удержи все цели 10 секунд</small></div><div class="energy-hud"><span class="hud-label">Силы для подработки</span><strong id="energy">100<em>%</em></strong><div class="energy-track"><i id="energyBar"></i></div></div></section>
+<div id="shockBanner" class="shock-banner" hidden><span id="shockName" role="status"></span><b id="shockCountdown"></b></div>
+<section class="workbench" aria-label="Интерактивная система труб и кувшинов"><div class="bench-top"><span><i class="status-dot" id="statusDot"></i><b id="statusText">Система на паузе</b></span><span class="bench-hint" id="connectionHint">Кнопки подключают и отключают трубы · вентиль меняет напор</span><button class="quiet" id="fullscreen" aria-label="Развернуть игру на весь экран">⛶</button></div><div class="scene-scroll" id="sceneScroll"><svg id="scene" viewBox="0 0 1180 530" aria-label="Пять кувшинов, соединительные трубы и регулируемые вентили"></svg></div><div class="bench-bottom"><span><i class="legend-line"></i>целевая граница</span><span><i class="legend-line red"></i>страховка из подушки</span><span>Переливы у края: Вкл / Выкл</span><span>Штрихи в трубе движутся только при потоке</span><button class="quiet" id="cancelConnect" hidden>Отменить соединение</button></div></section>
+<section class="control-deck"><div class="valve-panel"><div class="panel-heading"><span class="eyebrow">Выбранная труба</span><span class="badge" id="pipeStatus">ПОДКЛЮЧЕНА</span></div><div class="pipe-picker"><label for="pipeSelect">Настроить напор</label><select id="pipeSelect"></select></div><h2 id="pipeTitle">Доходы → Потребление</h2><div class="dial-row"><div id="valveControls" class="valve-controls"><div class="dial-readout"><span id="valvePercent">45</span><small>% открыт</small></div><div class="slider-wrap"><label for="valveRange"><b id="valveLabel">Повернуть вентиль</b><span>← закрыть · открыть →</span></label><input id="valveRange" type="range" min="0" max="100" step="1" value="45"></div></div><p id="overflowExplanation" class="overflow-explanation" hidden>Перелив несёт только излишек над краем.<br>Вентиля здесь нет.</p><button class="connect-button" id="connectToggle">Отключить трубу</button></div><div class="slider-caption"><span id="actualFlow">Факт: 0 ед./с</span><span id="limitFlow">Лимит: 0 ед./с</span></div><p class="panel-note" id="pipeNote">Потребление нельзя оставлять без подпитки.</p><p class="route-hint">Трубы · нажми кнопку, чтобы подключить или отключить</p><div class="route-shortcuts" id="routes" aria-label="Подключить или отключить трубы"></div></div><div class="source-panel"><div class="panel-heading"><span class="eyebrow">То, на что ты влияешь</span><span id="salaryLabel">Заработок</span></div><label class="source-label" for="overtime">Подработка <b id="overtimeValue">0%</b></label><div class="overtime-track"><input id="overtime" type="range" min="0" max="100" step="5" value="0" aria-describedby="overtimeNote"><span class="sustainable-mark">30%</span></div><p id="overtimeNote">До 30% — устойчиво: силы не убывают.</p><label class="source-label" for="comfort">Дополнительное потребление <b id="comfortValue">0%</b></label><input id="comfort" type="range" min="0" max="100" step="5" value="0"><p>Необходимый расход остаётся даже при нуле.</p><button class="training-button" id="train">Освоить новый навык <span id="trainCost"></span></button><p id="trainingText">Увеличивает основной ручеёк после обучения.</p></div></section>
+<section class="bottom-strip"><div class="live-event"><span class="event-symbol">↳</span><div><span class="eyebrow">Состояние потока</span><p id="eventText">Подключи к доходам остальные кувшины. Сначала можно настроить всё на паузе.</p></div></div><div class="goal-block"><b>Четыре запаса + постоянный доход.</b><span>Удержи баланс 10 секунд. Пустое потребление — конец игры.</span><div class="goal-track"><i id="goalProgress"></i></div></div></section>
+<footer><a href="Пять_кувшинов.html">Открыть прежний «Живой поток»</a><span>По материалам семинара Эрика Наймана · Модули 1, 3, 4</span><button id="model" class="quiet">Условная игровая экономика ↗</button><span id="storageStatus" role="status">Сохраняется в этом браузере</span></footer></main>
+<dialog id="modal" aria-labelledby="modalTitle"><div class="modal-top"><h2 id="modalTitle"></h2><button id="closeModal" class="close" aria-label="Закрыть окно">×</button></div><div id="modalBody"></div></dialog><div id="toast" role="status" aria-live="polite"></div><input id="importFile" type="file" accept=".json,application/json" hidden>
+<script>/* Five Jars v3 «Каскад» — deterministic teaching simulation. Rates are fictional units/second.
+   Reference engine for the ТЗ: same public API as v2, new rules (cascade overflow, priority,
+   float valve, scripted shocks, speculation risk, income goal as a flow). */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.FlowEngine = api;
+})(typeof globalThis === 'object' ? globalThis : this, function () {
+  'use strict';
+
+  const VERSION = 3, FIXED_DT = 0.02, MAX_DT = 1, HOLD_SECONDS = 10;
+  const JARS = ['income', 'consumption', 'savings', 'investments', 'speculation'];
+  const EPS = 1e-8;
+  const YIELD = 0.001;          // capital income: 0.1% of investments per second (accelerated model)
+  const SKILL_STEP = 3;         // +3 u/s per training level
+  const FLOAT_SHARE = 0.25;     // float line = 25% of the consumption target
+
+  const LEVELS = {
+    easy: { title: 'Спокойный поток', description: 'Стабильный доход и один короткий кризис. Время освоить переливы.',
+      salary: 18, expense: 6, comfortExpense: 4, volatility: 0, flowTarget: 21,
+      targets: { consumption: 160, savings: 700, investments: 900, speculation: 220 },
+      brim: { consumption: 1.3, savings: 1.15, investments: 1.3, speculation: 1.5 }, incomeCap: 600,
+      initial: { income: 250, consumption: 150, savings: 80, investments: 0, speculation: 0 }, upgradeCosts: [220, 350, 500],
+      shocks: [{ id: 'crisis', type: 'crisis', at: 100, duration: 20, invDrop: 0.15, specDrop: 0.25, recoverAfter: 40, title: 'Кризис' }],
+      market: { start: 60, every: 30, swings: [0.08, -0.10, 0.06, -0.06] } },
+    medium: { title: 'Переменный поток', description: 'Доход колеблется, случаются шоки. Без подушки придётся продавать.',
+      salary: 17, expense: 7.5, comfortExpense: 4, volatility: 0.18, flowTarget: 21,
+      targets: { consumption: 190, savings: 800, investments: 1050, speculation: 260 },
+      brim: { consumption: 1.3, savings: 1.15, investments: 1.3, speculation: 1.5 }, incomeCap: 650,
+      initial: { income: 210, consumption: 170, savings: 50, investments: 0, speculation: 0 }, upgradeCosts: [220, 350, 500],
+      shocks: [{ id: 'crisis', type: 'crisis', at: 120, duration: 35, invDrop: 0.2, specDrop: 0.3, recoverAfter: 60, title: 'Кризис' },
+               { id: 'repair', type: 'bill', at: 300, duration: 8, extraDrain: 35, title: 'Срочный ремонт' }],
+      market: { start: 60, every: 30, swings: [0.10, -0.14, 0.08, -0.08] } },
+    hard: { title: 'Под давлением', description: 'Высокие расходы, сильные колебания и серия шоков.',
+      salary: 16, expense: 8.5, comfortExpense: 5, volatility: 0.3, flowTarget: 22,
+      targets: { consumption: 220, savings: 950, investments: 1250, speculation: 300 },
+      brim: { consumption: 1.3, savings: 1.15, investments: 1.3, speculation: 1.5 }, incomeCap: 700,
+      initial: { income: 170, consumption: 200, savings: 30, investments: 0, speculation: 0 }, upgradeCosts: [220, 350, 500],
+      shocks: [{ id: 'crisis', type: 'crisis', at: 130, duration: 40, invDrop: 0.25, specDrop: 0.35, recoverAfter: 70, title: 'Кризис' },
+               { id: 'illness', type: 'illness', at: 300, duration: 20, drainFactor: 2, title: 'Болезнь' },
+               { id: 'repair', type: 'bill', at: 420, duration: 8, extraDrain: 40, title: 'Срочный ремонт' }],
+      market: { start: 60, every: 30, swings: [0.12, -0.18, 0.10, -0.10] } }
+  };
+
+  // kind: valve — rate = opening × maxRate; float — opens by itself below the float line;
+  // overflow — carries only the excess above the brim of `from`, no valve.
+  const PIPES = [
+    { id: 'income-consumption', from: 'income', to: 'consumption', title: 'На жизнь', kind: 'valve', priority: 1, maxRate: 30, loss: 0 },
+    { id: 'income-savings', from: 'income', to: 'savings', title: 'В подушку', kind: 'valve', priority: 2, maxRate: 24, loss: 0 },
+    { id: 'income-investments', from: 'income', to: 'investments', title: 'В инвестиции', kind: 'valve', priority: 3, maxRate: 24, loss: 0 },
+    { id: 'income-speculation', from: 'income', to: 'speculation', title: 'В спекуляции', kind: 'valve', priority: 4, maxRate: 12, loss: 0 },
+    { id: 'savings-consumption', from: 'savings', to: 'consumption', title: 'Страховка из подушки', kind: 'float', priority: 0, maxRate: 25, loss: 0 },
+    { id: 'investments-income', from: 'investments', to: 'income', title: 'Продажа инвестиций', kind: 'valve', priority: 0, maxRate: 25, loss: 0.1 },
+    { id: 'speculation-income', from: 'speculation', to: 'income', title: 'Выход из спекуляций', kind: 'valve', priority: 0, maxRate: 20, loss: 0.05 },
+    { id: 'consumption-savings', from: 'consumption', to: 'savings', title: 'Перелив в подушку', kind: 'overflow', priority: 0, maxRate: null, loss: 0 },
+    { id: 'savings-investments', from: 'savings', to: 'investments', title: 'Перелив в инвестиции', kind: 'overflow', priority: 0, maxRate: null, loss: 0 },
+    { id: 'investments-speculation', from: 'investments', to: 'speculation', title: 'Перелив в спекуляции', kind: 'overflow', priority: 0, maxRate: null, loss: 0 }
+  ];
+  const OVERFLOW_OF = { consumption: 'consumption-savings', savings: 'savings-investments', investments: 'investments-speculation' };
+
+  const freeze = value => {
+    if (value && typeof value === 'object') { Object.values(value).forEach(freeze); Object.freeze(value); }
+    return value;
+  };
+  freeze(LEVELS); freeze(PIPES);
+  const clamp = (x, low, high) => Math.min(high, Math.max(low, x));
+  const TOTAL_KEYS = ['salary', 'overtime', 'investmentIncome', 'consumption', 'shockCost', 'liquidationLoss',
+    'eaten', 'spilled', 'training', 'marketResult', 'revaluation'];
+  const zeroRates = () => ({ salary: 0, overtime: 0, investmentIncome: 0, drain: 0, consumption: 0, shockCost: 0,
+    actual: Object.fromEntries(PIPES.map(p => [p.id, 0])), incomeOverflow: 0, eaten: 0, spilled: 0,
+    spilledBy: { savings: 0, investments: 0, speculation: 0 }, liquidationLoss: 0, unpaid: 0 });
+  const editable = s => s && ['ready', 'running', 'paused'].includes(s.status);
+  const clone = s => ({ ...s, balances: { ...s.balances }, targets: { ...s.targets }, capacity: { ...s.capacity },
+    pipes: s.pipes.map(p => ({ ...p })), training: s.training && { ...s.training },
+    rates: { ...s.rates, actual: { ...s.rates.actual }, spilledBy: { ...s.rates.spilledBy } },
+    totals: { ...s.totals }, events: s.events.map(e => ({ ...e })), _warned: { ...s._warned } });
+  function event(s, text, type = 'info') {
+    s.events.push({ id: ++s._eventId, time: s.time, text, type });
+    if (s.events.length > 40) s.events.shift();
+  }
+  const fmt1 = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
+
+  function create(level = 'easy') {
+    if (!Object.hasOwn(LEVELS, level)) level = 'easy';
+    const cfg = LEVELS[level];
+    const capacity = { income: cfg.incomeCap };
+    for (const id of JARS.slice(1)) capacity[id] = Math.round(cfg.targets[id] * cfg.brim[id]);
+    const s = { version: VERSION, level, status: 'ready', time: 0,
+      balances: { ...cfg.initial }, targets: { ...cfg.targets }, capacity,
+      pipes: PIPES.map(p => ({ ...p, connected: p.id === 'income-consumption',
+        opening: p.id === 'income-consumption' ? 0.45 : p.kind === 'valve' ? 0.35 : 1 })),
+      overtime: 0, comfort: 0.35, energy: 100, salaryLevel: 0, training: null, holdTime: 0,
+      events: [], totals: Object.fromEntries(TOTAL_KEYS.map(k => [k, 0])),
+      rates: zeroRates(), _accumulator: 0, _eventId: 0, _incomePhase: 'normal', _marketIndex: 0,
+      _warned: { eaten: false, savings: false, investments: false, speculation: false, float: false, energy: false } };
+    event(s, 'Подключайте трубы и переливы. Потребление не должно опустеть.');
+    return s;
+  }
+  function play(s) { if (!s || !['ready', 'paused'].includes(s.status)) return s; const n = clone(s); n.status = 'running'; return n; }
+  function pause(s) { if (!s || s.status !== 'running') return s; const n = clone(s); n.status = 'paused'; return n; }
+  function togglePipe(s, id) {
+    if (!editable(s) || !s.pipes.some(p => p.id === id)) return s;
+    const n = clone(s), p = n.pipes.find(p => p.id === id); p.connected = !p.connected; return n;
+  }
+  function setValve(s, id, opening) {
+    const p = s && s.pipes.find(q => q.id === id);
+    if (!editable(s) || !p || p.kind === 'overflow' || !Number.isFinite(opening) || opening < 0 || opening > 1) return s;
+    const n = clone(s); n.pipes.find(q => q.id === id).opening = opening; return n;
+  }
+  function setSource(s, id, value) {
+    if (!editable(s) || !['overtime', 'comfort'].includes(id) || !Number.isFinite(value) || value < 0 || value > 1) return s;
+    const n = clone(s); n[id] = value; return n;
+  }
+  function upgrade(s) {
+    if (!editable(s) || s.training || s.salaryLevel >= 3) return s;
+    const cost = LEVELS[s.level].upgradeCosts[s.salaryLevel];
+    if (s.balances.income + EPS < cost) return s;
+    const n = clone(s);
+    n.balances.income -= cost; n.totals.training += cost;
+    n.training = { remaining: 10, cost, nextLevel: s.salaryLevel + 1 };
+    event(n, `Обучение началось: −${cost} ед. Через 10 секунд постоянный доход вырастет на ${SKILL_STEP} ед./с.`, 'training');
+    return n;
+  }
+
+  function salaryCondition(s) {
+    const cfg = LEVELS[s.level], cycle = Math.floor((s.time + EPS) / 45), within = s.time - cycle * 45;
+    if (!cfg.volatility || cycle === 0 || within >= 10 - EPS) return { factor: 1, phase: 'normal' };
+    return cycle % 2 ? { factor: 1 - cfg.volatility, phase: 'low' } : { factor: 1 + cfg.volatility * 0.5, phase: 'high' };
+  }
+  function activeShocks(s) {
+    return LEVELS[s.level].shocks.filter(sh => s.time + EPS >= sh.at && s.time + EPS < sh.at + sh.duration);
+  }
+  function scenario(s) {
+    const phase = salaryCondition(s), m = { phase, salaryFactor: phase.factor, drainFactor: 1, extraDrain: 0, overtimeFactor: 1 };
+    for (const sh of activeShocks(s)) {
+      if (sh.type === 'jobLoss' || sh.type === 'crisis') m.salaryFactor = 0;
+      if (sh.type === 'illness') { m.drainFactor *= sh.drainFactor; m.overtimeFactor = 0; }
+      if (sh.type === 'bill') m.extraDrain += sh.extraDrain;
+    }
+    return m;
+  }
+  const floatLine = s => s.targets.consumption * FLOAT_SHARE;
+  const nominalDrain = s => LEVELS[s.level].expense + LEVELS[s.level].comfortExpense * s.comfort;
+
+  // One physical step. Mutates s.balances and s.energy, returns rates. No events, no win/lose.
+  function advance(s, dt) {
+    const cfg = LEVELS[s.level], sc = scenario(s), r = zeroRates(), b = s.balances;
+    const pipe = id => s.pipes.find(p => p.id === id);
+    r.salary = (cfg.salary + s.salaryLevel * SKILL_STEP) * sc.salaryFactor;
+    r.overtime = 9 * s.overtime * clamp(s.energy / 10, 0, 1) * sc.overtimeFactor;
+    r.investmentIncome = b.investments * YIELD;
+    const base = nominalDrain(s);
+    r.drain = base * sc.drainFactor + sc.extraDrain;
+
+    // 1. Valve transfers from opening balances. Income pays by priority, not pro rata. No receiver throttling.
+    const moves = [];
+    let available = b.income;
+    for (const p of s.pipes.filter(p => p.from === 'income' && p.kind === 'valve').sort((a, c) => a.priority - c.priority)) {
+      const amount = p.connected ? Math.min(p.opening * p.maxRate * dt, available) : 0;
+      available -= amount; moves.push([p, amount]);
+    }
+    for (const id of ['investments-income', 'speculation-income']) {
+      const p = pipe(id);
+      moves.push([p, p.connected ? Math.min(p.opening * p.maxRate * dt, b[p.from]) : 0]);
+    }
+    for (const [p, amount] of moves) {
+      b[p.from] -= amount; b[p.to] += amount * (1 - p.loss);
+      r.actual[p.id] = amount / dt; r.liquidationLoss += amount * p.loss / dt;
+    }
+    // 2. External inflow.
+    b.income += (r.salary + r.overtime + r.investmentIncome) * dt;
+    // 3. Cascade overflow, top-down, in one pass.
+    let excess = Math.max(0, b.income - s.capacity.income);
+    b.income -= excess; b.consumption += excess; r.incomeOverflow = excess / dt;
+    for (const jar of ['consumption', 'savings', 'investments', 'speculation']) {
+      excess = Math.max(0, b[jar] - s.capacity[jar]);
+      if (excess <= 0) continue;
+      b[jar] -= excess;
+      const link = OVERFLOW_OF[jar] && pipe(OVERFLOW_OF[jar]);
+      if (link && link.connected) { b[link.to] += excess; r.actual[link.id] = excess / dt; }
+      else if (jar === 'consumption') r.eaten += excess / dt;
+      else { r.spilled += excess / dt; r.spilledBy[jar] = excess / dt; }
+    }
+    // 4. Float valve: opens only if consumption would fall below the float line, covers only that gap.
+    const need = r.drain * dt, line = floatLine(s), R1 = pipe('savings-consumption');
+    if (R1.connected && b.consumption - need < line) {
+      const give = Math.max(0, Math.min(line + need - b.consumption, b.savings, R1.opening * R1.maxRate * dt));
+      b.savings -= give; b.consumption += give; r.actual[R1.id] = give / dt;
+    }
+    // 5. Living costs.
+    const paid = Math.min(b.consumption, need);
+    b.consumption -= paid; r.consumption = paid / dt; r.unpaid = (need - paid) / dt;
+    r.shockCost = need > 0 ? (r.drain - base) * (paid / need) : 0;
+    JARS.forEach(id => { if (b[id] < EPS) b[id] = 0; });
+    // 6. Energy.
+    s.energy = clamp(s.energy + (3 * (1 - s.overtime) - 7 * s.overtime * clamp(s.energy / 10, 0, 1) * sc.overtimeFactor) * dt, 0, 100);
+    return r;
+  }
+  function previewRates(s) { return advance(clone(s), FIXED_DT); }
+
+  // Market events already included in a state at this time. Treat the saved index as
+  // derived metadata: a damaged index must never replay years of historical events.
+  function marketIndexAt(level, time) {
+    const m = LEVELS[level].market;
+    return Math.max(0, Math.floor((time + EPS - m.start) / m.every) + 1);
+  }
+  function applyMarket(s, t0, t1) {
+    const m = LEVELS[s.level].market, beforeIndex = marketIndexAt(s.level, t0), afterIndex = marketIndexAt(s.level, t1);
+    s._marketIndex = afterIndex;
+    // A fixed physical step is 0.02 s; market events are at least 30 s apart.
+    // Only the event crossed by this step can run, never events before t0.
+    if (afterIndex === beforeIndex) return;
+    const swing = m.swings[(afterIndex - 1) % m.swings.length], before = s.balances.speculation;
+    const delta = before * swing;
+    s.balances.speculation = before + delta; s.totals.marketResult += delta;
+    if (before > EPS) event(s, `Рынок: спекуляции ${swing > 0 ? '+' : '−'}${Math.round(Math.abs(swing) * 100)}% (${delta > 0 ? '+' : '−'}${Math.round(Math.abs(delta))} ед.).`, swing > 0 ? 'good' : 'warning');
+  }
+  const insured = s => s.pipes.find(p => p.id === 'savings-consumption').connected ? ' Страховка из подушки подключена.' : ' Страховка из подушки выключена — подключите её.';
+  function shockEvents(s, t0, t1) {
+    const crosses = t => t0 + EPS < t && t <= t1 + EPS;
+    for (const sh of LEVELS[s.level].shocks) {
+      if (sh.type === 'crisis' && crosses(sh.at)) {
+        const inv = s.balances.investments * sh.invDrop, spec = s.balances.speculation * sh.specDrop;
+        s.balances.investments -= inv; s.balances.speculation -= spec;
+        s.totals.revaluation -= inv; s.totals.marketResult -= spec;
+        const hit = [inv >= 0.5 ? `инвестиции −${Math.round(sh.invDrop * 100)}% (−${Math.round(inv)} ед., рынок вернётся, если не продавать на дне)` : '',
+          spec >= 0.5 ? `спекуляции −${Math.round(sh.specDrop * 100)}% (−${Math.round(spec)} ед.)` : ''].filter(Boolean).join(', ');
+        event(s, `Кризис: работы нет ${sh.duration} с${hit ? ', ' + hit : ''}.${insured(s)}`, 'danger');
+        continue;
+      }
+      if (sh.type === 'crisis' && crosses(sh.at + sh.recoverAfter)) {
+        const gain = s.balances.investments * (1 / (1 - sh.invDrop) - 1);
+        s.balances.investments += gain; s.totals.revaluation += gain;
+        event(s, gain >= 0.5 ? `Рынок восстановился: инвестиции +${Math.round(gain)} ед. Кто не продал на дне — вернул своё.` : 'Рынок восстановился после кризиса.', 'good');
+      }
+      if (sh.type === 'crisis') { if (crosses(sh.at + sh.duration)) event(s, `${sh.title}: работа вернулась. Пополните подушку.`, 'good'); continue; }
+      if (crosses(sh.at)) {
+        const what = sh.type === 'jobLoss' ? `зарплата 0 на ${sh.duration} с`
+          : sh.type === 'illness' ? `расходы ×${sh.drainFactor} и нет подработки ${sh.duration} с`
+          : `счёт ${sh.extraDrain * sh.duration} ед. за ${sh.duration} с`;
+        event(s, `Шок: ${sh.title} — ${what}.${insured(s)}`, 'danger');
+      }
+      if (crosses(sh.at + sh.duration)) event(s, `${sh.title}: шок закончился. Пополните подушку.`, 'good');
+    }
+  }
+
+  function goals(s) {
+    const cfg = LEVELS[s.level], flow = cfg.salary + s.salaryLevel * SKILL_STEP + s.balances.investments * YIELD;
+    const g = { income: flow + EPS >= cfg.flowTarget };
+    for (const id of JARS.slice(1)) g[id] = s.balances[id] + EPS >= s.targets[id];
+    return { flow, g, all: JARS.every(id => g[id]), met: JARS.filter(id => g[id]).length };
+  }
+
+  function tick(s) {
+    const dt = FIXED_DT, t0 = s.time, t1 = t0 + dt;
+    applyMarket(s, t0, t1);
+    shockEvents(s, t0, t1);
+    const phase = salaryCondition(s).phase;
+    if (phase !== s._incomePhase) {
+      if (phase === 'low') event(s, 'Поток дохода ослаб на 10 секунд. Проверьте запас потребления.', 'warning');
+      else if (phase === 'high') event(s, 'Доход временно вырос на 10 секунд: есть возможность пополнить запасы.', 'good');
+      else event(s, 'Обычный поток дохода восстановился.');
+      s._incomePhase = phase;
+    }
+    const r = advance(s, dt);
+    s.time = Math.round(t1 * 1e8) / 1e8;
+    for (const k of ['salary', 'overtime', 'investmentIncome', 'consumption', 'shockCost', 'liquidationLoss', 'eaten', 'spilled']) s.totals[k] += r[k] * dt;
+    s.rates = r;
+    const warn = (key, on, text, type = 'warning') => {
+      if (on && !s._warned[key]) { event(s, text, type); s._warned[key] = true; } else if (!on) s._warned[key] = false;
+    };
+    warn('eaten', r.eaten > 0.01, 'Потребление переполнено: излишек проедается. Подключите перелив в подушку.');
+    warn('savings', r.spilledBy.savings > 0.01, 'Подушка полна: излишек льётся мимо. Подключите перелив в инвестиции или прикройте вентиль.');
+    warn('investments', r.spilledBy.investments > 0.01, 'Инвестиции полны: излишек льётся мимо. Подключите перелив в спекуляции или прикройте вентиль.');
+    warn('speculation', r.spilledBy.speculation > 0.01, 'Спекуляции полны: излишек льётся мимо. Прикройте вентиль.');
+    warn('float', r.actual['savings-consumption'] > 0.01, 'Страховка из подушки включилась: потребление у красной черты.', 'info');
+    if (s.energy < 10 && s.overtime > 0.05 && !s._warned.energy) { event(s, 'Энергия заканчивается: подработка ослабевает. Устойчивый уровень — до 30%.', 'warning'); s._warned.energy = true; }
+    else if (s.energy > 40) s._warned.energy = false;
+    if (s.training) {
+      s.training.remaining = Math.max(0, s.training.remaining - dt);
+      if (s.training.remaining < EPS) {
+        s.salaryLevel = s.training.nextLevel; s.training = null;
+        event(s, `Обучение завершено: постоянный доход вырос на ${SKILL_STEP} ед./с.`, 'good');
+      }
+    }
+    if (s.balances.consumption <= EPS) {
+      s.status = 'lost'; s.holdTime = 0; s._accumulator = 0;
+      event(s, 'Потребление опустело: жить не на что. Поток остановлен.', 'danger'); return;
+    }
+    const gl = goals(s), oldHold = s.holdTime;
+    s.holdTime = gl.all ? Math.min(HOLD_SECONDS, s.holdTime + dt) : 0;
+    if (gl.all && oldHold === 0) event(s, 'Все пять целей достигнуты. Удерживайте их 10 секунд.', 'good');
+    if (s.holdTime >= HOLD_SECONDS - EPS) {
+      s.holdTime = HOLD_SECONDS; s.status = 'won'; s._accumulator = 0;
+      event(s, 'Победа! Все пять целей удержаны 10 секунд.', 'good');
+    }
+  }
+  function step(s, dt) {
+    if (!s || s.status !== 'running' || !Number.isFinite(dt) || dt <= 0 || dt > MAX_DT) return s;
+    const n = clone(s); n._accumulator += dt;
+    while (n._accumulator + EPS >= FIXED_DT && n.status === 'running') { n._accumulator = Math.max(0, n._accumulator - FIXED_DT); tick(n); }
+    return n;
+  }
+  function metrics(s) {
+    const cfg = LEVELS[s.level], r = previewRates(s), gl = goals(s);
+    const cost = cfg.upgradeCosts[s.salaryLevel] ?? null, drain = nominalDrain(s);
+    const inbound = r.actual['income-consumption'] + r.actual['savings-consumption'] + r.incomeOverflow;
+    const net = r.drain - inbound;
+    return { total: JARS.reduce((sum, id) => sum + s.balances[id], 0),
+      incomeFlow: gl.flow, flowTarget: cfg.flowTarget, goals: gl.g, goalsMet: gl.met, allFull: gl.all,
+      holdRemaining: Math.max(0, HOLD_SECONDS - s.holdTime), floatLine: floatLine(s),
+      consumptionSeconds: net > EPS ? s.balances.consumption / net : Infinity,
+      baseSalary: cfg.salary + s.salaryLevel * SKILL_STEP, passive: s.balances.investments * YIELD,
+      freedom: drain > 0 ? s.balances.investments * YIELD / drain : 0, sustainableOvertime: 0.3,
+      activeShocks: activeShocks(s).map(sh => sh.id), nextShock: cfg.shocks.find(sh => sh.at > s.time + EPS) || null,
+      upgradeCost: cost, canUpgrade: editable(s) && !s.training && cost !== null && s.balances.income + EPS >= cost };
+  }
+
+  function validateSave(raw) {
+    try {
+      const s = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      const number = (x, min = 0, max = 1e9) => Number.isFinite(x) && x >= min && x <= max;
+      const record = x => x !== null && typeof x === 'object' && !Array.isArray(x);
+      const assert = (ok, why) => { if (!ok) throw new Error(why); };
+      assert(record(s), 'Сохранение не удалось прочитать.');
+      assert(s.version === VERSION, s.version === 2 ? 'Сохранение от прошлой версии игры. Начните новую систему.' : 'Неподдерживаемая версия сохранения.');
+      assert(Object.hasOwn(LEVELS, s.level), 'Неизвестный уровень.');
+      assert(['ready', 'running', 'paused', 'won', 'lost'].includes(s.status), 'Неверное состояние игры.');
+      assert(number(s.time) && number(s.holdTime, 0, HOLD_SECONDS) && number(s._accumulator, 0, FIXED_DT), 'Неверное игровое время.');
+      const fresh = create(s.level);
+      assert(record(s.balances) && record(s.targets) && record(s.capacity), 'Неверные кувшины.');
+      JARS.forEach(id => {
+        assert(s.capacity?.[id] === fresh.capacity[id], 'Размеры кувшинов повреждены.');
+        assert(number(s.balances?.[id], 0, fresh.capacity[id] + 1e-6), 'Неверный баланс.');
+      });
+      JARS.slice(1).forEach(id => assert(s.targets?.[id] === fresh.targets[id], 'Цели сохранения повреждены.'));
+      assert(Array.isArray(s.pipes) && s.pipes.length === PIPES.length, 'Неверные трубы.');
+      PIPES.forEach((p, i) => {
+        const saved = s.pipes[i];
+        assert(record(saved) && ['id', 'from', 'to', 'kind', 'maxRate', 'loss'].every(k => saved[k] === p[k]) &&
+          typeof saved.connected === 'boolean' && number(saved.opening, 0, 1), 'Неверный вентиль.');
+      });
+      assert(number(s.energy, 0, 100) && number(s.overtime, 0, 1) && number(s.comfort, 0, 1), 'Неверные источники.');
+      assert(Number.isInteger(s.salaryLevel) && s.salaryLevel >= 0 && s.salaryLevel <= 3, 'Неверный доход.');
+      if (s.training !== null) assert(record(s.training) && s.salaryLevel < 3 && number(s.training.remaining, 0, 10) &&
+        s.training.nextLevel === s.salaryLevel + 1 && s.training.cost === LEVELS[s.level].upgradeCosts[s.salaryLevel], 'Неверное обучение.');
+      assert(record(s.totals), 'Неверные итоги.');
+      TOTAL_KEYS.forEach(k => assert(number(s.totals[k], ['marketResult', 'revaluation'].includes(k) ? -1e9 : 0), 'Неверные итоги.'));
+      assert(Array.isArray(s.events) && s.events.length <= 40 && Array.from(s.events).every(e =>
+        record(e) && Number.isSafeInteger(e.id) && e.id >= 0 && number(e.time) && typeof e.text === 'string' && e.text.length < 500 &&
+        ['info', 'warning', 'good', 'danger', 'training'].includes(e.type)), 'Неверный журнал.');
+      assert(Number.isSafeInteger(s._eventId) && s._eventId >= 0 && ['normal', 'low', 'high'].includes(s._incomePhase), 'Неверные метаданные.');
+      assert(Number.isSafeInteger(s._marketIndex) && s._marketIndex >= 0, 'Неверные метаданные.');
+      assert(record(s._warned) && Object.keys(fresh._warned).every(k => typeof s._warned[k] === 'boolean'), 'Неверные метаданные.');
+      assert((s.status !== 'lost' || s.balances.consumption === 0) && (s.status !== 'won' || (s.holdTime === HOLD_SECONDS && goals(s).all)), 'Неверный итог игры.');
+      const known = Object.fromEntries(Object.keys(fresh).map(k => [k, k === 'rates' ? fresh.rates : s[k]]));
+      const n = clone(known);
+      n.pipes = PIPES.map((p, i) => ({ ...p, connected: s.pipes[i].connected, opening: s.pipes[i].opening }));
+      n.targets = { ...fresh.targets }; n.capacity = { ...fresh.capacity };
+      n._marketIndex = marketIndexAt(n.level, n.time);
+      n.rates = zeroRates();
+      if (n.status === 'running') n.status = 'paused';
+      return { ok: true, state: n };
+    } catch (error) { return { ok: false, error: error.message || 'Сохранение не удалось прочитать.' }; }
+  }
+
+  return { VERSION, FIXED_DT, MAX_DT, HOLD_SECONDS, JARS: freeze([...JARS]), LEVELS, PIPES, YIELD, SKILL_STEP, FLOAT_SHARE,
+    create, start: create, play, pause, togglePipe, setValve, setSource, upgrade, step, previewRates, metrics, validateSave };
+});
+</script><script>(function(){'use strict';
+const E=FlowEngine,$=s=>document.querySelector(s),scene=$('#scene'),modal=$('#modal'),KEY='five-jars-flow-v3';
+const JARS=[{id:'income',name:'Доходы',x:120,color:'#78c9bf',dark:'#286d6c'},{id:'consumption',name:'Потребление',x:350,color:'#e4be76',dark:'#a07539'},{id:'savings',name:'Сбережения',x:580,color:'#a5c58d',dark:'#607e4b'},{id:'investments',name:'Инвестиции',x:810,color:'#69b8b1',dark:'#357b79'},{id:'speculation',name:'Спекуляции',x:1040,color:'#d4a787',dark:'#92654d'}];
+const NAMES=Object.fromEntries(JARS.map(j=>[j.id,j.name]));
+const ROUTES={
+'income-consumption':{d:'M204 250 H242 Q264 250 264 227 V130 Q264 110 284 110 H330 Q350 110 350 130 V176',valve:[350,143],rate:[350,93],color:'#e4be76'},
+'income-savings':{d:'M204 250 H250 Q278 250 278 222 V106 Q278 86 298 86 H560 Q580 86 580 106 V176',valve:[580,143],rate:[580,69],color:'#a5c58d'},
+'income-investments':{d:'M204 250 H258 Q292 250 292 216 V84 Q292 64 312 64 H790 Q810 64 810 84 V176',valve:[810,143],rate:[810,47],color:'#69b8b1'},
+'income-speculation':{d:'M204 250 H266 Q306 250 306 206 V62 Q306 42 326 42 H1020 Q1040 42 1040 62 V176',valve:[1040,143],rate:[1040,25],color:'#d4a787'},
+'savings-consumption':{d:'M580 347 V411 Q580 431 560 431 H462 Q442 431 442 411 V311 Q442 295 426 295 H423',valve:[479,431],rate:[479,389],color:'#a5c58d'},
+'investments-income':{d:'M810 347 V450 Q810 471 790 471 H75 Q54 471 54 450 V295',valve:[305,471],rate:[680,458],color:'#69b8b1'},
+'consumption-savings':{d:'M392 185 V194 H519 Q535 194 535 181',valve:[470,194],rate:[470,235],color:'#a5c58d'},
+'savings-investments':{d:'M622 185 V194 H749 Q765 194 765 181',valve:[700,194],rate:[700,235],color:'#69b8b1'},
+'investments-speculation':{d:'M852 185 V194 H979 Q995 194 995 181',valve:[930,194],rate:[930,235],color:'#d4a787'},
+'speculation-income':{d:'M1040 347 V481 Q1040 502 1020 502 H43 Q23 502 23 482 V313 Q23 295 41 295 H54',valve:[691,502],rate:[912,489],color:'#d4a787'}
+};
+const PORTS=[{key:'consumption-out',jar:'consumption',dir:'out',x:392,y:185},{key:'income-out',jar:'income',dir:'out',x:204,y:250},{key:'consumption-in',jar:'consumption',dir:'in',x:350,y:176},{key:'savings-in',jar:'savings',dir:'in',x:580,y:176},{key:'investments-in',jar:'investments',dir:'in',x:810,y:176},{key:'speculation-in',jar:'speculation',dir:'in',x:1040,y:176},{key:'savings-out',jar:'savings',dir:'out',x:580,y:347},{key:'investments-out',jar:'investments',dir:'out',x:810,y:347},{key:'speculation-out',jar:'speculation',dir:'out',x:1040,y:347},{key:'consumption-rescue',jar:'consumption',dir:'in',x:423,y:295},{key:'income-in',jar:'income',dir:'in',x:54,y:295}];
+const nf=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0}),fmt=n=>nf.format(n),dec=n=>Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:1}),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),clock=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(Math.floor(t%60)).padStart(2,'0')}`;
+let state=E.create('easy'),selected='income-consumption',pending=null,drag=null,speed=1,lastFrame=0,lastPaint=0,lastSave=0,toastTimer,finishedShown=false,saved=null,chosenLevel='easy',modalKind='',suppressClick=0,downloadURL=null;
+function notify(t){$('#toast').textContent=t;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),4000);}
+function save(){saved=JSON.parse(JSON.stringify(state));try{localStorage.setItem(KEY,JSON.stringify(state));$('#storageStatus').textContent='✓ Система сохранена';}catch(_){$('#storageStatus').textContent='В памяти до закрытия · сохраните файл';}}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const checked=E.validateSave(raw);if(checked.ok){saved=checked.state;state=checked.state;}else notify('Старое сохранение не прочитано. Можно собрать новую систему.');}}catch(_){$('#storageStatus').textContent='Автосохранение недоступно';}}
+function pause(){state=E.pause(state);lastFrame=0;save();update();}
+function showModal(title,html,kind='info'){if(state.status==='running')pause();modalKind=kind;$('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;if(!modal.open)modal.showModal();}
+function closeModal(){modal.close();modalKind='';lastFrame=0;update();}
+function mutate(fn){state=fn(state);update();save();}
+function openWelcome(){chosenLevel=state.level;showModal('Пять кувшинов · Каскад',`<div class="modal-copy"><p>Деньги льются постоянно. Подключай трубы кнопками, крути вентили и собирай каскад: полный кувшин передаёт излишек следующему.</p></div><div class="levels">${Object.entries(E.LEVELS).map(([id,l],i)=>`<button class="level-choice ${chosenLevel===id?'selected':''}" data-level="${id}" aria-pressed="${chosenLevel===id}"><span class="stars">${'●'.repeat(i+1)}</span><h3>${i===0?'Легко':i===1?'Средне':'Сложно'}</h3><p>${esc(l.description)}</p></button>`).join('')}</div><div class="welcome-tip"><b>Пять целей:</b> четыре кувшина выше золотых отметок + целевой постоянный доход. Удержи их 10 секунд.<br><b>Потребление опустело — game over.</b> Страховка из подушки поможет у красной черты. Для роста дохода понадобится обучение.</div><div class="modal-actions"><button data-action="import">Загрузить файл</button>${saved?'<button data-action="resume">Продолжить Каскад</button>':''}<button class="primary" data-action="start">Собрать новую систему →</button></div>`,'welcome');}
+function start(level){state=E.create(level);selected='income-consumption';pending=null;finishedShown=false;speed=1;lastFrame=0;$('#speed').textContent='×1';buildScene();closeModal();save();update();notify('Поток на паузе. Подключи трубы или нажми «Запустить поток».');}
+function connect(from,to){const p=state.pipes.find(p=>p.from===from&&p.to===to);if(!p){notify('Между этими кувшинами нет подходящей трубы. Выбери подсвеченный вход.');return false;}if(!p.connected)state=E.togglePipe(state,p.id);selected=p.id;pending=null;$('#ghost').setAttribute('d','');save();update();notify(`${NAMES[from]} → ${NAMES[to]}: ${p.kind==='overflow'?'перелив подключён. Он пропускает только излишек.':p.kind==='float'?'страховка подключена. Сработает у красной черты.':'труба подключена.'}`);return true;}
+function toggleConnection(id){
+  if(['won','lost'].includes(state.status)||!state.pipes.some(p=>p.id===id))return;
+  pending=null;drag=null;$('#ghost').setAttribute('d','');selected=id;
+  state=E.togglePipe(state,id);update();save();
+  const p=state.pipes.find(p=>p.id===id);
+  notify(`${NAMES[p.from]} → ${NAMES[p.to]}: ${!p.connected?'маршрут отключён.':p.kind==='overflow'?'перелив включён: пропускает излишек над краем.':p.kind==='float'?'страховка включена: подача откроется у красной черты.':p.opening===0?'труба подключена. Открой вентиль.':'труба подключена. Напор регулируется вентилем.'}`);
+}
+function portAction(key){if(['won','lost'].includes(state.status))return;const p=PORTS.find(p=>p.key===key);if(p.dir==='out'){pending=p;update();notify(`Теперь выбери вход: ${E.PIPES.filter(r=>r.from===p.jar).map(r=>NAMES[r.to]).join(', ')}.`);}else if(pending)connect(pending.jar,p.jar);else notify('Сначала нажми выходной штуцер кувшина, из которого пойдут деньги.');}
+function cancelConnect(){pending=null;drag=null;$('#ghost').setAttribute('d','');update();}
+function pipeMarkup(p){const r=ROUTES[p.id];return `<g class="pipe-group" id="pipe-${p.id}" data-pipe="${p.id}"><path class="pipe-shell" d="${r.d}"/><path class="pipe-core" d="${r.d}"/><path class="pipe-liquid" style="stroke:${r.color}" d="${r.d}"/><path class="pipe-motion" d="${r.d}"/><path class="pipe-hit" d="${r.d}"/></g>`;}
+function jarMarkup(j){const x=j.x;const shape='M-49 301 Q-8 292 42 301 L39 323 C40 341 67 381 59 434 Q53 462 0 466 Q-48 466 -57 440 C-70 400 -51 352 -49 330 L-49 316 L-65 304 Z';return `<g id="jar-${j.id}" class="jar" transform="translate(${x} -120)"><defs><linearGradient id="jg-${j.id}" x1="0" x2="1"><stop stop-color="${j.dark}"/><stop offset=".45" stop-color="${j.color}"/><stop offset="1" stop-color="${j.dark}"/></linearGradient><clipPath id="clip-${j.id}"><path d="${shape}"/></clipPath></defs><ellipse cx="5" cy="475" rx="65" ry="7" fill="#061e24" opacity=".6"/><path d="M43 329 C104 312 105 402 60 419" stroke="#375f65" stroke-width="14" fill="none"/><path d="M44 327 C98 312 98 396 62 411" stroke="#71918a" stroke-opacity=".6" stroke-width="7" fill="none"/><path class="jar-outline" d="${shape}" fill="#1e4149" stroke="#9db5a5" stroke-width="1.5" stroke-opacity=".45"/><g clip-path="url(#clip-${j.id})"><rect id="fill-${j.id}" x="-76" y="445" width="154" height="26" fill="url(#jg-${j.id})"/><path class="liquid-wave" id="wave-${j.id}" fill="${j.color}" opacity=".88"/><path d="M-42 310 Q-61 373 -43 446" fill="none" stroke="white" opacity=".10" stroke-width="8"/><path class="jar-target-mark" id="target-${j.id}" d="M-67 370 H65"/>${j.id==='consumption'?'<path id="floatLine" class="float-line"/><text id="floatLabel" class="float-label" x="0">СТРАХОВКА</text>':''}<text class="jar-value" id="value-${j.id}" x="0" y="408">0</text><text class="jar-unit" x="0" y="424">ИГРОВЫХ ЕДИНИЦ</text></g><ellipse cx="-8" cy="302" rx="47" ry="8" fill="#0a252c" stroke="#8ca89b" stroke-opacity=".6" stroke-width="1.2"/><path d="M-64 305 Q-7 316 41 304" fill="none" stroke="#bdd1b1" stroke-opacity=".5" stroke-width="2"/><g id="spill-${j.id}" class="spill-drops" hidden><path d="M73 314 q-6 8 0 10 q6-2 0-10 M83 327 q-6 8 0 10 q6-2 0-10 M75 344 q-6 8 0 10 q6-2 0-10"/></g><text class="jar-title" x="0" y="501">${j.name}</text><text class="jar-target-label" id="targetLabel-${j.id}" x="0" y="520"></text><text class="jar-check" id="check-${j.id}" x="0" y="540"></text></g>`;}
+function valveMarkup(p){const r=ROUTES[p.id];if(p.kind==='overflow')return `<text class="pipe-rate overflow-rate" id="rate-${p.id}" x="${r.rate[0]}" y="${r.rate[1]}"></text>`;return `${p.id==='savings-consumption'?'<path d="M479 395 V409" fill="none" stroke="#a9c6c0" stroke-width="1"/>':''}<g class="valve" id="valve-${p.id}" data-valve="${p.id}" transform="translate(${r.valve[0]} ${r.valve[1]})" role="slider" tabindex="0" aria-label="Вентиль ${NAMES[p.from]} — ${NAMES[p.to]}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><circle r="22" fill="transparent"/><circle class="wheel-outer" r="17"/><g class="wheel-rotor" id="rotor-${p.id}"><path class="wheel-spoke" d="M-12 0 H12 M0-12 V12"/><circle r="4" class="wheel-hub"/><circle cx="0" cy="-12" r="3.2" fill="#fff0c0"/></g><text class="valve-value" id="percent-${p.id}" x="-35" y="4"></text><title>Вращай мышью или используй стрелки клавиатуры</title></g><text class="pipe-rate" id="rate-${p.id}" x="${r.rate[0]}" y="${r.rate[1]}"></text>`;}
+function switchMarkup(p){const r=ROUTES[p.id],over=p.kind==='overflow',x=over?r.valve[0]-27:r.valve[0]+29,y=over?r.valve[1]-16:r.valve[1]-17,w=over?54:102;return `<g class="scene-switch ${over?'overflow-switch':''}" id="scene-toggle-${p.id}" data-toggle="${p.id}" transform="translate(${x} ${y})" role="button" tabindex="0" aria-label="${p.title}: ${NAMES[p.from]} → ${NAMES[p.to]}" aria-pressed="false"><rect class="switch-hit" x="-4" y="-12" width="${w+8}" height="60" fill="transparent"/><rect class="switch-bg" width="${w}" height="${over?32:36}" rx="6"/><text class="switch-label" x="${w/2}" y="${over?16:18}" text-anchor="middle" dominant-baseline="central"></text><title></title></g>`;}
+function buildScene(){scene.innerHTML=`<defs><pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#537a7c" opacity=".25"/></pattern><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L8 5 L0 9" fill="none" stroke="#83b8b0" stroke-width="1.5"/></marker></defs><rect width="1180" height="530" fill="url(#grid)"/><g id="salaryPipe" class="source-auto"><path d="M120 87 V175" class="pipe-shell"/><path d="M120 87 V175" class="pipe-core"/><path d="M120 87 V175" class="pipe-liquid" stroke="#78c9bf"/><path d="M120 87 V175" class="pipe-motion"/><rect x="37" y="30" width="166" height="58" rx="9" fill="#24464d" stroke="#577871"/><text x="120" y="50" text-anchor="middle" class="source-text">ТРУД И ПОДРАБОТКА</text><text x="120" y="72" text-anchor="middle" class="source-value" id="salaryStream"></text></g><g id="yieldPipe" class="source-auto"><path d="M881 247 H1131 V34 Q1131 12 1109 12 H245 Q223 12 223 34 V152 Q223 172 203 172 H149" fill="none" stroke="#416260" stroke-width="5"/><path class="pipe-motion" d="M881 247 H1131 V34 Q1131 12 1109 12 H245 Q223 12 223 34 V152 Q223 172 203 172 H149" stroke="#92d5be"/><text x="650" y="28" text-anchor="middle" class="source-text" id="yieldLabel">КАПИТАЛ СОЗДАЁТ ОБРАТНЫЙ ПОТОК</text></g><g id="incomeOverflow" class="source-auto dry"><path class="pipe-shell" d="M162 185 V194 H278 Q291 194 291 181 H301"/><path class="pipe-liquid" stroke="#e4be76" d="M162 185 V194 H278 Q291 194 291 181 H301"/><path class="pipe-motion" d="M162 185 V194 H278 Q291 194 291 181 H301"/><text id="incomeOverflowLabel" class="pipe-rate" x="229" y="224"></text></g>${state.pipes.map(pipeMarkup).join('')}<g id="drainPipe" class="source-auto" transform="translate(0 -120)"><path class="pipe-shell" d="M350 467 V580"/><path class="pipe-core" d="M350 467 V580"/><path class="pipe-liquid" stroke="#d7ac6a" d="M350 467 V580"/><path class="pipe-motion" d="M350 467 V580"/><path d="M336 575 L350 591 L364 575" fill="none" stroke="#d7ac6a" stroke-width="3"/><text class="note-text" id="drainLabel" x="386" y="577">РАСХОДЫ</text></g>${JARS.map(jarMarkup).join('')}${state.pipes.map(valveMarkup).join('')}${PORTS.map(p=>`<g class="port" id="port-${p.key}" data-port="${p.key}" transform="translate(${p.x} ${p.y})" role="button" tabindex="0" aria-label="${p.dir==='out'?'Выход':'Вход'} ${NAMES[p.jar]}${p.key==='consumption-rescue'?' из подушки':''}"><circle r="17" fill="transparent"/><circle class="port-ring" r="9"/><circle class="port-core" r="3"/><path d="${p.dir==='out'?'M-4 0 H4 M1-3 L4 0 L1 3':'M-3-3 L0 0 L3-3 M0 0 V4'}" fill="none" stroke="#16373c" stroke-width="1.6"/><title>${p.dir==='out'?'Начни соединение здесь':'Подключи входящую трубу'}</title></g>`).join('')}${state.pipes.map(switchMarkup).join('')}<path id="ghost" class="ghost-pipe" d=""/><text class="note-text" x="872" y="456">← ВОЗВРАТ КАПИТАЛА · СНИЗУ</text>`;
+$('#pipeSelect').innerHTML=E.PIPES.map(p=>`<option value="${p.id}">${p.kind==='overflow'?'Перелив: ':p.kind==='float'?'Страховка: ':''}${NAMES[p.from]} → ${NAMES[p.to]}</option>`).join('');$('#routes').innerHTML=E.PIPES.map(p=>`<button type="button" class="route-toggle" id="route-toggle-${p.id}" data-toggle="${p.id}" aria-label="Труба ${NAMES[p.from]} → ${NAMES[p.to]}" aria-pressed="false"><span>${p.kind==='overflow'?'<small>Перелив</small>':p.kind==='float'?'<small>Автостраховка</small>':''}${NAMES[p.from]} → ${NAMES[p.to]}</span><b class="route-action"></b></button>`).join('');update();}
+function update(){
+ const running=state.status==='running',ended=['won','lost'].includes(state.status),r=ended?state.rates:running?state.rates:E.previewRates(state),m=E.metrics(state),p=state.pipes.find(p=>p.id===selected),cfg=E.LEVELS[state.level];
+ const critical=state.balances.consumption<m.floatLine*1.25,shocks=cfg.shocks.filter(sh=>m.activeShocks.includes(sh.id));
+ scene.classList.toggle('is-paused',!running);scene.setAttribute('data-status',state.status);
+ $('#time').textContent=clock(state.time);$('#levelLabel').textContent=cfg.title;
+ $('#inRate').innerHTML=`${dec(r.salary+r.overtime+r.investmentIncome)} <em>ед./с</em>`;
+ $('#outRate').innerHTML=`${dec(r.drain)} <em>ед./с</em>`;
+ $('#sourceLabel').textContent=`Труд ${dec(r.salary+r.overtime)} · капитал ${dec(r.investmentIncome)}`;
+ $('#runway').textContent=ended?'Партия завершена':Number.isFinite(m.consumptionSeconds)?`При текущих потоках: ~${Math.ceil(m.consumptionSeconds)} с до нуля`:'Потребление получает достаточно';
+ $('#runway').style.color=critical?'#ffb59a':'';
+ $('#targetCount').innerHTML=`${m.goalsMet} <em>из 5</em>`;
+ $('#holdText').textContent=state.holdTime>0?`Держим: ${dec(state.holdTime)} / 10 с`:'Удержи все цели 10 секунд';
+ $('#goalProgress').style.width=state.holdTime/10*100+'%';
+ $('#energy').innerHTML=`${fmt(state.energy)}<em>%</em>`;$('#energyBar').style.width=state.energy+'%';
+ $('#statusText').textContent=state.status==='won'?'Все цели удержаны':state.status==='lost'?'Потребление опустело':running?(shocks.length?'Система переживает шок':critical?'Потребление на исходе':'Поток идёт'):'Пауза · настройка системы';
+ $('#statusDot').className='status-dot '+(critical||state.status==='lost'?'danger':running?'running':'');
+ $('#play').textContent=running?'Ⅱ Пауза':ended?'↻ Новая система':state.status==='ready'?'▶ Запустить поток':'▶ Продолжить поток';$('#speed').disabled=ended;
+ $('#shockBanner').hidden=!shocks.length;$('#shockName').textContent=shocks.map(sh=>sh.title+(sh.type==='crisis'?' · заработок остановлен':sh.type==='illness'?' · расходы выросли, подработка остановлена':' · дополнительные расходы')).join(' / ');
+ $('#shockCountdown').textContent=shocks.map(sh=>`ещё ${Math.max(0,Math.ceil(sh.at+sh.duration-state.time))} с`).join(' / ');
+ $('#salaryStream').textContent=`${dec(r.salary+r.overtime)} ед./с`;$('#salaryPipe').classList.toggle('dry',r.salary+r.overtime<.01);
+ $('#yieldLabel').textContent=`КАПИТАЛ: ${dec(r.investmentIncome)} ед./с → ДОХОДЫ · ПОКРЫВАЕТ ${dec(m.freedom*100)}% ОБЫЧНЫХ РАСХОДОВ`;
+ $('#yieldPipe').style.opacity=r.investmentIncome>.001?'1':'.3';$('#yieldPipe .pipe-motion').style.display=r.investmentIncome>.001?'':'none';
+ $('#drainLabel').textContent=`НА ЖИЗНЬ: −${dec(r.drain)} /с`;
+ $('#incomeOverflow').classList.toggle('dry',r.incomeOverflow<.01);$('#incomeOverflowLabel').textContent=`Авто: ${dec(r.incomeOverflow)} /с`;
+ const lineY=463-m.floatLine/state.capacity.consumption*158;
+ $('#floatLine').setAttribute('d',`M-66 ${lineY} H64`);$('#floatLabel').setAttribute('y',Math.min(456,lineY+13));
+ for(const j of JARS){
+  const b=state.balances[j.id],cap=state.capacity[j.id],top=463-Math.max(0,Math.min(1,b/cap))*158,reached=m.goals[j.id];
+  $('#fill-'+j.id).setAttribute('y',top);$('#fill-'+j.id).setAttribute('height',470-top);
+  $('#wave-'+j.id).setAttribute('d',`M-75 ${top} Q-37 ${top-4} 0 ${top} T76 ${top} L76 ${top+5} H-75Z`);
+  $('#target-'+j.id).style.display=j.id==='income'?'none':'';
+  if(j.id!=='income')$('#target-'+j.id).setAttribute('d',`M-66 ${463-state.targets[j.id]/cap*158} H64`);
+  $('#value-'+j.id).textContent=fmt(b);
+  $('#targetLabel-'+j.id).textContent=j.id==='income'?`Потенциал ${dec(m.incomeFlow)} / ${m.flowTarget} ед./с`:`Цель ${fmt(state.targets[j.id])} · ${Math.floor(b/state.targets[j.id]*100)}%`;
+  const loss=j.id==='consumption'?r.eaten:r.spilledBy[j.id]||0;
+  $('#check-'+j.id).textContent=loss>.01?`${j.id==='consumption'?'Проедается':'Мимо'}: −${dec(loss)} /с`:j.id==='consumption'&&critical?'⚠ У красной черты':reached?'✓ Цель достигнута':j.id==='income'?'Навык + капитал · без подработки':j.id==='speculation'?'Рыночный риск':'';
+  $('#check-'+j.id).classList.toggle('loss-note',loss>.01);$('#spill-'+j.id).toggleAttribute('hidden',loss<.01);
+  $('#jar-'+j.id).classList.toggle('jar-reached',reached);$('#jar-'+j.id).classList.toggle('jar-critical',j.id==='consumption'&&critical);
+ }
+ for(const q of state.pipes){
+  const flow=r.actual[q.id]||0,g=$('#pipe-'+q.id),v=$('#valve-'+q.id);
+  g.classList.toggle('disconnected',!q.connected);g.classList.toggle('selected',selected===q.id);g.classList.toggle('dry',flow<.01);
+  g.querySelector('.pipe-motion').style.animationDuration=Math.max(.25,3/(1+flow/4))+'s';
+  if(v){v.classList.toggle('disconnected',!q.connected);v.classList.toggle('selected',selected===q.id);v.setAttribute('aria-valuenow',Math.round(q.opening*100));v.setAttribute('aria-valuetext',`${Math.round(q.opening*100)} процентов, ${q.connected?'подключена':'отключена'}, поток ${dec(flow)} единиц в секунду`);v.setAttribute('tabindex',ended?'-1':'0');$('#rotor-'+q.id).setAttribute('transform',`rotate(${-135+q.opening*270})`);$('#percent-'+q.id).textContent=q.connected?Math.round(q.opening*100)+'%':'＋';}
+  $('#rate-'+q.id).textContent=q.kind==='overflow'?(q.connected?`${dec(flow)} ед./с`:'Перелив'):q.connected?`${dec(flow)} / ${dec(q.maxRate*q.opening)} ед./с`:'Поток отключён';
+ }
+ for(const pt of PORTS){const node=$('#port-'+pt.key);node.classList.toggle('pending',pending?.key===pt.key);node.classList.toggle('compatible',!!pending&&pt.dir==='in'&&state.pipes.some(p=>p.from===pending.jar&&p.to===pt.jar));node.setAttribute('tabindex',ended?'-1':'0');}
+ $('#connectionHint').textContent=pending?`Из «${NAMES[pending.jar]}»: выбери подсвеченный вход`:'Трубы: кнопка + вентиль · переливы: Вкл / Выкл';$('#cancelConnect').hidden=!pending;
+ if(document.activeElement!==$('#pipeSelect'))$('#pipeSelect').value=selected;
+ $('#pipeTitle').textContent=`${NAMES[p.from]} → ${NAMES[p.to]}`;
+ $('#pipeStatus').textContent=p.connected?'ПОДКЛЮЧЕНО':'ОТКЛЮЧЕНО';
+ const over=p.kind==='overflow';$('#valveControls').hidden=over;$('#overflowExplanation').hidden=!over;
+ $('#valvePercent').textContent=Math.round(p.opening*100);if(document.activeElement!==$('#valveRange'))$('#valveRange').value=Math.round(p.opening*100);
+ $('#valveRange').disabled=ended||over;$('#valveLabel').textContent=p.kind==='float'?'Предельный напор страховки':'Повернуть вентиль';
+ $('#connectToggle').textContent=p.kind==='float'?(p.connected?'Выключить страховку':'Включить страховку'):over?(p.connected?'Отключить перелив':'Подключить перелив'):p.connected?'Отключить трубу':'Подключить трубу';$('#connectToggle').disabled=ended;
+ $('#actualFlow').textContent=`${running||ended?'Факт':'План'}: ${dec(r.actual[p.id])} ед./с`;
+ $('#limitFlow').textContent=over?'Только излишек над краем':`Лимит: ${dec(p.opening*p.maxRate)} ед./с`;
+ $('#pipeNote').textContent=over?'Полный кувшин отдаёт излишек следующему. Если перелив отключён, излишек потребления проедается, а сбережений и инвестиций — льётся мимо.':p.kind==='float'?`Откроется автоматически у красной черты (${dec(m.floatLine)} ед.). Поддерживает уровень в пределах подушки и напора до 25 ед./с. Большой расход может превысить её возможности.`:p.id==='investments-income'?'Продажа капитала: 90% приходят в доходы, 10% теряются. Пассивный ручеёк уменьшается.':p.id==='speculation-income'?'Выход из спекуляций: 95% приходят в доходы, 5% теряются. Рыночные колебания меняют этот кувшин автоматически.':!p.connected?'Подключи трубу кнопкой. Затем отрегулируй напор.':p.opening===0?'Вентиль закрыт. Поверни его или передвинь ползунок, чтобы пошёл поток.':'При нехватке денег приоритет: жизнь → подушка → инвестиции → спекуляции. Полный получатель не останавливает трубу: лишнее переливается или теряется.';
+ document.querySelectorAll('[data-toggle]').forEach(b=>{
+  const q=state.pipes.find(p=>p.id===b.dataset.toggle),compact=b.classList.contains('overflow-switch'),action=q.connected?(compact?'Выкл':'Отключить'):(compact?'Вкл':'Подключить');
+  if(b.tagName.toLowerCase()==='button')b.disabled=ended;else{b.setAttribute('aria-disabled',String(ended));b.setAttribute('tabindex',ended?'-1':'0');}
+  b.classList.toggle('connected',q.connected);b.classList.toggle('selected',q.id===selected);b.setAttribute('aria-pressed',String(q.connected));
+  b.setAttribute('aria-label',`${q.connected?'Отключить':'Подключить'} ${q.kind==='overflow'?'перелив':q.kind==='float'?'страховку':'трубу'}: ${NAMES[q.from]} → ${NAMES[q.to]}`);
+  const description=`${q.title}: ${q.connected?'подключено':'отключено'}`,title=b.querySelector('title');if(title)title.textContent=description;else b.title=description;
+  const label=b.querySelector('.route-action,.switch-label');if(label)label.textContent=action;
+ });
+ if(document.activeElement!==$('#overtime'))$('#overtime').value=state.overtime*100;if(document.activeElement!==$('#comfort'))$('#comfort').value=state.comfort*100;
+ $('#overtime').disabled=ended;$('#comfort').disabled=ended;$('#overtimeValue').textContent=`${Math.round(state.overtime*100)}% · +${dec(r.overtime)} /с`;
+ $('#overtimeNote').textContent=state.overtime<=.3?'До 30% — устойчиво: силы не убывают.':'Выше 30% — силы убывают, поток подработки ослабевает.';
+ $('#comfortValue').textContent=`${Math.round(state.comfort*100)}% · +${dec(cfg.comfortExpense*state.comfort)} /с`;$('#salaryLabel').textContent=`Основной: ${dec(m.baseSalary)} /с`;
+ $('#train').disabled=ended||!m.canUpgrade;$('#trainCost').textContent=state.salaryLevel>=3?'Максимум':state.training?'Идёт обучение':`−${fmt(m.upgradeCost)} ед.`;
+ $('#trainingText').textContent=state.training?`Ещё ${dec(state.training.remaining)} с → +3 ед./с постоянного дохода.`:state.salaryLevel>=3?'Освоены все три навыка.':`+3 ед./с после 10 с обучения. Деньги берутся из Доходов. Окупаемость при обычном заработке: ~${Math.ceil(10+m.upgradeCost/3)} с.`;
+ let message=state.events.at(-1)?.text||'Настрой систему на паузе, затем запусти поток.';
+ if(shocks.length&&!ended)message=shocks.some(sh=>sh.type==='crisis')?'Кризис: основной заработок исчез. Подушка страхует жизнь; продажа капитала сократит будущий доход.':shocks.some(sh=>sh.type==='illness')?'Болезнь: расходы выросли, подработка остановилась. Проверь потребление и запас.':'Срочный ремонт: расход резко вырос. Даже полностью открытая страховка ограничена 25 ед./с.';
+ else if(critical&&!ended)message='Потребление у красной черты. Проверь приток и страховку из подушки: при нуле игра закончится.';
+ else if(r.eaten>.01)message=`Избыток потребления проедается: ${dec(r.eaten)} ед./с. Подключи перелив в сбережения.`;
+ else if(r.spilled>.01)message=`Мимо кувшинов льётся ${dec(r.spilled)} ед./с. Проверь переливы и уменьши лишний напор.`;
+ $('#eventText').textContent=message;
+}
+function result(){
+ if(finishedShown)return;finishedShown=true;save();const won=state.status==='won',m=E.metrics(state),t=state.totals,signed=n=>(n>0?'+':'')+dec(n),shockNames=E.LEVELS[state.level].shocks.filter(sh=>m.activeShocks.includes(sh.id)).map(sh=>sh.title).join(', ');
+ showModal(won?'Система работает!':'Поток остановился',`<div class="result-copy"><div class="result-icon">${won?'✓':'∅'}</div><h3>${won?'Пять целей удержаны.':'Кувшин потребления опустел.'}</h3><p>${won?'Четыре запаса и потенциал постоянного дохода были выше целей 10 секунд.':'Расходы продолжались, а подпитки не хватило. Страховка помогает только в пределах подушки и своего напора.'}</p>${!won&&shockNames?`<p><b>В момент остановки: ${esc(shockNames)}.</b> Запаса и настроенного притока не хватило, чтобы пережить этот шок.</p>`:''}</div><div class="result-stats"><div><b>${clock(state.time)}</b><span>Время в игре</span></div><div><b>${fmt(m.total)}</b><span>Осталось в кувшинах</span></div><div><b>${fmt(t.investmentIncome)}</b><span>Принёс капитал</span></div></div><dl class="result-ledger"><div><dt>Проедено сверх расходов</dt><dd>−${dec(t.eaten)}</dd></div><div><dt>Пролито мимо</dt><dd>−${dec(t.spilled)}</dd></div><div><dt>Потери при продаже</dt><dd>−${dec(t.liquidationLoss)}</dd></div><div><dt>Допрасходы шоков</dt><dd>−${dec(t.shockCost)}</dd></div><div><dt>Результат рынка спекуляций</dt><dd>${signed(t.marketResult)}</dd></div><div><dt>Переоценка при кризисе и восстановлении</dt><dd>${signed(t.revaluation)}</dd></div></dl><div class="modal-copy"><p>Капитал покрывает <b>сейчас ${dec(m.freedom*100)}%</b> обычных расходов. Это показатель текущей системы, а не доля за всю партию.</p><p>Сценарий и доходность условны. Восстановление инвестиций — правило игры, а не обещание рынка.</p></div><div class="modal-actions"><button data-action="close">Посмотреть схему</button><button data-action="export">Сохранить результат</button><button class="primary" data-action="welcome">Новая система →</button></div>`,'result');
+}
+function run(ts){if(!lastFrame)lastFrame=ts;const delta=Math.min(.25,Math.max(0,(ts-lastFrame)/1000));lastFrame=ts;if(state.status==='running'&&!document.hidden&&!modal.open){state=E.step(state,delta*speed);if(ts-lastPaint>32){update();lastPaint=ts;}if(ts-lastSave>2000){save();lastSave=ts;}if(['won','lost'].includes(state.status)){update();result();}}requestAnimationFrame(run);}
+function setOpening(id,value){if(!Number.isFinite(value))return;state=E.setValve(state,id,Math.max(0,Math.min(1,value)));selected=id;update();}
+function localPoint(e){const pt=scene.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(scene.getScreenCTM().inverse());}
+scene.addEventListener('pointerdown',e=>{if(['won','lost'].includes(state.status)||e.button>0)return;const v=e.target.closest('[data-valve]'),po=e.target.closest('[data-port]');if(v){e.preventDefault();const id=v.dataset.valve,r=ROUTES[id],pt=localPoint(e),p=state.pipes.find(p=>p.id===id),dist=Math.hypot(pt.x-r.valve[0],pt.y-r.valve[1]);selected=id;drag={kind:'valve',id,startY:e.clientY,startValue:p.opening,angle:Math.atan2(pt.y-r.valve[1],pt.x-r.valve[0]),turn:0,vertical:dist<7};v.focus({preventScroll:true});scene.setPointerCapture(e.pointerId);update();}else if(po){const p=PORTS.find(p=>p.key===po.dataset.port);if(p.dir==='out'){e.preventDefault();pending=p;drag={kind:'port',pointer:e.pointerId,moved:false};scene.setPointerCapture(e.pointerId);update();}}});
+scene.addEventListener('pointermove',e=>{if(!drag)return;const pt=localPoint(e);if(drag.kind==='valve'){e.preventDefault();if(drag.vertical)setOpening(drag.id,drag.startValue+(drag.startY-e.clientY)/170);else{const r=ROUTES[drag.id],a=Math.atan2(pt.y-r.valve[1],pt.x-r.valve[0]);let diff=a-drag.angle;if(diff>Math.PI)diff-=2*Math.PI;if(diff<-Math.PI)diff+=2*Math.PI;drag.turn+=diff;drag.angle=a;setOpening(drag.id,drag.startValue+drag.turn/(Math.PI*1.5));}}else if(pending){drag.moved=true;$('#ghost').setAttribute('d',`M${pending.x} ${pending.y} C${pending.x+70} ${pending.y} ${pt.x-70} ${pt.y} ${pt.x} ${pt.y}`);}});
+scene.addEventListener('pointerup',e=>{if(!drag)return;const was=drag;drag=null;try{scene.releasePointerCapture(e.pointerId);}catch(_){}if(was.kind==='port'&&pending){const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-port]');if(target){const p=PORTS.find(p=>p.key===target.dataset.port);if(p.dir==='in'&&connect(pending.jar,p.jar))suppressClick=performance.now()+250;}$('#ghost').setAttribute('d','');}else{save();suppressClick=performance.now()+100;}});
+scene.addEventListener('pointercancel',()=>{drag=null;$('#ghost').setAttribute('d','');save();});
+scene.addEventListener('click',e=>{const toggle=e.target.closest('[data-toggle]');if(toggle){toggleConnection(toggle.dataset.toggle);return;}if(performance.now()<suppressClick)return;const port=e.target.closest('[data-port]'),valve=e.target.closest('[data-valve]'),pipe=e.target.closest('[data-pipe]');if(port)portAction(port.dataset.port);else if(valve){selected=valve.dataset.valve;update();}else if(pipe){selected=pipe.dataset.pipe;update();}});
+scene.addEventListener('keydown',e=>{const toggle=e.target.closest('[data-toggle]');if(toggle&&['Enter',' '].includes(e.key)){e.preventDefault();if(!e.repeat)toggleConnection(toggle.dataset.toggle);return;}const v=e.target.closest('[data-valve]'),p=e.target.closest('[data-port]');if(p&&['Enter',' '].includes(e.key)){e.preventDefault();portAction(p.dataset.port);}if(v){const pipe=state.pipes.find(p=>p.id===v.dataset.valve);if(['ArrowUp','ArrowRight','ArrowDown','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();const delta=(e.shiftKey ? .1 : .02)*(['ArrowDown','ArrowLeft'].includes(e.key)?-1:1);setOpening(pipe.id,e.key==='Home'?0:e.key==='End'?1:pipe.opening+delta);save();}else if(e.key==='Enter'){e.preventDefault();selected=pipe.id;update();}}});
+$('#pipeSelect').onchange=e=>{selected=e.target.value;update();};$('#valveRange').addEventListener('input',e=>setOpening(selected,Number(e.target.value)/100));$('#valveRange').addEventListener('change',save);$('#connectToggle').onclick=()=>toggleConnection(selected);$('#routes').onclick=e=>{const b=e.target.closest('button[data-toggle]');if(b)toggleConnection(b.dataset.toggle);};for(const id of ['overtime','comfort']){$('#'+id).addEventListener('input',e=>{state=E.setSource(state,id,Number(e.target.value)/100);update();});$('#'+id).addEventListener('change',save);}
+$('#train').onclick=()=>mutate(E.upgrade);$('#cancelConnect').onclick=cancelConnect;$('#play').onclick=()=>{if(['won','lost'].includes(state.status)){openWelcome();return;}if(state.status==='running')pause();else{state=E.play(state);lastFrame=0;save();update();}};$('#speed').onclick=()=>{speed=speed===1?2:speed===2?3:1;$('#speed').textContent='×'+speed;notify('Скорость времени ×'+speed);};
+function help(){showModal('Собери работающий каскад',`<div class="modal-copy"><ol><li><b>Подключай кнопками.</b> У обычной трубы кнопка включает соединение, колесо задаёт напор. У перелива между горлышками — только «Вкл / Выкл». Светлая кнопка «Выкл» означает, что перелив работает. Полные названия маршрутов есть под схемой.</li><li><b>Поверни вентиль.</b> Тяни край по кругу или центр вверх/вниз. Можно использовать ползунок под схемой; на телефоне выбери трубу в списке. Стрелки меняют открытие на 2%, Shift — на 10%, Home и End закрывают и открывают полностью.</li><li><b>Не путай цель и край.</b> Золотая черта — цель запаса. Перелив начинается позже, когда кувшин наполнится до горлышка. Полная ёмкость не останавливает входящую трубу.</li><li><b>Сохраняй излишек.</b> Доходы автоматически переливаются в Потребление. Дальше подключай каскад: Потребление → Сбережения → Инвестиции → Спекуляции. Без перелива избыток потребления проедается, остальных кувшинов — льётся мимо.</li><li><b>Заранее подключи страховку.</b> Сбережения автоматически подпитывают Потребление у красной черты. Вентиль ограничивает помощь до 25 ед./с; пустая подушка или слишком большой расход всё равно приведут к нулю. <b>Потребление равно нулю — конец игры.</b></li><li><b>Развивай постоянный доход.</b> Его цель — основной заработок с навыками плюс доход капитала. Подработка помогает сейчас, но не засчитывается в эту цель. До 30% подработки силы не убывают. Обучение оплачивается из Доходов и длится 10 секунд.</li><li><b>Удержи пять целей 10 секунд.</b> Четыре запаса выше золотых черт и постоянный доход выше своего порога. Потенциал дохода показан под первым кувшином; фактические поступления во время кризиса могут быть ниже.</li></ol><p>Пауза останавливает время и позволяет настроить систему. Уход со страницы включает автопаузу. На узком экране прокручивай схему горизонтально. Кнопка ×1 меняет скорость.</p><p>Ручное соединение тоже доступно: выходной штуцер → входной штуцер. Подключение перелива не даёт откачивать запас ниже края.</p><div class="modal-actions"><button class="primary" data-action="close">Понятно</button></div></div>`);}
+function model(){showModal('Семинар и правила Каскада',`<div class="modal-copy"><p>Пять кувшинов из семинара Эрика Наймана: Доходы, Потребление, Сбережения, Инвестиции, Спекуляции. Основа: модуль 1, стр. 3; модуль 3, стр. 4 и 7–10; модуль 4, стр. 4–7 и 17.</p><p>Каскад — отдельная игровая интерпретация по рекомендациям Claude. Семинар описывает связи кувшинов; приведённые здесь числа, приоритеты и сценарии не являются его универсальными финансовыми правилами.</p><ul><li>Инвестиции создают 0,1% своей суммы в секунду — условный ускоренный обратный поток.</li><li>Продажа инвестиций возвращает 90% капитала, спекуляций — 95%. Остальное — игровые издержки.</li><li>Спекулятивный капитал автоматически меняется при рыночных событиях. Это уже рискованный капитал, а не неподвижный резерв.</li><li>При нехватке денег прямые трубы получают их по очереди: жизнь, подушка, инвестиции, спекуляции. Полученные деньги нельзя повторно отправить через вентиль в тот же шаг; переливы проходят каскадом.</li><li>Шоки следуют заданному сценарию уровня. Показываются только начавшиеся события. После кризиса текущий инвестиционный капитал восстанавливается по условному правилу; проданный капитал в этом не участвует.</li><li>Это восстановление не гарантировано в реальном мире. Игровые секунды, суммы и доходность не служат прогнозом.</li></ul><p>«Живой поток» сохранён отдельным файлом. Его сохранения несовместимы с Каскадом.</p></div>`);}
+function exportGame(){save();if(downloadURL)URL.revokeObjectURL(downloadURL);downloadURL=URL.createObjectURL(new Blob([JSON.stringify({format:'five-jars-cascade',state},null,2)],{type:'application/json'}));showModal('Сохранение системы',`<div class="modal-copy"><p>Сохранение включает уровни жидкости, трубы, вентили, сложность и время. После загрузки система откроется на паузе.</p><div class="modal-actions"><button data-action="import">Загрузить сохранение</button><a class="primary" href="${downloadURL}" download="Пять_кувшинов_Каскад.json">Скачать JSON ↓</a></div></div>`);}
+$('#help').onclick=help;$('#model').onclick=model;$('#save').onclick=exportGame;$('#new').onclick=openWelcome;$('#home').onclick=e=>{e.preventDefault();openWelcome();};$('#closeModal').onclick=closeModal;modal.addEventListener('close',()=>{modalKind='';lastFrame=0;});$('#modalBody').onclick=e=>{const level=e.target.closest('[data-level]');if(level){chosenLevel=level.dataset.level;$('#modalBody').querySelectorAll('[data-level]').forEach(b=>{b.classList.toggle('selected',b.dataset.level===chosenLevel);b.setAttribute('aria-pressed',b.dataset.level===chosenLevel);});return;}const b=e.target.closest('[data-action]');if(!b)return;switch(b.dataset.action){case'close':closeModal();break;case'start':start(chosenLevel);break;case'welcome':openWelcome();break;case'resume':{const checked=E.validateSave(saved);if(checked.ok){state=checked.state;finishedShown=false;buildScene();closeModal();update();if(['won','lost'].includes(state.status))result();}break;}case'export':exportGame();break;case'import':$('#importFile').click();break;}};
+$('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>250000)throw Error('Слишком большой файл. Выбери сохранение этой игры.');const raw=JSON.parse(await f.text());if(!['five-jars-cascade','five-jars-flow'].includes(raw.format))throw Error('Нужен файл сохранения «Пять кувшинов · Каскад».');if(raw.state?.version===2)throw Error('Это сохранение «Живого потока» v2. Открой прежнюю игру: правила Каскада несовместимы.');const checked=E.validateSave(raw.state);if(!checked.ok)throw Error(checked.error);showModal('Загрузить эту систему?',`<div class="modal-copy"><p>${esc(E.LEVELS[checked.state.level].title)} · время ${clock(checked.state.time)}. Текущая система будет заменена.</p><div class="modal-actions"><button id="confirmImport" class="primary">Загрузить на паузе</button></div></div>`);$('#confirmImport').onclick=()=>{state=checked.state;finishedShown=false;selected='income-consumption';pending=null;buildScene();closeModal();save();if(['won','lost'].includes(state.status))result();};}catch(err){notify(err.message||'Не удалось прочитать сохранение');}finally{e.target.value='';}};
+$('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else notify('В этом браузере используйте разворачивание окна.');}catch(_){notify('Разверните окно браузера для большей схемы.');}};document.addEventListener('fullscreenchange',()=>{const active=!!document.fullscreenElement;$('#fullscreen').setAttribute('aria-label',active?'Выйти из полного экрана':'Развернуть игру на весь экран');$('#fullscreen').setAttribute('aria-pressed',String(active));});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cancelConnect();if(e.code==='Space'&&!modal.open&&!['INPUT','BUTTON','SELECT','TEXTAREA','A'].includes(document.activeElement?.tagName)&&!document.activeElement?.closest('[data-port],[data-valve],[data-toggle]')){e.preventDefault();$('#play').click();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.status==='running'){pause();notify('Автопауза: страница была скрыта. Продолжение — по кнопке.');}lastFrame=0;});window.addEventListener('pagehide',()=>{if(state.status==='running')state=E.pause(state);save();});
+load();buildScene();openWelcome();requestAnimationFrame(run);
+})();
+</script></body></html>
