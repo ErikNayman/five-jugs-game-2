@@ -594,10 +594,10 @@ let ROUTES={},LAYOUT=null;
 // Desktop: jars in a row. Coordinates are SVG units; a flask spans y 172 (neck) … 346 (bottom), labels to 425.
 function wideLayout(on){const YX=on.includes('speculation')?1131:921;return{tall:false,
  jars:{income:[120,0],consumption:[350,0],savings:[580,0],investments:[810,0],speculation:[1040,0]},
- routes:{'income-consumption':{d:'M172 250 H242 Q264 250 264 227 V130 Q264 110 284 110 H330 Q350 110 350 130 V172',valve:[400,143],rate:[350,93]},
-  'income-savings':{d:'M172 250 H250 Q278 250 278 222 V106 Q278 86 298 86 H560 Q580 86 580 106 V172',valve:[590,143],rate:[580,69]},
-  'income-investments':{d:'M172 250 H258 Q292 250 292 216 V84 Q292 64 312 64 H790 Q810 64 810 84 V172',valve:[815,143],rate:[810,47]},
-  'income-speculation':{d:'M172 250 H266 Q306 250 306 206 V62 Q306 42 326 42 H1020 Q1040 42 1040 62 V172',valve:[1035,143],rate:[1040,25]},
+ routes:{'income-consumption':{d:'M172 250 H212 Q234 250 234 227 V130 Q234 110 254 110 H330 Q350 110 350 130 V172',valve:[350,143],rate:[350,93]},
+  'income-savings':{d:'M172 250 H220 Q248 250 248 222 V106 Q248 86 268 86 H560 Q580 86 580 106 V172',valve:[580,143],rate:[580,69]},
+  'income-investments':{d:'M172 250 H228 Q262 250 262 216 V84 Q262 64 282 64 H790 Q810 64 810 84 V172',valve:[810,143],rate:[810,47]},
+  'income-speculation':{d:'M172 250 H236 Q276 250 276 206 V62 Q276 42 296 42 H1020 Q1040 42 1040 62 V172',valve:[1040,143],rate:[1040,25]},
   'savings-consumption':{d:'M580 347 V431 Q580 451 560 451 H462 Q442 451 442 431 V311 Q442 295 426 295 H402',valve:[500,451],rate:[540,456],anchor:'start'},
   'investments-income':{d:'M810 347 V496 Q810 516 790 516 H75 Q54 516 54 496 V300 H68',valve:[620,516],rate:[720,521],anchor:'start'},
   'speculation-income':{d:'M1040 347 V552 Q1040 572 1020 572 H43 Q23 572 23 552 V313 Q23 300 41 300 H68',valve:[930,572],rate:[1030,577],anchor:'start'},
@@ -611,7 +611,7 @@ function tallLayout(){const yo={consumption:0,savings:270,investments:540,specul
  const ov=(a,b)=>{const y1=yo[a]+240,y2=yo[b]+184,m=(y1+y2)/2;return{d:`M372 ${y1} H415 V${y2} H342`,valve:[415,m],rate:[415,m-28]};};
  const br=k=>{const y=yo[k]+250;return{d:`M53 320 H24 V${y} H268`,valve:[130,y],rate:[130,y-34]};};
  return{tall:true,jars:{income:[105,0],consumption:[320,0],savings:[320,270],investments:[320,540],speculation:[320,810]},
- routes:{'income-consumption':{d:'M127 184 H212 V100 H320 V172',valve:[300,100],rate:[300,64]},
+ routes:{'income-consumption':{d:'M127 184 H212 V100 H320 V172',valve:[320,100],rate:[320,64]},
   'income-savings':br('savings'),'income-investments':br('investments'),'income-speculation':br('speculation'),
   'savings-consumption':{d:'M268 570 H238 V330 H268',valve:[238,460],rate:[238,500]},
   'investments-income':{d:'M268 870 H238',valve:[238,870],rate:[200,876],anchor:'end',compact:true},
