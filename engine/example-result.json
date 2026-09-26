@@ -1,0 +1,70 @@
+{
+ "type": "cascade:result",
+ "v": 1,
+ "engine": 3,
+ "rules": "3.4",
+ "lang": "ru",
+ "level": "endless",
+ "seed": 4089917025,
+ "code": "1VN1469",
+ "week": "2026-W39",
+ "opts": {},
+ "log": [
+  {
+   "t": 0,
+   "f": "setValve",
+   "x": [
+    "income-savings",
+    0.25
+   ]
+  },
+  {
+   "t": 0,
+   "f": "togglePipe",
+   "x": [
+    "income-savings"
+   ]
+  },
+  {
+   "t": 0,
+   "f": "setSource",
+   "x": [
+    "comfort",
+    0.7
+   ]
+  },
+  {
+   "t": 0,
+   "f": "setValve",
+   "x": [
+    "income-consumption",
+    0.25
+   ]
+  },
+  {
+   "t": 0,
+   "f": "setValve",
+   "x": [
+    "income-consumption",
+    0
+   ]
+  },
+  {
+   "t": 0,
+   "f": "togglePipe",
+   "x": [
+    "income-consumption"
+   ]
+  }
+ ],
+ "claim": {
+  "status": "lost",
+  "time": 18.06
+ },
+ "shown": {
+  "years": 0,
+  "real": 870,
+  "peak": 870,
+  "freedom": 0
+ }
+}
