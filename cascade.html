@@ -848,7 +848,7 @@ html[data-theme=light] .goal-chip u s{background:#a8741f}
     }
     // 2. External inflow.
     const auto = M ? r.salary * M.autoInvest : 0;
-    b.investments += auto * dt;
+    b.investments += auto * dt; r.auto = auto;
     b.income += (r.salary - auto + r.overtime + r.investmentIncome) * dt;
     // 3. Cascade overflow, top-down, in one pass.
     let excess = Math.max(0, b.income - s.capacity.income);
@@ -916,7 +916,7 @@ html[data-theme=light] .goal-chip u s{background:#a8741f}
         s._drop = { id: sh.id, v: drop }; // the recovery undoes this drop, whatever upgrades change later
         s.balances.investments -= inv; s.balances.speculation -= spec;
         s.totals.revaluation -= inv; s.totals.marketResult -= spec;
-        const hit = [inv >= 0.5 ? `инвестиции −${Math.round(drop * 100)}% (−${Math.round(inv)} ед., рынок вернётся, если не продавать на дне)` : '',
+        const hit = [inv >= 0.5 ? `инвестиции −${Math.round(drop * 100)}%${drop < sh.invDrop - EPS ? ' — 📈 индексный фонд смягчил падение' : ''} (−${Math.round(inv)} ед., рынок вернётся, если не продавать на дне)` : '',
           spec >= 0.5 ? `спекуляции −${Math.round(sh.specDrop * 100)}% (−${Math.round(spec)} ед.)` : ''].filter(Boolean).join(', ');
         const keep = Math.max(sh.salaryFloor || 0, effMods(s) ? effMods(s).crisisSalary : 0);
         event(s, `${sh.great ? '🌋 Великий кризис на 2 года' : 'Кризис'}: ${keep > 0 ? `доход упал до ${Math.round(keep * 100)}%` : 'работы нет'}${sh.great ? '' : ' ' + sh.duration + ' с'}${hit ? ', ' + hit : ''}.${insured(s)}`, 'danger');
@@ -1425,6 +1425,7 @@ function update(){
  if(m.pricePct>0)$('#drainLabel').textContent+=LAYOUT&&LAYOUT.tall?` · +${m.pricePct}%`:` · цены +${m.pricePct}%`;
  $('#jar-investments').classList.toggle('free',m.freedom>=1);
  renderLifeBar(m);
+ upgradeVisuals(m,r,shocks);
  if($('#comfortText')){$('#comfortText').textContent=`🛍 хотелки ${Math.round(state.comfort*100)}%`;$('#comfortBtn').classList.toggle('warn',state.comfort>.5);}
  if($('#skillText')){$('#skillText').textContent=state.salaryLevel>=3?'🎓 максимум':state.training?`🎓 ещё ${Math.ceil(state.training.remaining)} с`:`🎓 навык ${fmt(m.upgradeCost)}`;$('#skillBtn').classList.toggle('ready',m.canUpgrade);$('#skillBtn').classList.toggle('busy',!!state.training);$('#overtimeText').textContent=`💪 ${Math.round(state.overtime*100)}%`;$('#overtimeBtn').classList.toggle('warn',state.overtime>.3);$('#energyFill').setAttribute('width',Math.max(0,156*state.energy/100));$('#energyFill').classList.toggle('low',state.energy<25);$('#happyFill').setAttribute('width',Math.max(0,156*(state.happy??70)/100));$('#happyFill').classList.toggle('low',(state.happy??70)<25);}
  afterUpdate(m,r);
@@ -1745,6 +1746,14 @@ function resultText(){const m=E.metrics(state),years=Math.floor(state.time/E.YEA
 function copyResult(){const t=resultText(),ok=()=>notify('📋 Итог скопирован — вставь его в чат группы.'),fb=()=>{const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';(modal.open?modal:document.body).appendChild(a);a.select();let done=false;try{done=document.execCommand('copy');}catch(e){}a.remove();done?ok():notify('Не удалось скопировать. Код сценария: '+seedCode(state.seed));};
  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,fb);else fb();}
 let wiRun=0,wiSummary='';
+/* Улучшения видны в работе системы, а не только в карточке. */
+let autoPopT=-1,insShown={};
+function upgradeVisuals(m,r,shocks){const M=m.mods;if(!state.life||!M)return;const running=state.status==='running'&&!viewing;
+ if(M.autoInvest>0){$('#salaryStream').textContent+=` · 🤖${Math.round(M.autoInvest*100)}%`;if(running&&(r.auto||0)>.01&&state.time-autoPopT>=8){autoPopT=state.time;popText('investments',`🤖 +${fmt(r.auto*8)}`);}}
+ for(const sh of shocks){if((sh.type==='bill'||sh.type==='illness')&&M.billShare<1&&!(sh.type==='illness'&&M.noIllness)){$('#shockName').textContent+=` · 🛡 страховая платит ${Math.round((1-M.billShare)*100)}%`;if(running&&!insShown[sh.id]){insShown[sh.id]=1;popText('consumption',`🛡 страховая −${Math.round((1-M.billShare)*100)}%`);}}
+  if(sh.type==='illness'&&M.noIllness)$('#shockName').textContent+=' · 🏋 тебе не страшно';
+  if(sh.type==='bill'&&M.repairMul<1)$('#shockName').textContent+=' · 🧰 ремонт вдвое дешевле';}
+ if(M.floatMul<1){const el=$('#rate-savings-consumption');if(el&&!/медленно/.test(el.textContent))el.textContent+=' · 🏦 медленно';}}
 /* Стресс-тест: копия системы проходит 2 года жёсткого кризиса с замороженными кранами. Игра не меняется. */
 let viewing=null,lastStress=null;
 /* 🔧 Испытания: готовый капитал + кризис-сценарий. Игрок распределяет деньги, настраивает краны и проверяет. */
